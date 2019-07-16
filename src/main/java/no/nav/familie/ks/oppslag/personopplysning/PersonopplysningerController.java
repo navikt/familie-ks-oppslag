@@ -1,6 +1,6 @@
 package no.nav.familie.ks.oppslag.personopplysning;
 
-import no.nav.familie.ks.oppslag.felles.ws.MDCOperations;
+import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import org.springframework.http.MediaType;

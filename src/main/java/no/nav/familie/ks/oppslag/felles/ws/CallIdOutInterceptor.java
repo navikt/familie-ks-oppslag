@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.felles.ws;
 
+import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import org.apache.cxf.binding.soap.SoapHeader;
 import org.apache.cxf.binding.soap.SoapMessage;
 import org.apache.cxf.headers.Header;
@@ -7,10 +8,12 @@ import org.apache.cxf.jaxb.JAXBDataBinding;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.phase.AbstractPhaseInterceptor;
 import org.apache.cxf.phase.Phase;
+import org.springframework.stereotype.Component;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
 
+@Component
 public class CallIdOutInterceptor extends AbstractPhaseInterceptor<Message> {
 
     public CallIdOutInterceptor() {

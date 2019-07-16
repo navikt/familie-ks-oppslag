@@ -1,4 +1,4 @@
-package no.nav.familie.ks.oppslag.felles.ws;
+package no.nav.familie.ks.oppslag.felles;
 
 import org.slf4j.MDC;
 
