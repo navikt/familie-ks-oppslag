@@ -23,6 +23,7 @@ public class DevLauncher {
         initCryptoStoreConfig("truststore", TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP, "changeit");
 
         SpringApplication app = new SpringApplicationBuilder(ApplicationConfig.class)
+                .profiles("dev")
                 .build();
         app.run(args);
     }
