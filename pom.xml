@@ -20,9 +20,12 @@
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
+        <cxf.version>3.3.1</cxf.version>
+        <tjenestespesifikasjoner.version>1.2019.07.11-06.47-b55f47790a9d</tjenestespesifikasjoner.version>
     </properties>
 
     <dependencies>
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
@@ -41,12 +44,58 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- SOAP/CXF -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-core</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxws</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-transports-http</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-ws-security</artifactId>
+            <version>${cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.ws</groupId>
+            <artifactId>jaxws-ri</artifactId>
+            <version>2.3.1</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <!-- trenger denne . inneholder gamle com.sun.activation.registries klasser som er nødvendig -->
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+
+        <!-- WSDL -->
+        <dependency>
+            <groupId>no.nav.tjenestespesifikasjoner</groupId>
+            <artifactId>person-v3-tjenestespesifikasjon</artifactId>
+            <version>${tjenestespesifikasjoner.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
