@@ -26,7 +26,7 @@ public class PersonConsumerConfig {
     }
 
     @Bean
-    public PersonV3 getPort(@Value("${person.url}") String personV3Url) {
+    public PersonV3 getPort(@Value("${PERSON_V3_URL}") String personV3Url) {
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         factoryBean.setWsdlURL(PERSON_V3_WSDL);
         factoryBean.setServiceName(PERSON_V3_SERVICE);

@@ -4,3 +4,6 @@ no.nav.security.oidc:
     discoveryurl: https://security-token-service.nais.preprod.local/rest/v1/sts/.well-known/openid-configuration
     accepted_audience: ${ACCEPTEDAUDIENCE}
     cookie_name: ID_token
+
+SECURITYTOKENSERVICE_URL: https://sts-q0.preprod.local/SecurityTokenServiceProvider/
+PERSON_V3_URL: https://wasapp-q0.adeo.no/tpsws/ws/Person/v3
