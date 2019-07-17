@@ -20,6 +20,7 @@
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
+        <common-java-modules.version>1.2019.07.11-12.31-0b875ec24c4e</common-java-modules.version>
         <cxf.version>3.3.1</cxf.version>
         <oidc-support.version>0.2.18</oidc-support.version>
         <tjenestespesifikasjoner.version>1.2019.07.11-06.47-b55f47790a9d</tjenestespesifikasjoner.version>
@@ -97,6 +98,11 @@
             <version>${oidc-support.version}</version>
         </dependency>
         <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>log</artifactId>
+            <version>${common-java-modules.version}</version>
+        </dependency>
+        <dependency>
             <groupId>no.nav.security</groupId>
             <artifactId>oidc-test-support</artifactId>
             <version>${oidc-support.version}</version>
@@ -108,6 +114,36 @@
             <groupId>no.nav.tjenestespesifikasjoner</groupId>
             <artifactId>person-v3-tjenestespesifikasjon</artifactId>
             <version>${tjenestespesifikasjoner.version}</version>
+        </dependency>
+
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>5.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
         </dependency>
 
     </dependencies>

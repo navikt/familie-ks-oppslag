@@ -17,6 +17,8 @@ spec:
     initialDelay: 30
   vault:
     enabled: true
+  secureLogs:
+    enabled: true
   prometheus:
     enabled: true
     path: /internal/prometheus
