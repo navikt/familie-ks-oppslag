@@ -9,11 +9,13 @@ import org.apache.cxf.ws.security.trust.STSClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static no.nav.familie.ks.oppslag.felles.ws.sts.SecurityConstants.*;
+
 public class NAVSTSClient extends STSClient {
     public static final String DISABLE_CACHE_KEY = "NAVSTSClient.DISABLE_CACHE";
     private static final Logger logger = LoggerFactory.getLogger(NAVSTSClient.class);
     private static TokenStore tokenStore;
-    private static SluttBruker systemSluttBruker = new SluttBruker(PropertyUtil.getProperty("systembruker.username"), IdentType.Systemressurs);
+    private static SluttBruker systemSluttBruker = new SluttBruker(PropertyUtil.getProperty(SYSTEMUSER_USERNAME), IdentType.Systemressurs);
 
     private StsClientType type;
 
