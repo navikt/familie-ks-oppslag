@@ -8,5 +8,5 @@ no.nav.security.oidc:
 SECURITYTOKENSERVICE_URL: https://localhost:8063/soap/SecurityTokenServiceProvider/
 PERSON_V3_URL: https://localhost:8063/soap/tpsws/ws/Person/v3
 
-CREDENTIAL_USERNAME: srvfamilie-ks-oppsl
+CREDENTIAL_USERNAME: srvfamilie-ks-opps
 CREDENTIAL_PASSWORD: not-a-real-pw
