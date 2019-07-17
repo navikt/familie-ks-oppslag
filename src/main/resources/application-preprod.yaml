@@ -5,5 +5,5 @@ no.nav.security.oidc:
     accepted_audience: ${GYLDIGE_SRVBRUKERE}
     cookie_name: ID_token
 
-SECURITYTOKENSERVICE_URL: https://sts-q0.preprod.local/SecurityTokenServiceProvider/
-PERSON_V3_URL: https://wasapp-q0.adeo.no/tpsws/ws/Person/v3
+SECURITYTOKENSERVICE_URL: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
+PERSON_V3_URL: https://wasapp-q1.adeo.no/tpsws/ws/Person/v3

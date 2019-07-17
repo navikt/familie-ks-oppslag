@@ -49,5 +49,6 @@
     </logger>
 
     <logger name="org.apache.cxf" level="DEBUG"/>
+    <logger name="no.nav.familie.ks.oppslag.felles.ws.sts.NAVSTSClient" level="DEBUG" />
 
 </configuration>
