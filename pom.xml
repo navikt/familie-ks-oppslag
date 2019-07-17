@@ -20,7 +20,7 @@
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
-        <common-java-modules.version>1.2019.07.11-12.31-0b875ec24c4e</common-java-modules.version>
+        <common-java-modules.version>2018.10.02.19.54</common-java-modules.version>
         <cxf.version>3.3.1</cxf.version>
         <oidc-support.version>0.2.18</oidc-support.version>
         <tjenestespesifikasjoner.version>1.2019.07.11-06.47-b55f47790a9d</tjenestespesifikasjoner.version>
@@ -98,7 +98,7 @@
             <version>${oidc-support.version}</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
+            <groupId>no.nav.sbl</groupId>
             <artifactId>log</artifactId>
             <version>${common-java-modules.version}</version>
         </dependency>
