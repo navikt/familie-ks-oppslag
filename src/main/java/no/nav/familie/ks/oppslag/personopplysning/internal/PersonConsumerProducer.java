@@ -11,8 +11,8 @@ public class PersonConsumerProducer {
 
     @Bean
     public PersonConsumer personConsumer(PersonV3 consumerPort) {
-        PersonV3 port = wrapWithSts(consumerPort, NAVSTSClient.StsClientType.SYSTEM_SAML);
-        return new PersonConsumer(port);
+        //PersonV3 port = wrapWithSts(consumerPort, NAVSTSClient.StsClientType.SYSTEM_SAML);
+        return new PersonConsumer(consumerPort);
     }
 
     private PersonV3 wrapWithSts(PersonV3 port, NAVSTSClient.StsClientType samlTokenType) {

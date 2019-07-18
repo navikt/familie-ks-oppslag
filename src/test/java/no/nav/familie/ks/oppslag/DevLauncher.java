@@ -20,8 +20,7 @@ public class DevLauncher {
     private static final String TRUSTSTORE_PATH_PROP = "javax.net.ssl.trustStore";
 
     public static void main(String... args) {
-        initCryptoStoreConfig("truststore", TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP, "changeit");
-
+        //initCryptoStoreConfig("truststore", TRUSTSTORE_PATH_PROP, TRUSTSTORE_PASSW_PROP, "changeit");
         SpringApplication app = new SpringApplicationBuilder(ApplicationConfig.class)
                 .profiles("dev")
                 .build();
