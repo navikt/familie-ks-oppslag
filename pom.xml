@@ -97,6 +97,12 @@
             <groupId>no.nav.common</groupId>
             <artifactId>cxf</artifactId>
             <version>${common-java-modules.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>no.nav.common</groupId>
+                    <artifactId>log</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>no.nav.security</groupId>
