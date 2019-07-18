@@ -10,7 +10,6 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRespons
 import javax.xml.ws.soap.SOAPFaultException;
 
 public class PersonConsumer {
-    public static final String SERVICE_IDENTIFIER = "PersonV3";
 
     private PersonV3 port;
 

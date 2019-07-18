@@ -19,10 +19,10 @@ import java.time.LocalDate;
 @RequestMapping("/api/personopplysning")
 public class PersonopplysningerController {
 
-    private PersonopplysningerTjeneste personopplysningerTjeneste;
+    private PersonopplysningerService personopplysningerService;
 
-    public PersonopplysningerController(PersonopplysningerTjeneste personopplysningerTjeneste) {
-        this.personopplysningerTjeneste = personopplysningerTjeneste;
+    public PersonopplysningerController(PersonopplysningerService personopplysningerService) {
+        this.personopplysningerService = personopplysningerService;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "historikk")
@@ -30,6 +30,6 @@ public class PersonopplysningerController {
     public PersonhistorikkInfo historikk(@NotNull @RequestParam(name = "id") String aktørId) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør settes generelt i et filter elns
         LocalDate idag = LocalDate.now();
-        return personopplysningerTjeneste.hentHistorikkFor(new AktørId(aktørId), idag.minusYears(5), idag);
+        return personopplysningerService.hentHistorikkFor(new AktørId(aktørId), idag.minusYears(5), idag);
     }
 }

@@ -17,12 +17,12 @@ import java.util.Objects;
 
 @Service
 @ApplicationScope
-public class PersonopplysningerTjeneste {
+public class PersonopplysningerService {
 
     private final PersonConsumer personConsumer;
     private TpsOversetter oversetter;
 
-    public PersonopplysningerTjeneste(PersonConsumer personConsumer, TpsOversetter oversetter) {
+    public PersonopplysningerService(PersonConsumer personConsumer, TpsOversetter oversetter) {
         this.personConsumer = personConsumer;
         this.oversetter = oversetter;
     }
