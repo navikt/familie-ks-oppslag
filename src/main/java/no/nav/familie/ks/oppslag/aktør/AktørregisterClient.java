@@ -3,6 +3,7 @@ package no.nav.familie.ks.oppslag.aktør;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URI;
@@ -16,6 +17,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
+@Service
 public class AktørregisterClient {
 
     private static final String NAV_CONSUMER_ID = "Nav-Consumer-Id";

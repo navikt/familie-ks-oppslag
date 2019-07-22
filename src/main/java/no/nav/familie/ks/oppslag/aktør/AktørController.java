@@ -17,6 +17,10 @@ public class AktørController {
 
     AktørregisterClient aktørregisterClient;
 
+    AktørController(AktørregisterClient aktørregisterClient) {
+        this.aktørregisterClient = aktørregisterClient;
+    }
+
     @GetMapping
     @Unprotected
     public String getAktoerIdForPersonIdent(@NotNull @RequestParam(name = "ident") String personIdent) {
