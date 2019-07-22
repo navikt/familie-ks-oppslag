@@ -29,7 +29,7 @@ public class StsRestClient {
 
     private AccessTokenResponse cachedToken;
 
-    public StsRestClient(@Value("${STS_URL}") URI stsUrl, @Value("${CREDENTIAL_USERNAME}") String stsUsername, @Value("${CREDENTIAL_PASSWORD}") String stsPassword) {
+    public StsRestClient(@Value("${STS_REST_URL}") URI stsUrl, @Value("${CREDENTIAL_USERNAME}") String stsUsername, @Value("${CREDENTIAL_PASSWORD}") String stsPassword) {
         this.client = HttpClient.newHttpClient();
         this.stsUrl = URI.create(stsUrl + "/rest/v1/sts/token?grant_type=client_credentials&scope=openid");
         this.stsUsername = stsUsername;
