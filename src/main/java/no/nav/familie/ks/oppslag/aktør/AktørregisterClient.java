@@ -62,6 +62,7 @@ public class AktørregisterClient {
             } else if (response.statusCode() == HTTP_NOT_FOUND) {
                 throw new RuntimeException(String.format("Ident %s finnes ikke i Aktørregisteret", personIdent));
             } else {
+                LOG.info("Feilmelding fra Aktørreg: {}", response.body());
                 throw new RuntimeException(String.format("Feil ved kall mot Aktørregisteret. Statuskode %s", response.statusCode()));
             }
         } catch (IOException | InterruptedException e) {
