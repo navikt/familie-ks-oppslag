@@ -14,7 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan({ "no.nav.familie.ks.oppslag" })
 public class ApplicationConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfig.class);
 
     @Bean
     ServletWebServerFactory servletWebServerFactory() {
@@ -28,7 +28,7 @@ public class ApplicationConfig {
 
     @Bean
     public FilterRegistrationBean<LogFilter> logFilter() {
-        log.info("Registering LogFilter filter");
+        LOG.info("Registering LogFilter filter");
         final FilterRegistrationBean<LogFilter> filterRegistration = new FilterRegistrationBean<>();
         filterRegistration.setFilter(new LogFilter());
         filterRegistration.setOrder(1);

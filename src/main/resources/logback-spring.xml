@@ -48,4 +48,7 @@
         <appender-ref ref="metrics"/>
     </logger>
 
+    <logger name="java.net.http.HttpClient" level="DEBUG" />
+    <logger name="java.net.http.HttpRequest" level="DEBUG" />
+
 </configuration>
