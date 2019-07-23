@@ -44,7 +44,7 @@ public class AktørregisterClient {
     }
 
     public String getAktoerId(String personIdent) {
-        URI uri = URI.create(String.format("%s/identer?gjeldende=true", aktørRegisterUrl));
+        URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
         LOG.info("OIDC-token: {}", systembrukerToken);
 
