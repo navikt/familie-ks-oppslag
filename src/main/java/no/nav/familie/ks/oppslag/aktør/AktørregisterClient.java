@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.aktør;
 
+import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 public class AktørregisterClient {
 
     private static final String NAV_CONSUMER_ID = "Nav-Consumer-Id";
+    private static final String NAV_CALL_ID = "Nav-Call-Id";
     private static final String NAV_PERSONIDENTER = "Nav-Personidenter";
     private static final String AKTOERID_IDENTGRUPPE = "AktoerId";
     private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
@@ -51,6 +53,7 @@ public class AktørregisterClient {
                 .header(ACCEPT, "application/json")
                 .header(NAV_PERSONIDENTER, personIdent)
                 .header(NAV_CONSUMER_ID, consumer)
+                .header(NAV_CALL_ID, MDCOperations.getCallId())
                 .header(AUTHORIZATION, "Bearer " + systembrukerToken)
                 .timeout(Duration.ofSeconds(5))
                 .build();
