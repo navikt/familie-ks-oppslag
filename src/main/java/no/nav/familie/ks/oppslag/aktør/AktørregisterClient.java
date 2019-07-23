@@ -1,6 +1,8 @@
 package no.nav.familie.ks.oppslag.aktør;
 
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class AktørregisterClient {
     private static final String NAV_CONSUMER_ID = "Nav-Consumer-Id";
     private static final String NAV_PERSONIDENTER = "Nav-Personidenter";
     private static final String AKTOERID_IDENTGRUPPE = "AktoerId";
+    private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
@@ -41,12 +44,15 @@ public class AktørregisterClient {
     public String getAktoerId(String personIdent) {
         URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
 
+        String systemOidcToken = stsRestClient.getSystemOIDCToken();
+        LOG.info("OIDC: {}", systemOidcToken);
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .header(ACCEPT, "application/json")
                 .header(NAV_PERSONIDENTER, personIdent)
                 .header(NAV_CONSUMER_ID, consumer)
-                .header(AUTHORIZATION, "Bearer " + stsRestClient.getSystemOIDCToken())
+                .header(AUTHORIZATION, "Bearer " + systemOidcToken)
                 .timeout(Duration.ofSeconds(5))
                 .build();
         try {

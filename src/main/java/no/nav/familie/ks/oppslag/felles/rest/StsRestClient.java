@@ -31,7 +31,7 @@ public class StsRestClient {
 
     public StsRestClient(@Value("${STS_REST_URL}") URI stsUrl, @Value("${CREDENTIAL_USERNAME}") String stsUsername, @Value("${CREDENTIAL_PASSWORD}") String stsPassword) {
         this.client = HttpClient.newHttpClient();
-        this.stsUrl = URI.create(stsUrl + "/rest/v1/sts/token?grant_type=client_credentials&scope=openid");
+        this.stsUrl = URI.create(stsUrl + "?grant_type=client_credentials&scope=openid");
         this.stsUsername = stsUsername;
         this.stsPassword = stsPassword;
     }
