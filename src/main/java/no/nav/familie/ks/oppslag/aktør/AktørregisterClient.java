@@ -1,7 +1,7 @@
 package no.nav.familie.ks.oppslag.aktør;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import no.nav.familie.ks.oppslag.aktør.internal.AktørIkkeFunnetException;
+import no.nav.familie.ks.oppslag.aktør.domene.Aktør;
 import no.nav.familie.ks.oppslag.aktør.internal.AktørResponse;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
@@ -21,7 +21,6 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Optional;
 
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static javax.ws.rs.core.HttpHeaders.ACCEPT;
 import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
@@ -77,15 +76,15 @@ public class AktørregisterClient {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOG.info("Response fra aktørreg. Statuskode: {}, Body: {}", response.statusCode(), response.body());
+            Aktør aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class).get(personIdent);
 
-            if (response.statusCode() == HTTP_OK) {
-                AktørResponse aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class);
-                return aktørResponse.get(personIdent).getIdenter().get(0).getIdent();
-            } else if (response.statusCode() == HTTP_NOT_FOUND) {
-                throw new AktørIkkeFunnetException(personIdent);
+            if (response.statusCode() == HTTP_OK && aktørResponse.getFeilmelding() == null) {
+                return aktørResponse.getIdenter().get(0).getIdent();
             } else {
-                throw new RuntimeException(String.format("Feil ved kall mot Aktørregisteret. Statuskode: %s. Feilmelding: %s", response.statusCode(), response.body()));
+                throw new RuntimeException(String.format("Feil ved kall mot Aktørregisteret. Statuskode: %s. Feilmelding: %s",
+                        response.statusCode(),
+                        aktørResponse.getFeilmelding())
+                );
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall mot Aktørregisteret", e);
