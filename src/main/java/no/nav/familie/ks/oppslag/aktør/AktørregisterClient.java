@@ -56,7 +56,6 @@ public class AktørregisterClient {
 
     public String getAktørId(String personIdent) {
         return Optional.ofNullable(aktørCache().get(personIdent)).orElseGet(() -> {
-            LOG.info("Henter aktørid fra register");
             String aktørId = hentAktørIdFraRegister(personIdent);
             aktørCache().put(personIdent, aktørId);
             return aktørId;
@@ -78,6 +77,7 @@ public class AktørregisterClient {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            LOG.info("Response fra aktørreg: {}", response.body());
 
             if (response.statusCode() == HTTP_OK) {
                 AktørResponse aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class);
