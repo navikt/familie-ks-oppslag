@@ -25,6 +25,6 @@ public class AktørController {
     @Unprotected
     public String getAktoerIdForPersonIdent(@NotNull @RequestParam(name = "ident") String personIdent) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør erstattes med en interceptor
-        return aktørregisterClient.getAktoerId(personIdent);
+        return aktørregisterClient.getAktørId(personIdent);
     }
 }

@@ -5,6 +5,10 @@ import no.nav.familie.ks.oppslag.aktør.internal.AktørIkkeFunnetException;
 import no.nav.familie.ks.oppslag.aktør.internal.AktørResponse;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
+import org.ehcache.Cache;
+import org.ehcache.CacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -15,6 +19,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.Optional;
 
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
@@ -28,24 +33,37 @@ public class AktørregisterClient {
     private static final String NAV_CALL_ID = "Nav-Call-Id";
     private static final String NAV_PERSONIDENTER = "Nav-Personidenter";
     private static final String AKTOERID_IDENTGRUPPE = "AktoerId";
+    private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
     private String aktørRegisterUrl;
     private String consumer;
     private ObjectMapper objectMapper;
+    private final CacheManager aktørCacheManager;
 
     AktørregisterClient(@Value("${AKTOERID_URL}") String aktørRegisterUrl,
                         @Value("${CREDENTIAL_USERNAME}") String consumer,
-                        @Autowired StsRestClient stsRestClient) {
+                        @Autowired StsRestClient stsRestClient,
+                        @Autowired CacheManager aktørCacheManager) {
         this.aktørRegisterUrl = aktørRegisterUrl;
         this.httpClient = HttpClient.newHttpClient();
         this.consumer = consumer;
         this.stsRestClient = stsRestClient;
         this.objectMapper = new ObjectMapper();
+        this.aktørCacheManager = aktørCacheManager;
     }
 
-    public String getAktoerId(String personIdent) {
+    public String getAktørId(String personIdent) {
+        return Optional.ofNullable(aktørCache().get(personIdent)).orElseGet(() -> {
+            LOG.info("Henter aktørid fra register");
+            String aktørId = hentAktørIdFraRegister(personIdent);
+            aktørCache().put(personIdent, aktørId);
+            return aktørId;
+        });
+    }
+
+    private String hentAktørIdFraRegister(String personIdent) {
         URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
 
@@ -72,5 +90,9 @@ public class AktørregisterClient {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall mot Aktørregisteret", e);
         }
+    }
+
+    private Cache<String, String> aktørCache() {
+        return aktørCacheManager.getCache("aktørIdCache", String.class, String.class);
     }
 }
