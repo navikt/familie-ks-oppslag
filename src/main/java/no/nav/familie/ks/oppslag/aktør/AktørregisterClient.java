@@ -77,7 +77,7 @@ public class AktørregisterClient {
                 .build();
         try {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOG.info("Response fra aktørreg: {}", response.body());
+            LOG.info("Response fra aktørreg. Statuskode: {}, Body: {}", response.statusCode(), response.body());
 
             if (response.statusCode() == HTTP_OK) {
                 AktørResponse aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class);
