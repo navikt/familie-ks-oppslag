@@ -1,11 +1,10 @@
 package no.nav.familie.ks.oppslag.aktør;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.familie.ks.oppslag.aktør.internal.AktørIkkeFunnetException;
 import no.nav.familie.ks.oppslag.aktør.internal.AktørResponse;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,6 @@ public class AktørregisterClient {
     private static final String NAV_CALL_ID = "Nav-Call-Id";
     private static final String NAV_PERSONIDENTER = "Nav-Personidenter";
     private static final String AKTOERID_IDENTGRUPPE = "AktoerId";
-    private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
@@ -67,10 +65,9 @@ public class AktørregisterClient {
                 AktørResponse aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class);
                 return aktørResponse.get(personIdent).getIdenter().get(0).getIdent();
             } else if (response.statusCode() == HTTP_NOT_FOUND) {
-                throw new RuntimeException(String.format("Ident %s finnes ikke i Aktørregisteret", personIdent));
+                throw new AktørIkkeFunnetException(personIdent);
             } else {
-                LOG.info("Feilmelding fra Aktørreg: {}", response.body());
-                throw new RuntimeException(String.format("Feil ved kall mot Aktørregisteret. Statuskode %s", response.statusCode()));
+                throw new RuntimeException(String.format("Feil ved kall mot Aktørregisteret. Statuskode: %s. Feilmelding: %s", response.statusCode(), response.body()));
             }
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall mot Aktørregisteret", e);
