@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.aktør;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class AktørregisterClient {
     private StsRestClient stsRestClient;
     private String aktørRegisterUrl;
     private String consumer;
+    private ObjectMapper objectMapper;
 
     AktørregisterClient(@Value("${AKTOERID_URL}") String aktørRegisterUrl,
                         @Value("${CREDENTIAL_USERNAME}") String consumer,
@@ -41,6 +43,7 @@ public class AktørregisterClient {
         this.httpClient = HttpClient.newHttpClient();
         this.consumer = consumer;
         this.stsRestClient = stsRestClient;
+        this.objectMapper = new ObjectMapper();
     }
 
     public String getAktoerId(String personIdent) {
@@ -60,7 +63,8 @@ public class AktørregisterClient {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
             if (response.statusCode() == HTTP_OK) {
-                return response.body();
+                AktørResponse aktørResponse = objectMapper.readValue(response.body(), AktørResponse.class);
+                return aktørResponse.get(personIdent).getIdenter().get(0).getIdent();
             } else if (response.statusCode() == HTTP_NOT_FOUND) {
                 throw new RuntimeException(String.format("Ident %s finnes ikke i Aktørregisteret", personIdent));
             } else {
