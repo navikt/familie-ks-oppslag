@@ -3,15 +3,15 @@ package no.nav.familie.ks.oppslag.aktør.domene;
 public class Ident {
 
     private String ident;
-    private String identGruppe;
+    private String identgruppe;
     private boolean gjeldende;
 
     public String getIdent() {
         return this.ident;
     }
 
-    public String getIdentGruppe() {
-        return this.identGruppe;
+    public String getIdentgruppe() {
+        return this.identgruppe;
     }
 
     public boolean getGjeldende() {
