@@ -1,6 +1,7 @@
 package no.nav.familie.ks.oppslag.aktør;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.familie.ks.oppslag.aktør.internal.AktørResponse;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.slf4j.Logger;

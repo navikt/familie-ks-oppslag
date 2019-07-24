@@ -1,4 +1,4 @@
-package no.nav.familie.ks.oppslag.aktør;
+package no.nav.familie.ks.oppslag.aktør.internal;
 
 import no.nav.familie.ks.oppslag.aktør.domene.Aktør;
 
