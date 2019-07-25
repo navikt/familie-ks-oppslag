@@ -16,7 +16,7 @@ public class AktørService {
     private AktørregisterClient aktørregisterClient;
     private final CacheManager aktørCacheManager;
 
-    AktørService(@Autowired AktørregisterClient aktørregisterClient,
+    public AktørService(@Autowired AktørregisterClient aktørregisterClient,
                  @Autowired CacheManager aktørCacheManager) {
         this.aktørCacheManager = aktørCacheManager;
         this.aktørregisterClient = aktørregisterClient;
