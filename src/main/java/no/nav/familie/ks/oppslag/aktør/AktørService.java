@@ -1,5 +1,7 @@
 package no.nav.familie.ks.oppslag.aktør;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.ks.oppslag.aktør.domene.Aktør;
 import no.nav.familie.ks.oppslag.aktør.internal.AktørResponse;
@@ -9,6 +11,7 @@ import org.ehcache.CacheManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.net.http.HttpResponse;
 import java.util.Optional;
 
@@ -50,7 +53,7 @@ public class AktørService {
                         aktørResponse.getFeilmelding())
                 );
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Klarte ikke deserialisere respons fra Aktørregisteret", e);
         }
     }
