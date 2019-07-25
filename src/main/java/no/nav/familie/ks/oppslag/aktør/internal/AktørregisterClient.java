@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.aktør.internal;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ public class AktørregisterClient {
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
+    private ObjectMapper objectMapper;
     private String aktørRegisterUrl;
     private String consumer;
 
@@ -34,9 +36,10 @@ public class AktørregisterClient {
         this.consumer = consumer;
         this.aktørRegisterUrl = aktørRegisterUrl;
         this.httpClient = HttpClient.newHttpClient();
+        this.objectMapper = new ObjectMapper();
     }
 
-    public HttpResponse<String> hentAktørId(String personIdent) {
+    public AktørResponse hentAktørId(String personIdent) {
         URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
 
@@ -50,7 +53,8 @@ public class AktørregisterClient {
                 .timeout(Duration.ofSeconds(5))
                 .build();
         try {
-            return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            return objectMapper.readValue(httpResponse.body(), AktørResponse.class);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall mot Aktørregisteret", e);
         }

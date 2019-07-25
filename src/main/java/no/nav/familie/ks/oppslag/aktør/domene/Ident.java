@@ -17,4 +17,9 @@ public class Ident {
     public boolean getGjeldende() {
         return this.gjeldende;
     }
+
+    public Ident withIdent(String ident) {
+        this.ident = ident;
+        return this;
+    }
 }

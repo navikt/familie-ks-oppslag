@@ -14,4 +14,14 @@ public class Aktør {
     public String getFeilmelding() {
         return this.feilmelding;
     }
+
+    public Aktør withIdenter(List<Ident> identer) {
+        this.identer = identer;
+        return this;
+    }
+
+    public Aktør withFeilmelding(String feilmelding) {
+        this.feilmelding = feilmelding;
+        return this;
+    }
 }
