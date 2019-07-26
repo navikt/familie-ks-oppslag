@@ -1,8 +1,6 @@
 package no.nav.familie.ks.oppslag.felles.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -31,8 +29,6 @@ public class StsRestClient {
 
     private AccessTokenResponse cachedToken;
 
-    private static final Logger LOG = LoggerFactory.getLogger(StsRestClient.class);
-
     public StsRestClient(@Value("${STS_REST_URL}") URI stsUrl, @Value("${CREDENTIAL_USERNAME}") String stsUsername, @Value("${CREDENTIAL_PASSWORD}") String stsPassword) {
         this.client = HttpClient.newHttpClient();
         this.stsUrl = URI.create(stsUrl + "/rest/v1/sts/token?grant_type=client_credentials&scope=openid");
@@ -51,7 +47,6 @@ public class StsRestClient {
     }
 
     public String getSystemOIDCToken() {
-        LOG.info("STS-URL: {}", this.stsUrl.toString());
         if (isTokenValid()) {
             return cachedToken.getAccess_token();
         }

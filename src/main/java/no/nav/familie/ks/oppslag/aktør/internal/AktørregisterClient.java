@@ -3,8 +3,6 @@ package no.nav.familie.ks.oppslag.aktør.internal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -24,7 +22,6 @@ public class AktørregisterClient {
     private static final String NAV_CALL_ID = "Nav-Call-Id";
     private static final String NAV_PERSONIDENTER = "Nav-Personidenter";
     private static final String AKTOERID_IDENTGRUPPE = "AktoerId";
-    private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
@@ -45,7 +42,6 @@ public class AktørregisterClient {
     public AktørResponse hentAktørId(String personIdent) {
         URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
-        LOG.info("Token fra STS: {}", systembrukerToken);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
