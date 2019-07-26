@@ -16,8 +16,8 @@ public class AktørService {
     private AktørregisterClient aktørregisterClient;
     private final CacheManager aktørCacheManager;
 
-    public AktørService(@Autowired AktørregisterClient aktørregisterClient,
-                 @Autowired CacheManager aktørCacheManager) {
+    @Autowired
+    public AktørService(AktørregisterClient aktørregisterClient, CacheManager aktørCacheManager) {
         this.aktørCacheManager = aktørCacheManager;
         this.aktørregisterClient = aktørregisterClient;
     }
@@ -33,7 +33,6 @@ public class AktørService {
     private String hentAktørIdFraRegister(String personIdent) {
         AktørResponse response = aktørregisterClient.hentAktørId(personIdent);
         Aktør aktørResponse = response.get(personIdent);
-        System.out.println(aktørResponse);
         if (aktørResponse.getFeilmelding() == null) {
             return aktørResponse.getIdenter().get(0).getIdent();
         } else {

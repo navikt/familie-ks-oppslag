@@ -27,10 +27,10 @@ public class AktørClientTestConfig {
         Ident testIdent = new Ident().withIdent("1000011111111");
 
         when(aktørregisterClient.hentAktørId(stringCaptor.capture())).thenAnswer(invocation -> {
-            String arg = invocation.getArgument(0);
+            String identArg = invocation.getArgument(0);
 
             return new AktørResponse()
-                    .withAktør(arg, new Aktør().withIdenter(Collections.singletonList(testIdent)));
+                    .withAktør(identArg, new Aktør().withIdenter(Collections.singletonList(testIdent)));
         });
         return aktørregisterClient;
     }
