@@ -2,15 +2,10 @@ package no.nav.familie.ks.oppslag.personopplysning;
 
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
-import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.TpsOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.internal.PersonConsumer;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentSikkerhetstiltakPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.*;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.AktoerId;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +27,6 @@ public class PersonopplysningerService {
         this.personConsumer = personConsumer;
         this.oversetter = oversetter;
     }
-
 
     public PersonhistorikkInfo hentHistorikkFor(AktørId aktørId, LocalDate fom, LocalDate tom) {
         Objects.requireNonNull(aktørId, "aktørId");

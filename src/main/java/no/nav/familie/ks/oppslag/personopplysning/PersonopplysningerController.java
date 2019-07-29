@@ -3,6 +3,7 @@ package no.nav.familie.ks.oppslag.personopplysning;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
+import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.security.oidc.api.ProtectedWithClaims;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
