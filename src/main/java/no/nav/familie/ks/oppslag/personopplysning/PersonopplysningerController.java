@@ -5,6 +5,7 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.security.oidc.api.ProtectedWithClaims;
+import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @RestController
-@ProtectedWithClaims(issuer = "intern")
+//@ProtectedWithClaims(issuer = "intern")
+@Unprotected
 @RequestMapping("/api/personopplysning")
 public class PersonopplysningerController {
 
