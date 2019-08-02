@@ -1,15 +1,10 @@
 package no.nav.familie.ks.oppslag.personopplysning;
 
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
-import no.nav.familie.ks.oppslag.personopplysning.domene.TpsOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.internal.PersonConsumer;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkSikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.binding.*;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -39,12 +34,12 @@ public class PersonopplysningerTestConfig {
     @Bean
     @Profile("mock-personopplysninger")
     @Primary
-    PersonopplysningerService personopplysningerServiceMock(@Autowired TpsOversetter tpsOversetter) throws HentPersonSikkerhetsbegrensning, HentPersonPersonIkkeFunnet, HentPersonhistorikkSikkerhetsbegrensning, HentPersonhistorikkPersonIkkeFunnet {
-        PersonConsumer personConsumerMock = mock(PersonConsumer.class);
-        when(personConsumerMock.hentPersonhistorikkResponse(any())).thenReturn(hentPersonHistorikkResponse());
-
-        return new PersonopplysningerService(personConsumerMock, tpsOversetter);
+    public PersonConsumer personConsumerMock() throws HentPersonhistorikkSikkerhetsbegrensning, HentPersonhistorikkPersonIkkeFunnet {
+        PersonConsumer personConsumer = mock(PersonConsumer.class);
+        when(personConsumer.hentPersonhistorikkResponse(any())).thenReturn(hentPersonHistorikkResponse());
+        return personConsumer;
     }
+
     private HentPersonhistorikkResponse hentPersonHistorikkResponse() {
         HentPersonhistorikkResponse response = new HentPersonhistorikkResponse();
         response.setAktoer(new AktoerId().withAktoerId(AKTØR_ID));
