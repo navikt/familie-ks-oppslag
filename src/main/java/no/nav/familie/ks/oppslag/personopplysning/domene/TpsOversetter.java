@@ -4,6 +4,7 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.Adresseinfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.TpsAdresseOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.Familierelasjon;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.RelasjonsRolleType;
+import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.SivilstandType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.status.PersonstatusPeriode;
 import no.nav.familie.ks.oppslag.personopplysning.domene.status.PersonstatusType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.Landkode;
@@ -11,13 +12,9 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.Landkode;
 
 import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.StatsborgerskapPeriode;
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Aktoer;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Bruker;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Doedsdato;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Foedselsdato;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Personstatus;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.Statsborgerskap;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +46,7 @@ public class TpsOversetter {
         return landkode;
     }
 
-    public Personinfo tilBrukerInfo(AktørId aktørId, Bruker bruker) { // NOSONAR - ingen forbedring å forkorte metoden her
+    /*public Personinfo tilBrukerInfo(AktørId aktørId, Bruker bruker) { // NOSONAR - ingen forbedring å forkorte metoden her
         String navn = bruker.getPersonnavn().getSammensattNavn();
         String adresse = tpsAdresseOversetter.finnAdresseFor(bruker);
         String adresseLandkode = tpsAdresseOversetter.finnAdresseLandkodeFor(bruker);
@@ -89,6 +86,28 @@ public class TpsOversetter {
                 .medDiskresjonsKode(diskresjonskode)
                 .medAdresseInfoList(adresseinfoList)
                 .medLandkode(landkode)
+                .build();
+    }*/
+
+    public Personinfo tilPersoninfo(AktørId aktørId, Person person) {
+
+        Set<Familierelasjon> familierelasjoner = person.getHarFraRolleI().stream()
+                .map(this::tilRelasjon)
+                .collect(toSet());
+
+        String diskresjonskode = person.getDiskresjonskode() == null ? null : person.getDiskresjonskode().getValue();
+
+        return new Personinfo.Builder()
+                .medAktørId(aktørId)
+                .medFamilierelasjon(familierelasjoner)
+                .medAdresse(tpsAdresseOversetter.finnAdresseFor(person))
+                .medPersonstatusType(tilPersonstatusType(person.getPersonstatus()))
+                .medSivilstandType(tilSivilstandType(person.getSivilstand()))
+                .medStatsborgerskap(utledLandkode(person.getStatsborgerskap()))
+                .medFødselsdato(finnFødselsdato(person))
+                .medDødsdato(finnDødsdato(person))
+                .medDiskresjonsKode(diskresjonskode)
+                .medNavn(person.getPersonnavn().getSammensattNavn())
                 .build();
     }
 
@@ -144,7 +163,11 @@ public class TpsOversetter {
         return PersonstatusType.valueOf(personstatus.getPersonstatus().getValue());
     }
 
-    private LocalDate finnDødsdato(Bruker person) {
+    private SivilstandType tilSivilstandType(Sivilstand sivilstand) {
+        return SivilstandType.valueOf(sivilstand.getSivilstand().getValue());
+    }
+
+    private LocalDate finnDødsdato(Person person) {
         LocalDate dødsdato = null;
         Doedsdato dødsdatoJaxb = person.getDoedsdato();
         if (dødsdatoJaxb != null) {
@@ -153,7 +176,7 @@ public class TpsOversetter {
         return dødsdato;
     }
 
-    private LocalDate finnFødselsdato(Bruker person) {
+    private LocalDate finnFødselsdato(Person person) {
         LocalDate fødselsdato = null;
         Foedselsdato fødselsdatoJaxb = person.getFoedselsdato();
         if (fødselsdatoJaxb != null) {

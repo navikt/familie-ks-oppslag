@@ -3,6 +3,7 @@ package no.nav.familie.ks.oppslag.personopplysning.domene;
 
 import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.Adresseinfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.Familierelasjon;
+import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.SivilstandType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.status.PersonstatusType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.Landkode;
 
@@ -24,6 +25,7 @@ public class Personinfo {
     private LocalDate fødselsdato;
     private LocalDate dødsdato;
     private PersonstatusType personstatus;
+    private SivilstandType sivilstand;
     private Set<Familierelasjon> familierelasjoner = Collections.emptySet();
     private Landkode statsborgerskap;
     private String utlandsadresse;
@@ -52,6 +54,8 @@ public class Personinfo {
     public PersonstatusType getPersonstatus() {
         return personstatus;
     }
+
+    public SivilstandType getSivilstand() { return sivilstand; }
 
     public LocalDate getFødselsdato() {
         return fødselsdato;
@@ -157,6 +161,11 @@ public class Personinfo {
             return this;
         }
 
+        public Builder medSivilstandType(SivilstandType sivilstand) {
+            personinfoMal.sivilstand = sivilstand;
+            return this;
+        }
+
         public Builder medFamilierelasjon(Set<Familierelasjon> familierelasjon) {
             personinfoMal.familierelasjoner = familierelasjon;
             return this;
@@ -199,7 +208,7 @@ public class Personinfo {
 
         public Personinfo build() {
             requireNonNull(personinfoMal.aktørId, "Navbruker må ha aktørId"); //$NON-NLS-1$
-            requireNonNull(personinfoMal.personIdent, "Navbruker må ha fødselsnummer"); //$NON-NLS-1$
+            //requireNonNull(personinfoMal.personIdent, "Navbruker må ha fødselsnummer"); //$NON-NLS-1$
             requireNonNull(personinfoMal.navn, "Navbruker må ha navn"); //$NON-NLS-1$
             requireNonNull(personinfoMal.fødselsdato, "Navbruker må ha fødselsdato"); //$NON-NLS-1$
             return personinfoMal;
