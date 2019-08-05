@@ -4,14 +4,22 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.TpsOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.internal.PersonConsumer;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.AktoerId;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -21,6 +29,8 @@ public class PersonopplysningerService {
 
     private final PersonConsumer personConsumer;
     private TpsOversetter oversetter;
+
+    private static final Logger LOG = LoggerFactory.getLogger(PersonopplysningerService.class);
 
     public PersonopplysningerService(PersonConsumer personConsumer, TpsOversetter oversetter) {
         this.personConsumer = personConsumer;
@@ -42,6 +52,21 @@ public class PersonopplysningerService {
         } catch (HentPersonhistorikkPersonIkkeFunnet hentPersonhistorikkPersonIkkeFunnet) {
             // Fant ikke personen returnerer tomt sett
             return PersonhistorikkInfo.builder().medAktørId(aktørId.getId()).build();
+        }
+    }
+
+    public HentPersonResponse hentPersoninfoFor(AktørId aktørId) {
+        var request = new HentPersonRequest();
+        request.setAktoer(new AktoerId().withAktoerId(aktørId.getId()));
+        request.withInformasjonsbehov(Collections.singletonList(Informasjonsbehov.FAMILIERELASJONER));
+        try {
+            return personConsumer.hentPersonResponse(request);
+        } catch (HentPersonSikkerhetsbegrensning hentPersonSikkerhetsbegrensning) {
+            LOG.info("Ikke tilgang til å hente personinfo for person");
+            throw new IllegalArgumentException(hentPersonSikkerhetsbegrensning);
+        } catch (HentPersonPersonIkkeFunnet hentPersonPersonIkkeFunnet) {
+            LOG.info("Hent Personinfo: Personen finnes ikke i TPS");
+            throw new IllegalArgumentException(hentPersonPersonIkkeFunnet);
         }
     }
 }
