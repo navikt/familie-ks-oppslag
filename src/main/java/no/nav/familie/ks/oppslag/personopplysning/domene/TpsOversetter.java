@@ -189,11 +189,11 @@ public class TpsOversetter {
         String rollekode = familierelasjon.getTilRolle().getValue();
         RelasjonsRolleType relasjonsrolle = RelasjonsRolleType.valueOf(rollekode);
         String adresse = tpsAdresseOversetter.finnAdresseFor(familierelasjon.getTilPerson());
-        PersonIdent personIdent = (PersonIdent) familierelasjon.getTilPerson().getAktoer();
-        no.nav.familie.ks.oppslag.personopplysning.domene.PersonIdent ident = no.nav.familie.ks.oppslag.personopplysning.domene.PersonIdent.fra(personIdent.getIdent().getIdent());
+        AktoerId aktoer = (AktoerId) familierelasjon.getTilPerson().getAktoer();
+        AktørId aktørId = aktoer == null ? null : new AktørId(aktoer.getAktoerId());
         Boolean harSammeBosted = familierelasjon.isHarSammeBosted();
 
-        return new Familierelasjon(ident, relasjonsrolle,
+        return new Familierelasjon(aktørId, relasjonsrolle,
                 tilLocalDate(familierelasjon.getTilPerson().getFoedselsdato()), adresse, harSammeBosted);
     }
 

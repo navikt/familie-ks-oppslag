@@ -1,46 +1,27 @@
 package no.nav.familie.ks.oppslag.personopplysning.domene.relasjon;
 
-
-import no.nav.familie.ks.oppslag.personopplysning.domene.PersonIdent;
+import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 
 import java.time.LocalDate;
 
 public class Familierelasjon {
-    private PersonIdent personIdent;
+    private AktørId aktørId;
     private RelasjonsRolleType relasjonsrolle;
     private LocalDate fødselsdato;
     private String adresse;
     private Boolean harSammeBosted;
 
-    /**
-     * @deprecated bruk ctor med PersonIdent
-     */
-    @Deprecated
-    public Familierelasjon(String fnr, RelasjonsRolleType relasjonsrolle, LocalDate fødselsdato,
+    public Familierelasjon(AktørId aktørId, RelasjonsRolleType relasjonsrolle, LocalDate fødselsdato,
                            String adresse, Boolean harSammeBosted) {
-
-        this(PersonIdent.fra(fnr), relasjonsrolle, fødselsdato, adresse, harSammeBosted);
-    }
-
-    public Familierelasjon(PersonIdent personIdent, RelasjonsRolleType relasjonsrolle, LocalDate fødselsdato,
-                           String adresse, Boolean harSammeBosted) {
-        this.personIdent = personIdent;
+        this.aktørId = aktørId;
         this.relasjonsrolle = relasjonsrolle;
         this.fødselsdato = fødselsdato;
         this.adresse = adresse;
         this.harSammeBosted = harSammeBosted;
     }
 
-    /**
-     * @deprecated bruk {@link #getPersonIdent()}
-     */
-    @Deprecated
-    public String getFnr() {
-        return personIdent.getIdent();
-    }
-
-    public PersonIdent getPersonIdent() {
-        return personIdent;
+    public AktørId getAktørId() {
+        return aktørId;
     }
 
     public RelasjonsRolleType getRelasjonsrolle() {
@@ -57,7 +38,6 @@ public class Familierelasjon {
 
     @Override
     public String toString() {
-        // tar ikke med personIdent i toString så det ikke lekkeri logger etc.
         return getClass().getSimpleName()
                 + "<relasjon=" + relasjonsrolle  //$NON-NLS-1$
                 + ", fødselsdato=" + fødselsdato //$NON-NLS-1$
