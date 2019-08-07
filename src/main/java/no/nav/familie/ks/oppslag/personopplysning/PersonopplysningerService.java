@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import java.time.LocalDate;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -58,7 +58,7 @@ public class PersonopplysningerService {
     public Personinfo hentPersoninfoFor(AktørId aktørId) {
         var request = new HentPersonRequest();
         request.setAktoer(new AktoerId().withAktoerId(aktørId.getId()));
-        request.withInformasjonsbehov(Collections.singletonList(Informasjonsbehov.FAMILIERELASJONER));
+        request.withInformasjonsbehov(List.of(Informasjonsbehov.FAMILIERELASJONER, Informasjonsbehov.ADRESSE));
         try {
             var response = personConsumer.hentPersonResponse(request);
             return oversetter.tilPersoninfo(aktørId, response.getPerson());

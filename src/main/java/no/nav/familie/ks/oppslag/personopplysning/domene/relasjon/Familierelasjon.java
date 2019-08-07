@@ -8,15 +8,13 @@ public class Familierelasjon {
     private AktørId aktørId;
     private RelasjonsRolleType relasjonsrolle;
     private LocalDate fødselsdato;
-    private String adresse;
     private Boolean harSammeBosted;
 
     public Familierelasjon(AktørId aktørId, RelasjonsRolleType relasjonsrolle, LocalDate fødselsdato,
-                           String adresse, Boolean harSammeBosted) {
+                           Boolean harSammeBosted) {
         this.aktørId = aktørId;
         this.relasjonsrolle = relasjonsrolle;
         this.fødselsdato = fødselsdato;
-        this.adresse = adresse;
         this.harSammeBosted = harSammeBosted;
     }
 
@@ -26,10 +24,6 @@ public class Familierelasjon {
 
     public RelasjonsRolleType getRelasjonsrolle() {
         return relasjonsrolle;
-    }
-
-    public String getAdresse() {
-        return adresse;
     }
 
     public Boolean getHarSammeBosted() {

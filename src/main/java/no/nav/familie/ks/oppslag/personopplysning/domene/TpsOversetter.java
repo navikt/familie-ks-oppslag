@@ -188,13 +188,12 @@ public class TpsOversetter {
     private Familierelasjon tilRelasjon(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon familierelasjon) {
         String rollekode = familierelasjon.getTilRolle().getValue();
         RelasjonsRolleType relasjonsrolle = RelasjonsRolleType.valueOf(rollekode);
-        String adresse = tpsAdresseOversetter.finnAdresseFor(familierelasjon.getTilPerson());
         AktoerId aktoer = (AktoerId) familierelasjon.getTilPerson().getAktoer();
         AktørId aktørId = aktoer == null ? null : new AktørId(aktoer.getAktoerId());
         Boolean harSammeBosted = familierelasjon.isHarSammeBosted();
 
         return new Familierelasjon(aktørId, relasjonsrolle,
-                tilLocalDate(familierelasjon.getTilPerson().getFoedselsdato()), adresse, harSammeBosted);
+                tilLocalDate(familierelasjon.getTilPerson().getFoedselsdato()), harSammeBosted);
     }
 
     private LocalDate tilLocalDate(Foedselsdato fødselsdatoJaxb) {
