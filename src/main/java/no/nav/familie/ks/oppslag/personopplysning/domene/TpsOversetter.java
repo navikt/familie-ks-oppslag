@@ -1,6 +1,5 @@
 package no.nav.familie.ks.oppslag.personopplysning.domene;
 
-import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.Adresseinfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.TpsAdresseOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.Familierelasjon;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.RelasjonsRolleType;
@@ -13,7 +12,6 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.Landkode;
 import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.StatsborgerskapPeriode;
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkResponse;
 import org.slf4j.Logger;
@@ -21,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -46,50 +43,8 @@ public class TpsOversetter {
         return landkode;
     }
 
-    /*public Personinfo tilBrukerInfo(AktørId aktørId, Bruker bruker) { // NOSONAR - ingen forbedring å forkorte metoden her
-        String navn = bruker.getPersonnavn().getSammensattNavn();
-        String adresse = tpsAdresseOversetter.finnAdresseFor(bruker);
-        String adresseLandkode = tpsAdresseOversetter.finnAdresseLandkodeFor(bruker);
-        String utlandsadresse = tpsAdresseOversetter.finnUtlandsadresseFor(bruker);
-
-        LocalDate fødselsdato = finnFødselsdato(bruker);
-        LocalDate dødsdato = finnDødsdato(bruker);
-
-        Aktoer aktoer = bruker.getAktoer();
-        PersonIdent pi = (PersonIdent) aktoer;
-        String ident = pi.getIdent().getIdent();
-        PersonstatusType personstatus = tilPersonstatusType(bruker.getPersonstatus());
-        Set<Familierelasjon> familierelasjoner = bruker.getHarFraRolleI().stream()
-                .map(this::tilRelasjon)
-                .collect(toSet());
-
-        Landkode landkode = utledLandkode(bruker.getStatsborgerskap());
-
-        String diskresjonskode = bruker.getDiskresjonskode() == null ? null : bruker.getDiskresjonskode().getValue();
-        String geografiskTilknytning = bruker.getGeografiskTilknytning() != null ? bruker.getGeografiskTilknytning().getGeografiskTilknytning() : null;
-
-        List<Adresseinfo> adresseinfoList = tpsAdresseOversetter.lagListeMedAdresseInfo(bruker);
-
-        return new Personinfo.Builder()
-                .medAktørId(aktørId)
-                .medPersonIdent(no.nav.familie.ks.oppslag.personopplysning.domene.PersonIdent.fra(ident))
-                .medNavn(navn)
-                .medAdresse(adresse)
-                .medAdresseLandkode(adresseLandkode)
-                .medFødselsdato(fødselsdato)
-                .medDødsdato(dødsdato)
-                .medPersonstatusType(personstatus)
-                .medStatsborgerskap(landkode)
-                .medFamilierelasjon(familierelasjoner)
-                .medUtlandsadresse(utlandsadresse)
-                .medGegrafiskTilknytning(geografiskTilknytning)
-                .medDiskresjonsKode(diskresjonskode)
-                .medAdresseInfoList(adresseinfoList)
-                .medLandkode(landkode)
-                .build();
-    }*/
-
-    public Personinfo tilPersoninfo(AktørId aktørId, Person person) {
+    public Personinfo tilPersoninfo(AktørId aktørId, HentPersonResponse response) {
+        Bruker person = (Bruker) response.getPerson();
 
         Set<Familierelasjon> familierelasjoner = person.getHarFraRolleI().stream()
                 .map(this::tilRelasjon)

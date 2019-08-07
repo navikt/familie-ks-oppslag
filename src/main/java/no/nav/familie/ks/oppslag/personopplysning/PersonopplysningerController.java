@@ -6,7 +6,6 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.security.oidc.api.ProtectedWithClaims;
 import no.nav.security.oidc.api.Unprotected;
-import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +35,7 @@ public class PersonopplysningerController {
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "personinfo")
     @Unprotected
-    public HentPersonResponse personInfo(@NotNull @RequestParam(name = "id") String aktørId) {
+    public Personinfo personInfo(@NotNull @RequestParam(name = "id") String aktørId) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør settes generelt i et filter elns
         return personopplysningerService.hentPersoninfoFor(new AktørId(aktørId));
     }
