@@ -34,7 +34,7 @@ public class PersonopplysningerController {
         return personopplysningerService.hentHistorikkFor(new AktørId(aktørId), idag.minusYears(5), idag);
     }
 
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "personinfo")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "info")
     @Unprotected
     public Personinfo personInfo(@NotNull @RequestParam(name = "id") String aktørId) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør settes generelt i et filter elns

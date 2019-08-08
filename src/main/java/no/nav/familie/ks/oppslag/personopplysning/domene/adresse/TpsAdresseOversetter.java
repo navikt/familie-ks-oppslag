@@ -54,7 +54,6 @@ public class TpsAdresseOversetter {
         return adresseInfoList;
     }
 
-
     public void konverterBostedadressePerioder(HentPersonhistorikkResponse response, PersonhistorikkInfo.Builder builder) {
         if (Optional.ofNullable(response.getBostedsadressePeriodeListe()).isPresent()) {
             response.getBostedsadressePeriodeListe().forEach(e -> {

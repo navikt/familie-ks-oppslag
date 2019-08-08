@@ -46,7 +46,7 @@ public class TpsOversetter {
                 .map(this::tilRelasjon)
                 .collect(toSet());
 
-        String diskresjonskode = person.getDiskresjonskode() == null ? null : person.getDiskresjonskode().getValue();
+        String diskresjonskode = person.getDiskresjonskode() != null ? person.getDiskresjonskode().getValue() : null;
         String geografiskTilknytning = person.getGeografiskTilknytning() != null ? person.getGeografiskTilknytning().getGeografiskTilknytning() : null;
 
         return new Personinfo.Builder()
