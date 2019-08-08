@@ -222,7 +222,6 @@ public class TpsAdresseOversetter {
 
     Adresseinfo byggUkjentAdresse(Bruker bruker) {
         return new Adresseinfo.Builder(AdresseType.UKJENT_ADRESSE,
-                TpsUtil.getPersonIdent(bruker),
                 bruker.getPersonnavn().getSammensattNavn(),
                 tilPersonstatusType(bruker.getPersonstatus())).build();
     }
@@ -246,7 +245,6 @@ public class TpsAdresseOversetter {
                                                         AdresseType gjeldende) {
         Personstatus personstatus = bruker.getPersonstatus();
         return new Adresseinfo.Builder(gjeldende,
-                TpsUtil.getPersonIdent(bruker),
                 TpsUtil.getPersonnavn(bruker),
                 personstatus == null ? null : tilPersonstatusType(personstatus));
     }

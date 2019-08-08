@@ -20,7 +20,6 @@ public class Personinfo {
 
     private AktørId aktørId;
     private String navn;
-    private PersonIdent personIdent;
     private String adresse;
     private LocalDate fødselsdato;
     private LocalDate dødsdato;
@@ -41,10 +40,6 @@ public class Personinfo {
 
     public AktørId getAktørId() {
         return aktørId;
-    }
-
-    public PersonIdent getPersonIdent() {
-        return personIdent;
     }
 
     public String getNavn() {
@@ -127,20 +122,6 @@ public class Personinfo {
             return this;
         }
 
-        /**
-         * @deprecated Bruk {@link #medPersonIdent(PersonIdent)} i stedet!
-         */
-        @Deprecated
-        public Builder medFnr(String fnr) {
-            personinfoMal.personIdent = PersonIdent.fra(fnr);
-            return this;
-        }
-
-        public Builder medPersonIdent(PersonIdent fnr) {
-            personinfoMal.personIdent = fnr;
-            return this;
-        }
-
         public Builder medAdresse(String adresse) {
             personinfoMal.adresse = adresse;
             return this;
@@ -208,7 +189,6 @@ public class Personinfo {
 
         public Personinfo build() {
             requireNonNull(personinfoMal.aktørId, "Navbruker må ha aktørId"); //$NON-NLS-1$
-            //requireNonNull(personinfoMal.personIdent, "Navbruker må ha fødselsnummer"); //$NON-NLS-1$
             requireNonNull(personinfoMal.navn, "Navbruker må ha navn"); //$NON-NLS-1$
             requireNonNull(personinfoMal.fødselsdato, "Navbruker må ha fødselsdato"); //$NON-NLS-1$
             return personinfoMal;
