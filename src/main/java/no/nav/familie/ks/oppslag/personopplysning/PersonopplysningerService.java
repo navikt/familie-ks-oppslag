@@ -52,6 +52,7 @@ public class PersonopplysningerService {
             throw new IllegalArgumentException(hentPersonhistorikkSikkerhetsbegrensning);
         } catch (HentPersonhistorikkPersonIkkeFunnet hentPersonhistorikkPersonIkkeFunnet) {
             // Fant ikke personen returnerer tomt sett
+            LOG.info("Prøver å hente historikk for Aktør {} som ikke finnes i TPS", aktørId);
             return PersonhistorikkInfo.builder().medAktørId(aktørId.getId()).build();
         }
     }
@@ -67,7 +68,7 @@ public class PersonopplysningerService {
             LOG.info("Ikke tilgang til å hente personinfo for person");
             throw new IllegalArgumentException(hentPersonSikkerhetsbegrensning);
         } catch (HentPersonPersonIkkeFunnet hentPersonPersonIkkeFunnet) {
-            LOG.info("Hent Personinfo: Personen finnes ikke i TPS");
+            LOG.info("Prøver å hente personinfo for Aktør {} som ikke finnes i TPS", aktørId);
             throw new IllegalArgumentException(hentPersonPersonIkkeFunnet);
         }
     }
