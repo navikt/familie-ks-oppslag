@@ -13,6 +13,7 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.AktoerId;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -32,11 +33,11 @@ public class PersonopplysningerService {
 
     private static final Logger LOG = LoggerFactory.getLogger(PersonopplysningerService.class);
 
+    @Autowired
     public PersonopplysningerService(PersonConsumer personConsumer, TpsOversetter oversetter) {
         this.personConsumer = personConsumer;
         this.oversetter = oversetter;
     }
-
 
     public PersonhistorikkInfo hentHistorikkFor(AktørId aktørId, LocalDate fom, LocalDate tom) {
         Objects.requireNonNull(aktørId, "aktørId");
