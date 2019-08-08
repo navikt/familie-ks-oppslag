@@ -14,8 +14,6 @@ import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -27,8 +25,6 @@ import static java.util.stream.Collectors.toSet;
 @Component
 public class TpsOversetter {
 
-    private static final Logger log = LoggerFactory.getLogger(TpsOversetter.class);
-
     private TpsAdresseOversetter tpsAdresseOversetter;
 
     public TpsOversetter(TpsAdresseOversetter tpsAdresseOversetter) {
@@ -38,7 +34,7 @@ public class TpsOversetter {
     private Landkode utledLandkode(Statsborgerskap statsborgerskap) {
         Landkode landkode = Landkode.UDEFINERT;
         if (Optional.ofNullable(statsborgerskap).isPresent()) {
-            landkode = new Landkode(statsborgerskap.getLand().getKodeRef());
+            landkode = new Landkode(statsborgerskap.getLand().getValue());
         }
         return landkode;
     }
@@ -51,6 +47,7 @@ public class TpsOversetter {
                 .collect(toSet());
 
         String diskresjonskode = person.getDiskresjonskode() == null ? null : person.getDiskresjonskode().getValue();
+        String geografiskTilknytning = person.getGeografiskTilknytning() != null ? person.getGeografiskTilknytning().getGeografiskTilknytning() : null;
 
         return new Personinfo.Builder()
                 .medAktørId(aktørId)
@@ -62,6 +59,7 @@ public class TpsOversetter {
                 .medFødselsdato(finnFødselsdato(person))
                 .medDødsdato(finnDødsdato(person))
                 .medDiskresjonsKode(diskresjonskode)
+                .medGegrafiskTilknytning(geografiskTilknytning)
                 .medNavn(person.getPersonnavn().getSammensattNavn())
                 .build();
     }
@@ -84,20 +82,19 @@ public class TpsOversetter {
     }
 
     private void konverterPersonstatusPerioder(HentPersonhistorikkResponse response, PersonhistorikkInfo.Builder builder) {
-        Optional.ofNullable(response.getPersonstatusListe()).ifPresent(list -> {
-            list.forEach(e -> {
-                Personstatus personstatus = new Personstatus();
-                personstatus.setPersonstatus(e.getPersonstatus());
-                PersonstatusType personstatusType = tilPersonstatusType(personstatus);
+        Optional.ofNullable(response.getPersonstatusListe()).ifPresent(list ->
+                list.forEach(e -> {
+                    Personstatus personstatus = new Personstatus();
+                    personstatus.setPersonstatus(e.getPersonstatus());
+                    PersonstatusType personstatusType = tilPersonstatusType(personstatus);
 
-                Periode gyldighetsperiode = Periode.innenfor(
-                        DateUtil.convertToLocalDate(e.getPeriode().getFom()),
-                        DateUtil.convertToLocalDate(e.getPeriode().getTom()));
+                    Periode gyldighetsperiode = Periode.innenfor(
+                            DateUtil.convertToLocalDate(e.getPeriode().getFom()),
+                            DateUtil.convertToLocalDate(e.getPeriode().getTom()));
 
-                PersonstatusPeriode periode = new PersonstatusPeriode(gyldighetsperiode, personstatusType);
-                builder.leggTil(periode);
-            });
-        });
+                    PersonstatusPeriode periode = new PersonstatusPeriode(gyldighetsperiode, personstatusType);
+                    builder.leggTil(periode);
+                }));
     }
 
     private void konverterStatsborgerskapPerioder(HentPersonhistorikkResponse response, PersonhistorikkInfo.Builder builder) {
