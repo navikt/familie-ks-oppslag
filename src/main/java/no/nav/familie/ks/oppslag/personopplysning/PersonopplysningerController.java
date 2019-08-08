@@ -27,6 +27,7 @@ public class PersonopplysningerController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "historikk")
+    @Unprotected
     public PersonhistorikkInfo historikk(@NotNull @RequestParam(name = "id") String aktørId) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør settes generelt i et filter elns
         LocalDate idag = LocalDate.now();
