@@ -65,7 +65,7 @@ public class PersonopplysningerTestConfig {
                 .withBostedsadresse(NORSK_ADRESSE)
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("GIFT")))
                 .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
-                .withPersonnavn(new Personnavn().withFornavn("TEST").withEtternavn("TESTESEN"))
+                .withPersonnavn(new Personnavn().withSammensattNavn("TEST TESTESEN"))
                 .withHarFraRolleI(hentFamilierelasjoner())
                 .withGeografiskTilknytning(new Bydel().withGeografiskTilknytning("0315"))
                 .withGjeldendePostadressetype(new Postadressetyper().withValue("BOSTEDSADRESSE"))
@@ -84,7 +84,7 @@ public class PersonopplysningerTestConfig {
                 .withTilPerson(new Person()
                         .withAktoer(new AktoerId().withAktoerId("1000011111112"))
                         .withFoedselsdato(hentFoedselsdato("1990-01-01"))
-                        .withPersonnavn(new Personnavn().withFornavn("EKTEMANN").withEtternavn("TESTESEN")));
+                        .withPersonnavn(new Personnavn().withSammensattNavn("EKTEMANN TESTESEN")));
 
         Familierelasjon barnet = new Familierelasjon();
         barnet
@@ -93,7 +93,7 @@ public class PersonopplysningerTestConfig {
                 .withTilPerson(new Person()
                         .withAktoer(new AktoerId().withAktoerId("1000011111113"))
                         .withFoedselsdato(hentFoedselsdato("2018-05-01"))
-                        .withPersonnavn(new Personnavn().withFornavn("BARN").withEtternavn("TESTESEN")));
+                        .withPersonnavn(new Personnavn().withSammensattNavn("BARN TESTESEN")));
 
         return Arrays.asList(giftMed, barnet);
     }
