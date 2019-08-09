@@ -12,6 +12,7 @@ import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkSikkerhet
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.AktoerId;
 import no.nav.tjeneste.virksomhet.person.v3.informasjon.Informasjonsbehov;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
+import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonResponse;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.slf4j.Logger;
@@ -58,11 +59,11 @@ public class PersonopplysningerService {
     }
 
     public Personinfo hentPersoninfoFor(AktørId aktørId) {
-        var request = new HentPersonRequest();
-        request.setAktoer(new AktoerId().withAktoerId(aktørId.getId()));
-        request.withInformasjonsbehov(List.of(Informasjonsbehov.FAMILIERELASJONER, Informasjonsbehov.ADRESSE));
+        var request = new HentPersonRequest()
+                .withAktoer(new AktoerId().withAktoerId(aktørId.getId()))
+                .withInformasjonsbehov(List.of(Informasjonsbehov.FAMILIERELASJONER, Informasjonsbehov.ADRESSE));
         try {
-            var response = personConsumer.hentPersonResponse(request);
+            HentPersonResponse response = personConsumer.hentPersonResponse(request);
             return oversetter.tilPersoninfo(aktørId, response);
         } catch (HentPersonSikkerhetsbegrensning hentPersonSikkerhetsbegrensning) {
             LOG.info("Ikke tilgang til å hente personinfo for person");
