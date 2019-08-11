@@ -49,6 +49,8 @@ public class PersonopplysningerTestConfig {
         response.setAktoer(new AktoerId().withAktoerId(AKTØR_ID));
         response
                 .withStatsborgerskapListe(hentStatsborgerskap())
+                .withPersonstatusListe(hentPersonstatus())
+                .withMidlertidigAdressePeriodeListe(hentMidlertidigAdresse())
                 .withBostedsadressePeriodeListe(hentBostedsadresse());
 
         return response;
@@ -106,6 +108,18 @@ public class PersonopplysningerTestConfig {
         }
     }
 
+    private Collection<PersonstatusPeriode> hentPersonstatus() {
+        PersonstatusPeriode personstatusPeriode = new PersonstatusPeriode();
+        personstatusPeriode
+                .withPersonstatus(new Personstatuser().withValue("BOSA"))
+                .withPeriode(new Periode()
+                        .withFom(DateUtil.convertToXMLGregorianCalendar(FOM))
+                        .withTom(DateUtil.convertToXMLGregorianCalendar(TOM)));
+
+        return Collections.singletonList(personstatusPeriode);
+
+    }
+
     private Collection<StatsborgerskapPeriode> hentStatsborgerskap() {
         StatsborgerskapPeriode statsborgerskapPeriode = new StatsborgerskapPeriode();
         statsborgerskapPeriode
@@ -126,5 +140,20 @@ public class PersonopplysningerTestConfig {
                         .withTom(DateUtil.convertToXMLGregorianCalendar(TOM)));
 
         return Collections.singletonList(bostedsadressePeriode);
+    }
+
+    private Collection<MidlertidigPostadresse> hentMidlertidigAdresse() {
+        MidlertidigPostadresseUtland midlertidigPostadresseUtland = new MidlertidigPostadresseUtland();
+        midlertidigPostadresseUtland
+                .withUstrukturertAdresse(new UstrukturertAdresse()
+                        .withAdresselinje1("TEST 1")
+                        .withAdresselinje2("TEST 2")
+                        .withAdresselinje3("TEST 3")
+                        .withLandkode(new Landkoder().withValue("SWE")))
+                .withPostleveringsPeriode(new Gyldighetsperiode()
+                        .withFom(DateUtil.convertToXMLGregorianCalendar(FOM))
+                        .withTom(DateUtil.convertToXMLGregorianCalendar(TOM)));
+
+        return Collections.singletonList(midlertidigPostadresseUtland);
     }
 }

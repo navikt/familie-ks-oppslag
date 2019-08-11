@@ -50,6 +50,7 @@ public class PersonopplysningerService {
             var response = personConsumer.hentPersonhistorikkResponse(request);
             return oversetter.tilPersonhistorikkInfo(aktørId.getId(), response);
         } catch (HentPersonhistorikkSikkerhetsbegrensning hentPersonhistorikkSikkerhetsbegrensning) {
+            LOG.info("Ikke tilgang til å hente historikk for person");
             throw new IllegalArgumentException(hentPersonhistorikkSikkerhetsbegrensning);
         } catch (HentPersonhistorikkPersonIkkeFunnet hentPersonhistorikkPersonIkkeFunnet) {
             // Fant ikke personen returnerer tomt sett
