@@ -60,7 +60,7 @@ public class PersonopplysningerService {
     }
 
     public Personinfo hentPersoninfoFor(AktørId aktørId) {
-        var request = new HentPersonRequest()
+        HentPersonRequest request = new HentPersonRequest()
                 .withAktoer(new AktoerId().withAktoerId(aktørId.getId()))
                 .withInformasjonsbehov(List.of(Informasjonsbehov.FAMILIERELASJONER, Informasjonsbehov.ADRESSE));
         try {
