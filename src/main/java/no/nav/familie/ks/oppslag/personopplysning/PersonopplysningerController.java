@@ -5,6 +5,7 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.security.oidc.api.ProtectedWithClaims;
+import org.springframework.format.annotation.DateTimeFormat;
 import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +28,13 @@ public class PersonopplysningerController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "historikk")
-    public PersonhistorikkInfo historikk(@NotNull @RequestParam(name = "id") String aktørId) {
+    public PersonhistorikkInfo historikk(
+            @NotNull @RequestParam(name = "id") String aktørId,
+            @NotNull @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fomDato,
+            @NotNull @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate tomDato
+    ) {
         MDCOperations.putCallId(); // FIXME: Midlertidig, bør settes generelt i et filter elns
-        LocalDate idag = LocalDate.now();
-        return personopplysningerService.hentHistorikkFor(new AktørId(aktørId), idag.minusYears(5), idag);
+        return personopplysningerService.hentHistorikkFor(new AktørId(aktørId), fomDato, tomDato);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "info")
