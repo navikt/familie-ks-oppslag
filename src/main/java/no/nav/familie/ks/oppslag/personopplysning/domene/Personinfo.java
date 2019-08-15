@@ -31,7 +31,6 @@ public class Personinfo {
     private String geografiskTilknytning;
     private String diskresjonskode;
     private String adresseLandkode;
-    private Landkode landkode;
 
     private List<Adresseinfo> adresseInfoList = new ArrayList<>();
 
@@ -94,10 +93,6 @@ public class Personinfo {
 
     public List<Adresseinfo> getAdresseInfoList() {
         return adresseInfoList;
-    }
-
-    public Landkode getLandkode() {
-        return landkode;
     }
 
     @Override
@@ -179,11 +174,6 @@ public class Personinfo {
 
         public Builder medAdresseInfoList(List<Adresseinfo> adresseinfoArrayList) {
             personinfoMal.adresseInfoList = adresseinfoArrayList;
-            return this;
-        }
-
-        public Builder medLandkode(Landkode landkode) {
-            personinfoMal.landkode = landkode;
             return this;
         }
 

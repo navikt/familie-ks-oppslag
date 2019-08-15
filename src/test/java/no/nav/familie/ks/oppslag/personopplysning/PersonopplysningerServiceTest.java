@@ -6,6 +6,8 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.TpsOversetter;
 import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.AdresseType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.adresse.TpsAdresseOversetter;
+import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.Familierelasjon;
+import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.RelasjonsRolleType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.relasjon.SivilstandType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.status.PersonstatusType;
 import no.nav.familie.ks.oppslag.personopplysning.domene.tilhørighet.Landkode;
@@ -16,6 +18,7 @@ import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkPersonIkk
 import no.nav.tjeneste.virksomhet.person.v3.binding.HentPersonhistorikkSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.person.v3.feil.PersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.person.v3.feil.Sikkerhetsbegrensning;
+import no.nav.tjeneste.virksomhet.person.v3.informasjon.Person;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonRequest;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest;
 import org.junit.Before;
@@ -83,18 +86,32 @@ public class PersonopplysningerServiceTest {
     public void skalKonvertereResponsTilPersonInfo() {
         Personinfo response = personopplysningerService.hentPersoninfoFor(new AktørId(AKTØR_ID));
 
-        LocalDate fødselsdato = LocalDate.parse("1990-01-01");
+        LocalDate forventetFødselsdato = LocalDate.parse("1990-01-01");
+
+        Familierelasjon barn = response.getFamilierelasjoner().stream()
+                .filter(p -> p.getRelasjonsrolle().equals(RelasjonsRolleType.BARN))
+                .findFirst().orElse(null);
+        Familierelasjon ektefelle = response.getFamilierelasjoner().stream()
+                .filter(p -> p.getRelasjonsrolle().equals(RelasjonsRolleType.EKTE))
+                .findFirst().orElse(null);
 
         assertThat(response.getAktørId().getId()).isEqualTo(AKTØR_ID);
-        assertThat(response.getFamilierelasjoner()).hasSize(2);
         assertThat(response.getStatsborgerskap().erNorge()).isTrue();
         assertThat(response.getSivilstand()).isEqualTo(SivilstandType.GIFT);
         assertThat(response.getAlder()).isEqualTo(29);
         assertThat(response.getAdresseInfoList()).hasSize(1);
         assertThat(response.getPersonstatus()).isEqualTo(PersonstatusType.BOSA);
         assertThat(response.getGeografiskTilknytning()).isEqualTo("0315");
-        assertThat(response.getFødselsdato()).isEqualTo(fødselsdato);
+        assertThat(response.getFødselsdato()).isEqualTo(forventetFødselsdato);
+        assertThat(response.getDødsdato()).isNull();
+        assertThat(response.getDiskresjonskode()).isNull();
         assertThat(response.getAdresseLandkode()).isEqualTo("NOR");
+
+        assertThat(response.getFamilierelasjoner()).hasSize(2);
+        assertThat(barn).isNotNull();
+        assertThat(barn.getHarSammeBosted()).isTrue();
+        assertThat(ektefelle).isNotNull();
+        assertThat(ektefelle.getHarSammeBosted()).isTrue();
     }
 
     @Test
