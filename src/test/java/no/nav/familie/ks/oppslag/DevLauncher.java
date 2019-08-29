@@ -11,7 +11,7 @@ import no.nav.security.oidc.test.support.spring.TokenGeneratorConfiguration;
 
 
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-@Import({ApplicationConfig.class, TokenGeneratorConfiguration.class})
+@Import({ApplicationConfig.class, TokenGeneratorConfiguration.class, STSTestController.class})
 public class DevLauncher {
 
     public static void main(String... args) {
