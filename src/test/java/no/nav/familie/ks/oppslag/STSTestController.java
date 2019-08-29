@@ -18,7 +18,7 @@ public class STSTestController {
 
     @Unprotected
     @GetMapping("/sts")
-    public AccessTokenResponseTest addCookie(@RequestParam(value = "subject", defaultValue = "12345678910") String subject,
+    public AccessTokenResponseTest addCookie(@RequestParam(value = "subject", defaultValue = "srv-user") String subject,
                                              @RequestParam(value = "expiry", required = false) String expiry) {
         long expiryTime = expiry != null ? Long.parseLong(expiry) : JwtTokenGenerator.EXPIRY;
         SignedJWT token = JwtTokenGenerator.createSignedJWT(subject, expiryTime);
