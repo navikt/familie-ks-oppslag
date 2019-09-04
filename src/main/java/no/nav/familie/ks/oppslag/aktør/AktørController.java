@@ -18,13 +18,6 @@ public class AktørController {
     }
 
     @GetMapping
-    @Deprecated
-    public String getAktoerIdForPersonIdent(@NotNull @RequestParam(name = "ident") String personIdent) {
-        MDCOperations.putCallId(); // FIXME: Midlertidig, bør erstattes med en interceptor
-        return aktørService.getAktørId(personIdent);
-    }
-
-    @GetMapping
     public String getAktørIdForPersonIdent(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
         MDCOperations.putCallId();
         return aktørService.getAktørId(personIdent);
