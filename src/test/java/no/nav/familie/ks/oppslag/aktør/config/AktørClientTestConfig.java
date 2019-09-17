@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 
 import java.util.Collections;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +32,13 @@ public class AktørClientTestConfig {
 
             return new AktørResponse()
                     .withAktør(identArg, new Aktør().withIdenter(Collections.singletonList(testIdent)));
+        });
+
+        when(aktørregisterClient.hentPersonIdent(any())).thenAnswer(invocation -> {
+            String idenArg = invocation.getArgument(0);
+
+            return new AktørResponse()
+                    .withAktør(idenArg, new Aktør().withIdenter(Collections.singletonList(testIdent)));
         });
         return aktørregisterClient;
     }
