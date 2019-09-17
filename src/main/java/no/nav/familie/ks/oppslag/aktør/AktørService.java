@@ -7,6 +7,8 @@ import no.nav.familie.ks.oppslag.aktør.internal.AktørregisterClient;
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class AktørService {
 
+    private static final Logger secureLogger = LoggerFactory.getLogger("secureLogger");
     private final CacheManager aktørCacheManager;
     private AktørregisterClient aktørregisterClient;
 
@@ -44,11 +47,14 @@ public class AktørService {
     private String hentAktørIdFraRegister(String personIdent) {
         AktørResponse response = aktørregisterClient.hentAktørId(personIdent);
         Aktør aktørResponse = response.get(personIdent);
+
+        secureLogger.info("Hentet aktør id'er for fnr: {}: {}", personIdent, aktørResponse);
         if (aktørResponse.getFeilmelding() == null) {
             final var identer = aktørResponse.getIdenter()
                     .stream()
                     .filter(Ident::getGjeldende)
                     .collect(Collectors.toList());
+
             if(identer.size() > 1) {
                 throw new IllegalStateException("Flere gjeldende aktørIder");
             } else if(identer.isEmpty()) {
@@ -67,11 +73,14 @@ public class AktørService {
         final var ident = aktørId.getId();
         AktørResponse response = aktørregisterClient.hentPersonIdent(ident);
         Aktør aktørResponse = response.get(ident);
+
+        secureLogger.info("Hentet fnr for aktørId: {}: {}", aktørId, aktørResponse);
         if (aktørResponse.getFeilmelding() == null) {
             final var identer = aktørResponse.getIdenter()
                     .stream()
                     .filter(Ident::getGjeldende)
                     .collect(Collectors.toList());
+
             if(identer.size() > 1) {
                 throw new IllegalStateException("Flere gjeldende norske identer");
             } else if(identer.isEmpty()) {
