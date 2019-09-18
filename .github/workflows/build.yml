@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - '*'
+      - '*/*'
 jobs:
   deploy-to-dev:
     name: Build, push and deploy to dev-fss
