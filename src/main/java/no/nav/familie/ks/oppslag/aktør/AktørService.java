@@ -76,14 +76,14 @@ public class AktørService {
         HttpStatus status;
         var feilmelding = new LinkedMultiValueMap<String, String>();
 
-        boolean aktørId = idType instanceof AktørId;
-        String id = aktørId ? ((AktørId) idType).getId() : (String) idType;
+        boolean erAktørId = idType instanceof AktørId;
+        String id = erAktørId ? ((AktørId) idType).getId() : (String) idType;
 
-        Aktør response = aktørId ?
+        Aktør response = erAktørId ?
                 aktørregisterClient.hentPersonIdent(id).get(id) :
                 aktørregisterClient.hentAktørId(id).get(id);
 
-        secureLogger.info(aktørId ? "Hentet fnr for aktørId: {}: {}" : "Hentet aktør id'er for fnr: {}: {}", id, response);
+        secureLogger.info(erAktørId ? "Hentet fnr for aktørId: {}: {}" : "Hentet aktør id'er for fnr: {}: {}", id, response);
 
         if (response.getFeilmelding() == null) {
             final var identer = response.getIdenter().stream()
@@ -94,11 +94,11 @@ public class AktørService {
             } else {
                 status = identer.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.CONFLICT;
                 feilmelding.add("message",
-                        String.format("%s gjeldene %s", identer.isEmpty() ? "Ingen" : "Flere", aktørId ? "aktørIder" : "norske identer"));
+                        String.format("%s gjeldene %s", identer.isEmpty() ? "Ingen" : "Flere", erAktørId ? "aktørIder" : "norske identer"));
             }
         } else {
             status = HttpStatus.BAD_REQUEST;
-            feilmelding.add("message", String.format("Feil ved kall mot Aktørregisteret. Feilmelding: %s", response.getFeilmelding()));
+            feilmelding.add("message", String.format("Funksjonell feil. Fikk følgende feilmelding fra aktørregisteret: %s", response.getFeilmelding()));
         }
         return new ResponseEntity<>(feilmelding, status);
     }

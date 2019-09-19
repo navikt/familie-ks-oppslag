@@ -24,6 +24,7 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRequest
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
 
@@ -46,7 +47,8 @@ public class PersonopplysningerServiceTest {
     public void setUp() throws Exception {
         personConsumer = new PersonopplysningerTestConfig().personConsumerMock();
         mock = mock(AktørService.class);
-        personopplysningerService = new PersonopplysningerService(mock(AktørService.class), this.personConsumer, new TpsOversetter(new TpsAdresseOversetter(), mock));
+        when(mock.getPersonIdent(new AktørId(AKTØR_ID))).thenReturn(new ResponseEntity<String>("11111111111", HttpStatus.OK));
+        personopplysningerService = new PersonopplysningerService(mock, this.personConsumer, new TpsOversetter(new TpsAdresseOversetter(), mock));
     }
 
     @Test
