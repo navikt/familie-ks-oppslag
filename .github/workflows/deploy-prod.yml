@@ -19,7 +19,8 @@ jobs:
           NAME: familie-ks-oppslag
         run: |
           echo "docker.pkg.github.com"/"$GITHUB_REPOSITORY"/"$NAME" > .docker_image
-          echo "$(date "+%Y.%m.%d")-$(git rev-parse --short HEAD)" > .docker_tag
+          commit=$(git rev-parse --short HEAD)
+          docker images docker.pkg.github.com/navikt/familie-ks-oppslag/familie-ks-oppslag --format "{{.Tag}}" | grep "$commit" | cut -c 1-18 > .docker_tag
       - name: Deploy til dev-fss
         uses: navikt/deployment-cli/action@b60ef91
         env:
