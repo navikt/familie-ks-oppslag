@@ -20,7 +20,9 @@ jobs:
         run: |
           echo "docker.pkg.github.com"/"$GITHUB_REPOSITORY"/"$NAME" > .docker_image
           commit=$(git rev-parse --short HEAD)
-          docker images docker.pkg.github.com/navikt/familie-ks-oppslag/familie-ks-oppslag --format "{{.Tag}}" | grep "$commit" | cut -c 1-18 > .docker_tag
+          tags_for_commit=$(docker images docker.pkg.github.com/navikt/familie-ks-oppslag/familie-ks-oppslag --format "{{.Tag}}" | grep "$commit")
+          echo "Liste av docker tags: $tags_for_commit"
+          echo "$tags_for_commit" | cut -c 1-18 > .docker_tag
       - name: Deploy til dev-fss
         uses: navikt/deployment-cli/action@b60ef91
         env:

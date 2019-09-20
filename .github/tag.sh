@@ -48,7 +48,7 @@ next_version="v$new_major.$new_minor"
 printf "Neste versjon blir: $next_version\n"
 
 #3: Tag git commit med ny versjon
-git tag -a $next_version -m "Test av tag-script"
+git tag -a $next_version -m "Release av versjon $next_version"
 
 #4: Push tag
 git push origin $next_version
