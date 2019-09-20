@@ -43,4 +43,4 @@ jobs:
           cluster: dev-fss
           team: teamfamilie
           resource: app-preprod.yaml
-          ref: $CURRENT_BRANCH
+          ref: ${{ CURRENT_BRANCH }}
