@@ -27,7 +27,7 @@ public class AktørController {
     }
 
     @GetMapping(path = "/fraaktorid")
-    public String getPersonIdentForAktørId(@NotNull @RequestHeader(name = "Nav-Aktorid") String aktørId) {
+    public ResponseEntity<String> getPersonIdentForAktørId(@NotNull @RequestHeader(name = "Nav-Aktorid") String aktørId) {
         return aktørService.getPersonIdent(new AktørId(aktørId));
     }
 }
