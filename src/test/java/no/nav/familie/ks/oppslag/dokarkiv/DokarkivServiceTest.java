@@ -26,6 +26,8 @@ public class DokarkivServiceTest {
     public static final byte[] JSON_DOK = "{}".getBytes();
     public static final String STRUKTURERT_VARIANTFORMAT = "ORIGINAL";
     public static final String JOURNALPOST_ID = "123";
+    public static final String FILNAVN = "filnavn";
+
     private DokarkivClient dokarkivClient = mock(DokarkivClient.class);
     private DokarkivService dokarkivService;
 
@@ -38,7 +40,7 @@ public class DokarkivServiceTest {
     public void skal_mappe_request_til_oppretttJournalpostRequest_av_type_ARKIV_PDFA() {
         final ArgumentCaptor<OpprettJournalpostRequest> captor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, DokumentType.KONTANTSTØTTE_SØKNAD, false, List.of(new Dokument(PDF_DOK, FilType.PDFA)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -50,7 +52,7 @@ public class DokarkivServiceTest {
     public void skal_mappe_request_til_oppretttJournalpostRequest_av_type_ORIGINAL_JSON() {
         final ArgumentCaptor<OpprettJournalpostRequest> captor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, DokumentType.KONTANTSTØTTE_SØKNAD, false, List.of(new Dokument(JSON_DOK, FilType.JSON)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN,  false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -65,7 +67,7 @@ public class DokarkivServiceTest {
         responseFraKlient.setJournalpostferdigstilt(true);
         when(dokarkivClient.lagJournalpost(any(OpprettJournalpostRequest.class), anyBoolean(), anyString())).thenReturn(responseFraKlient);
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, DokumentType.KONTANTSTØTTE_SØKNAD, false, List.of(new Dokument(JSON_DOK, FilType.JSON)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         ArkiverDokumentResponse arkiverDokumentResponse = dokarkivService.lagInngåendeJournalpost(dto);
 
         assertThat(arkiverDokumentResponse.getJournalpostId()).isEqualTo(JOURNALPOST_ID);
@@ -92,6 +94,7 @@ public class DokarkivServiceTest {
         assertThat(request.getDokumenter().get(0).getDokumentvarianter().get(0).getFiltype()).isEqualTo(pdfa);
         assertThat(request.getDokumenter().get(0).getDokumentvarianter().get(0).getFysiskDokument()).isEqualTo(pdfDok);
         assertThat(request.getDokumenter().get(0).getDokumentvarianter().get(0).getVariantformat()).isEqualTo(arkivVariantformat);
+        assertThat(request.getDokumenter().get(0).getDokumentvarianter().get(0).getFilnavn()).isEqualTo(FILNAVN);
     }
 
 }

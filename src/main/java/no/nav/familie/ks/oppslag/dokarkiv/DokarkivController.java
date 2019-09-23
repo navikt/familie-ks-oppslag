@@ -18,7 +18,7 @@ import java.util.Map;
 
 @RestController
 @ProtectedWithClaims(issuer = "intern")
-@RequestMapping("/api/dokarkiv")
+@RequestMapping("/api/arkiv")
 public class DokarkivController {
     private static final Logger LOG = LoggerFactory.getLogger(DokarkivController.class);
 
@@ -38,7 +38,7 @@ public class DokarkivController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        LOG.info("Input validerer ikke: " + errors);
+        LOG.warn("Valideringsfeil av input ved arkivering: " + errors);
         return errors;
     }
 
@@ -46,15 +46,13 @@ public class DokarkivController {
     @ExceptionHandler(RuntimeException.class)
     public Map<String, String> handleValidationExceptions(
             RuntimeException ex) {
-        LOG.info("Uventet feil: ", ex);
+        LOG.warn("Uventet arkiveringsfeil: ", ex);
         return Map.of("message", ex.getMessage());
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public ArkiverDokumentResponse arkiverDokument(@Valid @RequestBody ArkiverDokumentRequest arkiverDokumentRequest) {
-        MDCOperations.putCallId(); // FIXME: Midlertidig, bør erstattes med en interceptor
-
         return journalføringService.lagInngåendeJournalpost(arkiverDokumentRequest);
     }
 }

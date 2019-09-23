@@ -8,6 +8,8 @@ public class DokumentVariant {
 
 	private byte[] fysiskDokument;
 
+	private String filnavn;
+
 	public String getFiltype() {
 		return filtype;
 	}
@@ -20,9 +22,14 @@ public class DokumentVariant {
 		return fysiskDokument;
 	}
 
-	public DokumentVariant(String filtype, String variantformat, byte[] fysiskDokument) {
+	public String getFilnavn() {
+		return filnavn;
+	}
+
+	public DokumentVariant(String filtype, String variantformat, byte[] fysiskDokument, String filnavn) {
 		this.filtype = filtype;
 		this.variantformat = variantformat;
 		this.fysiskDokument = fysiskDokument;
+		this.filnavn = filnavn;
 	}
 }

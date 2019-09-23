@@ -2,6 +2,7 @@ package no.nav.familie.ks.oppslag.dokarkiv.api;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ArkiverDokumentRequest {
@@ -10,16 +11,14 @@ public class ArkiverDokumentRequest {
     private String fnr;
     @NotBlank
     private String navn;
-    private DokumentType dokumentType;
-    private boolean forsøkFerdigstill;
 
+    private boolean forsøkFerdigstill;
     @NotEmpty
     private List<Dokument> dokumenter;
 
-    public ArkiverDokumentRequest(String fnr, String navn, DokumentType dokumentType, boolean forsøkFerdigstill, List<Dokument> dokumenter) {
+    public ArkiverDokumentRequest(String fnr, String navn, boolean forsøkFerdigstill, List<Dokument> dokumenter) {
         this.fnr = fnr;
         this.navn = navn;
-        this.dokumentType = dokumentType;
         this.forsøkFerdigstill = forsøkFerdigstill;
         this.dokumenter = dokumenter;
     }
@@ -32,10 +31,6 @@ public class ArkiverDokumentRequest {
         return navn;
     }
 
-    public DokumentType getDokumentType() {
-        return dokumentType;
-    }
-
     public boolean isForsøkFerdigstill() {
         return forsøkFerdigstill;
     }
@@ -43,17 +38,4 @@ public class ArkiverDokumentRequest {
     public List<Dokument> getDokumenter() {
         return dokumenter;
     }
-
-    @Override
-    public String toString() {
-        return "ArkiverDokumentRequest{" +
-                "fnr='" + fnr + '\'' +
-                ", navn='" + navn + '\'' +
-                ", dokumentType='" + dokumentType + '\'' +
-                ", forsøkFerdigstill=" + forsøkFerdigstill +
-                ", dokumenter=" + dokumenter +
-                '}';
-    }
-
-
 }
