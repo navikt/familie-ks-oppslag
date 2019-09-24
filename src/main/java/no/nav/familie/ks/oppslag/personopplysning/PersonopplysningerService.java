@@ -100,7 +100,8 @@ public class PersonopplysningerService {
             status = HttpStatus.NOT_FOUND;
             feilmelding.add("message", hentPersonPersonIkkeFunnet.getMessage());
         } catch (NullPointerException npe) {
-            status = personIdentResponse.getStatusCode();
+            LOG.info("Fant ikke fødselsnummer for aktørId {} i aktørreg. Klarer ikke hente personinfo fra TPS", aktørId);
+            status = HttpStatus.NOT_FOUND;
             feilmelding.addAll("message", Optional.ofNullable(personIdentResponse.getHeaders().get("message"))
                     .orElse(List.of("aktørService::getPersonIdent returnerte null"))
             );
