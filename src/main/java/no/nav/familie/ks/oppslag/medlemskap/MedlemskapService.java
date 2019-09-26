@@ -31,7 +31,7 @@ public class MedlemskapService {
     private StsRestClient stsRestClient;
     private String srvBruker;
 
-    public MedlemskapService(@Value("MEDL2_URL") String url, @Value("CREDENTIAL_USERNAME") String srvBruker, @Autowired StsRestClient stsRestClient) {
+    public MedlemskapService(@Value("${MEDL2_URL}") String url, @Value("${CREDENTIAL_USERNAME}") String srvBruker, @Autowired StsRestClient stsRestClient) {
         this.medl2Url = url;
         this.srvBruker = srvBruker;
         this.stsRestClient = stsRestClient;
@@ -40,7 +40,6 @@ public class MedlemskapService {
 
     public String hentMedlemskapsUnntak(String aktørId) {
         URI uri = URI.create(String.format("%s/medlemskapsunntak", medl2Url));
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
                 .header(ACCEPT, "application/json")
