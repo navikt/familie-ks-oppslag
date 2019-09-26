@@ -2,6 +2,8 @@ package no.nav.familie.ks.oppslag.medlemskap;
 
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 @Service
 public class MedlemskapService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(MedlemskapService.class);
     private static final String NAV_CONSUMER_ID = "Nav-Consumer-Id";
     private static final String NAV_CALL_ID = "Nav-Call-Id";
     private static final String NAV_PERSONIDENT = "Nav-Personident";
@@ -49,6 +52,7 @@ public class MedlemskapService {
                 .build();
 
         try {
+            LOG.info("Prøver å hente medlemskapsunntak fra MEDL2");
             var httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return httpResponse.body();
         } catch (IOException | InterruptedException e) {
