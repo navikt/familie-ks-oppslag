@@ -31,9 +31,10 @@ public class OppgaveConsumer {
         return port.opprettOppgave(tilWSOpprett(request));
     }
 
-    public void oppdaterOppgave(Oppgave request) throws
+    public Boolean oppdaterOppgave(Oppgave request) throws
             WSSikkerhetsbegrensningException, WSOppgaveIkkeFunnetException, WSOptimistiskLasingException, SoapFaultException {
         port.lagreOppgave(tilWSLagre(request));
+        return true;
     }
 
     private WSOpprettOppgaveRequest tilWSOpprett(Oppgave request) {

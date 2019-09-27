@@ -28,8 +28,7 @@ public class OppgaveService {
     ResponseEntity opprettEllerOppdaterOppgave(Oppgave request) {
         try {
             if (request.getEksisterendeOppgaveId() != null) {
-                oppgaveConsumer.oppdaterOppgave(request);
-                return ResponseEntity.ok().build();
+                return ResponseEntity.ok(oppgaveConsumer.oppdaterOppgave(request));
             } else {
                 return opprettOppgaveResponse(request);
             }
