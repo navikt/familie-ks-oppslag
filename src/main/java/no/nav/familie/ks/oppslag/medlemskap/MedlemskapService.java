@@ -46,7 +46,7 @@ public class MedlemskapService {
         try {
             LOG.info("Prøver å hente medlemskapsunntak fra MEDL2");
             var httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOG.info("Request headers: {}", request.headers().toString());
+            LOG.info("Response status: {}", httpResponse.statusCode());
             return httpResponse.body();
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall til medl2", e);

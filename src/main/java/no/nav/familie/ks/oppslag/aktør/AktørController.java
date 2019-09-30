@@ -2,7 +2,6 @@ package no.nav.familie.ks.oppslag.aktør;
 
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.security.oidc.api.ProtectedWithClaims;
-import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -23,7 +22,6 @@ public class AktørController {
     }
 
     @GetMapping
-    @Unprotected
     public ResponseEntity<String> getAktørIdForPersonIdent(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
         return aktørService.getAktørId(personIdent);
     }
