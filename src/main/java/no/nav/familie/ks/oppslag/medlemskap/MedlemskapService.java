@@ -36,7 +36,7 @@ public class MedlemskapService {
 
     public String hentMedlemskapsUnntak(String aktørId) {
         URI uri = URI.create(String.format("%s/medlemskapsunntak", medl2Url));
-        HttpRequest request = HttpRequestUtil.createRequest(stsRestClient.getSystemOIDCToken())
+        HttpRequest request = HttpRequestUtil.createRequest("Bearer " + stsRestClient.getSystemOIDCToken())
                 .uri(uri)
                 .header(ACCEPT, "application/json")
                 .header(NavHttpHeaders.NAV_PERSONIDENT.asString(), aktørId)
