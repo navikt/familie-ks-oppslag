@@ -1,6 +1,7 @@
 package no.nav.familie.ks.oppslag.medlemskap;
 
-import no.nav.familie.ks.oppslag.felles.MDCOperations;
+import no.nav.familie.http.client.HttpRequestUtil;
+import no.nav.familie.http.client.NavHttpHeaders;
 import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,18 +14,13 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 
 import static javax.ws.rs.core.HttpHeaders.ACCEPT;
-import static javax.ws.rs.core.HttpHeaders.AUTHORIZATION;
 
 @Service
 public class MedlemskapService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedlemskapService.class);
-    private static final String NAV_CONSUMER_ID = "Nav-Consumer-Id";
-    private static final String NAV_CALL_ID = "Nav-Call-Id";
-    private static final String NAV_PERSONIDENT = "Nav-Personident";
 
     private String medl2Url;
     private HttpClient httpClient;
@@ -40,14 +36,11 @@ public class MedlemskapService {
 
     public String hentMedlemskapsUnntak(String aktørId) {
         URI uri = URI.create(String.format("%s/medlemskapsunntak", medl2Url));
-        HttpRequest request = HttpRequest.newBuilder()
+        HttpRequest request = HttpRequestUtil.createRequest(stsRestClient.getSystemOIDCToken())
                 .uri(uri)
                 .header(ACCEPT, "application/json")
-                .header(NAV_PERSONIDENT, aktørId)
-                .header(NAV_CONSUMER_ID, srvBruker)
-                .header(NAV_CALL_ID, MDCOperations.getCallId())
-                .header(AUTHORIZATION, "Bearer " + stsRestClient.getSystemOIDCToken())
-                .timeout(Duration.ofSeconds(5))
+                .header(NavHttpHeaders.NAV_PERSONIDENT.asString(), aktørId)
+                .header(NavHttpHeaders.NAV_CONSUMER_ID.asString(), srvBruker)
                 .build();
 
         try {
