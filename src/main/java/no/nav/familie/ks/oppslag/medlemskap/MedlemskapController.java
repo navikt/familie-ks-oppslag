@@ -5,8 +5,6 @@ import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("api/medlemskap")
 public class MedlemskapController {
@@ -19,7 +17,7 @@ public class MedlemskapController {
 
     @GetMapping
     @Unprotected
-    public ResponseEntity<List<MedlemskapsUnntakResponse>> hentMedlemskapsUnntak(@RequestParam("id") String aktørId) {
+    public ResponseEntity<MedlemskapsInfo> hentMedlemskapsUnntak(@RequestParam("id") String aktørId) {
         return medlemskapService.hentMedlemskapsUnntak(aktørId);
     }
 }
