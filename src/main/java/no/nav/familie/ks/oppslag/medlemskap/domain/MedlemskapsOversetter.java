@@ -42,7 +42,7 @@ public class MedlemskapsOversetter {
                 .medTom(response.getTilOgMed().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
                 .medDekning(response.getDekning())
                 .medGrunnlag(response.getGrunnlag())
-                .medErMedlem(response.isMedlem());
+                .medGjelderMedlemskapIFolketrygden(response.isMedlem());
         if (response.getStatusaarsak() != null) {
             builder.medPeriodeStatusÅrsak(PeriodeStatusÅrsak.valueOf(response.getStatusaarsak()));
         }

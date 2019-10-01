@@ -5,12 +5,12 @@ import java.time.LocalDate;
 public class PeriodeInfo {
 
     private PeriodeStatus periodeStatus;
-    private PeriodeStatusÅrsak periodeStatusÅrsak; // Kun hvis periodeStatus uavklart eller avvist
+    private PeriodeStatusÅrsak periodeStatusÅrsak;
     private LocalDate fom;
     private LocalDate tom;
-    private boolean erMedlem; //Gjelder unntaket medlem i Folketrygden
-    private String grunnlag; //Hva som gir grunnlag for medlemskapsunntaket
-    private String dekning; //Hva som gir dekning for medlemskapsunntaket
+    private boolean gjelderMedlemskapIFolketrygden;
+    private String grunnlag;
+    private String dekning;
 
     public PeriodeStatus getPeriodeStatus() {
         return periodeStatus;
@@ -28,8 +28,8 @@ public class PeriodeInfo {
         return tom;
     }
 
-    public boolean isErMedlem() {
-        return erMedlem;
+    public boolean isGjelderMedlemskapIFolketrygden() {
+        return gjelderMedlemskapIFolketrygden;
     }
 
     public String getGrunnlag() {
@@ -68,8 +68,8 @@ public class PeriodeInfo {
             return this;
         }
 
-        public Builder medErMedlem(boolean erMedlem) {
-            periodeInfo.erMedlem = erMedlem;
+        public Builder medGjelderMedlemskapIFolketrygden(boolean gjelderMedlemskap) {
+            periodeInfo.gjelderMedlemskapIFolketrygden = gjelderMedlemskap;
             return this;
         }
 

@@ -71,6 +71,6 @@ public class MedlemskapServiceTest {
         assertThat(gyldigPeriode.getFom()).isNotNull();
         assertThat(gyldigPeriode.getTom()).isNotNull();
         assertThat(gyldigPeriode.getGrunnlag()).isNotNull();
-        assertThat(gyldigPeriode.isErMedlem()).isNotNull();
+        assertThat(gyldigPeriode.isGjelderMedlemskapIFolketrygden()).isNotNull();
     }
 }

@@ -43,11 +43,6 @@ public class MedlemskapsUnntakResponse {
     @JsonProperty("unntakId")
     private Long unntakId = null;
 
-    /**
-     * Dekningsgraden for dette medlemskapsunntaket.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/DekningMedl\&quot; target&#x3D;\&quot;_blank\&quot;&gt;DekningMedl&lt;/a&gt;
-     *
-     * @return dekning
-     **/
     @JsonProperty("dekning")
     public String getDekning() {
         return dekning;
@@ -57,11 +52,6 @@ public class MedlemskapsUnntakResponse {
         this.dekning = dekning;
     }
 
-    /**
-     * Startdatoen for perioden til medlemskapsunntaket, på ISO-8601 format.
-     *
-     * @return fraOgMed
-     **/
     @JsonProperty("fraOgMed")
     @NotNull
     public Date getFraOgMed() {
@@ -72,12 +62,6 @@ public class MedlemskapsUnntakResponse {
         this.fraOgMed = fraOgMed;
     }
 
-
-    /**
-     * Grunnlaget for dette medlemskapsunntaket.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/GrunnlagMedl\&quot; target&#x3D;\&quot;_blank\&quot;&gt;GrunnlagMedl&lt;/a&gt;
-     *
-     * @return grunnlag
-     **/
     @JsonProperty("grunnlag")
     @NotNull
     public String getGrunnlag() {
@@ -88,12 +72,6 @@ public class MedlemskapsUnntakResponse {
         this.grunnlag = grunnlag;
     }
 
-
-    /**
-     * Hvorvidt dekningen for medlemskapsunntaket har en helsedel.
-     *
-     * @return helsedel
-     **/
     @JsonProperty("helsedel")
     @NotNull
     public Boolean isHelsedel() {
@@ -104,12 +82,6 @@ public class MedlemskapsUnntakResponse {
         this.helsedel = helsedel;
     }
 
-
-    /**
-     * Den naturlige identen som medlemskapsunntaket er lagret på.
-     *
-     * @return ident
-     **/
     @JsonProperty("ident")
     @NotNull
     public String getIdent() {
@@ -120,12 +92,6 @@ public class MedlemskapsUnntakResponse {
         this.ident = ident;
     }
 
-
-    /**
-     * Lovvalget for dette medlemskapsunntaket.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/LovvalgMedl\&quot; target&#x3D;\&quot;_blank\&quot;&gt;LovvalgMedl&lt;/a&gt;
-     *
-     * @return lovvalg
-     **/
     @JsonProperty("lovvalg")
     @NotNull
     public String getLovvalg() {
@@ -136,12 +102,6 @@ public class MedlemskapsUnntakResponse {
         this.lovvalg = lovvalg;
     }
 
-
-    /**
-     * Landet dette medlemskapsunntaket gjelder for.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/Landkoder\&quot; target&#x3D;\&quot;_blank\&quot;&gt;Landkoder&lt;/a&gt;
-     *
-     * @return lovvalgsland
-     **/
     @JsonProperty("lovvalgsland")
     public String getLovvalgsland() {
         return lovvalgsland;
@@ -151,11 +111,6 @@ public class MedlemskapsUnntakResponse {
         this.lovvalgsland = lovvalgsland;
     }
 
-    /**
-     * Beskriver hvorvidt dette medlemskapsunntaket handler om et medlemskap i folketrygden eller ikke.
-     *
-     * @return medlem
-     **/
     @JsonProperty("medlem")
     @NotNull
     public Boolean isMedlem() {
@@ -166,12 +121,6 @@ public class MedlemskapsUnntakResponse {
         this.medlem = medlem;
     }
 
-
-    /**
-     * Sluttdatoen for perioden til medlemskapsunntaket.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/PeriodestatusMedl\&quot; target&#x3D;\&quot;_blank\&quot;&gt;PeriodestatusMedl&lt;/a&gt;
-     *
-     * @return status
-     **/
     @JsonProperty("status")
     @NotNull
     public String getStatus() {
@@ -182,11 +131,6 @@ public class MedlemskapsUnntakResponse {
         this.status = status;
     }
 
-    /**
-     * Dersom statusen på medlemskapsunntaket ikke er gyldig vil dette feltet beskrive hvorfor.&lt;br/&gt;Kodeverk: &lt;a href&#x3D;\&quot;https://kodeverk-web.nais.adeo.no/kodeverksoversikt/kodeverk/StatusaarsakMedl\&quot; target&#x3D;\&quot;_blank\&quot;&gt;StatusaarsakMedl&lt;/a&gt;
-     *
-     * @return statusaarsak
-     **/
     @JsonProperty("statusaarsak")
     public String getStatusaarsak() {
         return statusaarsak;
@@ -196,11 +140,6 @@ public class MedlemskapsUnntakResponse {
         this.statusaarsak = statusaarsak;
     }
 
-    /**
-     * Sluttdatoen for perioden til medlemskapsunntaket, på ISO-8601 format..
-     *
-     * @return tilOgMed
-     **/
     @JsonProperty("tilOgMed")
     @NotNull
     public Date getTilOgMed() {
@@ -211,11 +150,6 @@ public class MedlemskapsUnntakResponse {
         this.tilOgMed = tilOgMed;
     }
 
-    /**
-     * Den funksjonelle ID&#39;en til et medlemskapsunntak.
-     *
-     * @return unntakId
-     **/
     @JsonProperty("unntakId")
     @NotNull
     public Long getUnntakId() {
@@ -225,7 +159,4 @@ public class MedlemskapsUnntakResponse {
     public void setUnntakId(Long unntakId) {
         this.unntakId = unntakId;
     }
-
 }
-
-
