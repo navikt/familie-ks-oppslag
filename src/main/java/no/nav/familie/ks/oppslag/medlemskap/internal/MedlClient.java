@@ -8,6 +8,7 @@ import no.nav.familie.ks.oppslag.medlemskap.MedlemskapService;
 import no.nav.familie.ks.oppslag.medlemskap.MedlemskapsUnntakResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.net.URI;
@@ -49,7 +50,9 @@ public class MedlClient {
         try {
             LOG.info("Prøver å hente medlemskapsunntak fra MEDL2");
             var httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            LOG.info("Response status: {}", httpResponse.statusCode());
+            if (HttpStatus.OK.value() != httpResponse.statusCode() || httpResponse.body().isEmpty()) {
+                throw new RuntimeException("Medl2 returnerte feil");
+            }
             return Arrays.asList(objectMapper.readValue(httpResponse.body(), MedlemskapsUnntakResponse[].class));
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall til medl2", e);

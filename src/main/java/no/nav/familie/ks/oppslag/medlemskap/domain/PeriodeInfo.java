@@ -12,6 +12,34 @@ public class PeriodeInfo {
     private String grunnlag; //Hva som gir grunnlag for medlemskapsunntaket
     private String dekning; //Hva som gir dekning for medlemskapsunntaket
 
+    public PeriodeStatus getPeriodeStatus() {
+        return periodeStatus;
+    }
+
+    public PeriodeStatusÅrsak getPeriodeStatusÅrsak() {
+        return periodeStatusÅrsak;
+    }
+
+    public LocalDate getFom() {
+        return fom;
+    }
+
+    public LocalDate getTom() {
+        return tom;
+    }
+
+    public boolean isErMedlem() {
+        return erMedlem;
+    }
+
+    public String getGrunnlag() {
+        return grunnlag;
+    }
+
+    public String getDekning() {
+        return dekning;
+    }
+
     public static class Builder {
 
         private PeriodeInfo periodeInfo;
