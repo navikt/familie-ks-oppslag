@@ -1,10 +1,13 @@
 package no.nav.familie.ks.oppslag.oppgave;
 
-import no.nav.familie.ks.oppslag.oppgave.domene.Oppgave;
+
+import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.oppgave.internal.OppgaveConsumer;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSSikkerhetsbegrensningException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 @ApplicationScope
 public class OppgaveService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(OppgaveService.class);
     private final OppgaveConsumer oppgaveConsumer;
 
     @Autowired
@@ -35,7 +39,7 @@ public class OppgaveService {
         } catch (WSSikkerhetsbegrensningException | WSOppgaveIkkeFunnetException | WSOptimistiskLasingException e) {
             return ResponseEntity.status(setPassendeStatus(e)).header("message", e.getMessage()).build();
         } catch (SoapFaultException e) {
-            return ResponseEntity.status(PRECONDITION_FAILED)
+            return ResponseEntity.status(BAD_GATEWAY)
                     .header("message", String.format("SOAP tjenesten returnerte en SOAP Fault: %s", e.getMessage())).build();
         }
     }
@@ -50,7 +54,18 @@ public class OppgaveService {
     }
 
     private HttpStatus setPassendeStatus(Exception e) {
-        return e instanceof WSSikkerhetsbegrensningException ? UNAUTHORIZED :
-                e instanceof WSOppgaveIkkeFunnetException ? NOT_FOUND : EXPECTATION_FAILED;
+        if (e instanceof WSSikkerhetsbegrensningException) {
+            LOG.info("Ikke tilgang til å opprette eller oppdatere oppgave i Gosys.");
+            return UNAUTHORIZED;
+        } else if (e instanceof WSOppgaveIkkeFunnetException) {
+            LOG.info("Prøver å oppdatere oppgave som ikke finnes i Gosys.");
+            return NOT_FOUND;
+        } else if (e instanceof WSOptimistiskLasingException) {
+            LOG.info("WSLagreOppgaveRequest returnerte WSOptimistiskLasingException...");
+            return BAD_REQUEST;
+        } else {
+            LOG.info("Det oppstod en uventet feil.");
+            return EXPECTATION_FAILED;
+        }
     }
 }

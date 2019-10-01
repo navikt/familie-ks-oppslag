@@ -1,6 +1,6 @@
 package no.nav.familie.ks.oppslag.oppgave;
 
-import no.nav.familie.ks.oppslag.oppgave.domene.Oppgave;
+import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.oppgave.internal.OppgaveConsumer;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
@@ -28,7 +28,7 @@ public class OppgaveServiceTest {
     public void opprettOppgaveSkalGiFeilHvisIngenOppgaveIdBlirReturnert() {
         String forventetFeilmelding = "Ugyldig respons: Fikk ingen oppgaveId tilbake fra GSAK";
 
-        Oppgave mock = new Oppgave(null, null, null, null, "Test null-response", null);
+        Oppgave mock = new Oppgave("", "", null, "", "Test null-response", 0);
         ResponseEntity response = oppgaveService.opprettEllerOppdaterOppgave(mock);
         assertThat(Objects.requireNonNull(response.getHeaders().get("message")).get(0)).isEqualTo(forventetFeilmelding);
     }
@@ -37,8 +37,8 @@ public class OppgaveServiceTest {
     public void opprettEllerOppdaterOppgaveSkalReturnereFeilMeldingVedExcetion() {
         String forventetFeilmelding = "feilmelding";
 
-        Oppgave opprett = new Oppgave(null, null, null, null, "WS-exception", null);
-        Oppgave oppdater = new Oppgave("1234", null, null, null, "WS-exception", null);
+        Oppgave opprett = new Oppgave("", "", null, "", "WS-exception", 0);
+        Oppgave oppdater = new Oppgave("", "", null, "", "WS-exception", 0);
 
         ResponseEntity opprettResponse = oppgaveService.opprettEllerOppdaterOppgave(opprett);
         ResponseEntity oppdaterResponse = oppgaveService.opprettEllerOppdaterOppgave(oppdater);

@@ -1,7 +1,7 @@
 package no.nav.familie.ks.oppslag.oppgave.internal;
 
+import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
-import no.nav.familie.ks.oppslag.oppgave.domene.Oppgave;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.BehandleOppgaveV1;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
@@ -70,7 +70,7 @@ public class OppgaveConsumer {
     }
 
     private int avklarFrist(Oppgave request) {
-        return request.getBehandlingsfristDager() != null ? request.getBehandlingsfristDager() : DEFAULT_OPPGAVEFRIST_DAGER;
+        return request.getBehandlingsfristDager() > 0 ? request.getBehandlingsfristDager() : DEFAULT_OPPGAVEFRIST_DAGER;
     }
 
     // Sett frist til mandag hvis fristen er i helgen.
