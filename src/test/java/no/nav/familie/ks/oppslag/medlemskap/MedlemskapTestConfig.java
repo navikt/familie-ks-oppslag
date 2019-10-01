@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.medlemskap;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.ks.oppslag.medlemskap.internal.MedlClient;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class MedlemskapTestConfig {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
     @Bean
     @Profile("mock-medlemskap")
@@ -31,7 +32,7 @@ public class MedlemskapTestConfig {
     }
 
     private List<MedlemskapsUnntakResponse> mockMedlemskapResponse() {
-        File medlemskapsResponseBody = new File(getFile("medlemskap/medlrespons.json"));
+        File medlemskapsResponseBody = new File(getFile());
 
         try {
             return Arrays.asList(mapper.readValue(medlemskapsResponseBody, MedlemskapsUnntakResponse[].class));
@@ -40,7 +41,7 @@ public class MedlemskapTestConfig {
         }
     }
 
-    private String getFile(String filnavn) {
-        return getClass().getClassLoader().getResource(filnavn).getFile();
+    private String getFile() {
+        return getClass().getClassLoader().getResource("medlemskap/medlrespons.json").getFile();
     }
 }

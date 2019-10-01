@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.medlemskap.internal;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.http.client.HttpRequestUtil;
 import no.nav.familie.http.client.NavHttpHeaders;
@@ -35,7 +36,7 @@ public class MedlClient {
         this.srvBruker = srvBruker;
         this.stsRestClient = stsRestClient;
         this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
     public List<MedlemskapsUnntakResponse> hentMedlemskapsUnntakResponse(String aktørId) {
@@ -48,14 +49,14 @@ public class MedlClient {
                 .build();
 
         try {
-            LOG.info("Prøver å hente medlemskapsunntak fra MEDL2");
             var httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             if (HttpStatus.OK.value() != httpResponse.statusCode() || httpResponse.body().isEmpty()) {
-                throw new RuntimeException("Medl2 returnerte feil");
+                LOG.warn("Medl2 returnerte feil. Responskode: {}. Respons: {}", httpResponse.statusCode(), httpResponse.body());
+                throw new RuntimeException("Feil ved kall til MEDL2");
             }
             return Arrays.asList(objectMapper.readValue(httpResponse.body(), MedlemskapsUnntakResponse[].class));
         } catch (IOException | InterruptedException e) {
-            throw new RuntimeException("Feil ved kall til medl2", e);
+            throw new RuntimeException("Feil ved kall til MEDL2", e);
         }
     }
 }
