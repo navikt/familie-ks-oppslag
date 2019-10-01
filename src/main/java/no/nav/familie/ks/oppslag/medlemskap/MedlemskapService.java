@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MedlemskapService {
 
@@ -24,10 +26,11 @@ public class MedlemskapService {
         this.medlemskapsOversetter = medlemskapsOversetter;
     }
 
-    public ResponseEntity<MedlemskapsInfo> hentMedlemskapsUnntak(String aktørId) {
+    public ResponseEntity<List<MedlemskapsUnntakResponse>> hentMedlemskapsUnntak(String aktørId) {
         try {
-            MedlemskapsInfo medlemskapsInfo = medlemskapsOversetter.tilMedlemskapsInfo(medlClient.hentMedlemskapsUnntakResponse(aktørId));
-            return ResponseEntity.ok(medlemskapsInfo);
+            List<MedlemskapsUnntakResponse> response = medlClient.hentMedlemskapsUnntakResponse(aktørId);
+            //MedlemskapsInfo medlemskapsInfo = medlemskapsOversetter.tilMedlemskapsInfo(medlClient.hentMedlemskapsUnntakResponse(aktørId));
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             LOG.warn("Feil ved oppslag mot MEDL2 for Aktør: {}", aktørId, e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
