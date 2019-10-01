@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
+import no.nav.familie.http.sts.StsRestClient;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
-import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 

@@ -5,6 +5,7 @@ no.nav.security.oidc:
     accepted_audience: ${GYLDIGE_SRVBRUKERE}
     cookie_name: ID_token
 
+AAD_URL: https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/token
 SECURITYTOKENSERVICE_URL: https://sts.adeo.no/SecurityTokenServiceProvider/
 STS_REST_URL: https://security-token-service.nais.adeo.no
 AKTOERID_URL: https://app.adeo.no/aktoerregister/api/v1
