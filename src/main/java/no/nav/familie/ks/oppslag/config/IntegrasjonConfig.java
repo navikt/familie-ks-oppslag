@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
@@ -17,7 +17,7 @@ public class IntegrasjonConfig {
 
     @Bean
     @Autowired
-    @Primary
+    @Profile("!mock-sts")
     public StsRestClient stsRestClient(ObjectMapper objectMapper,
                                        @Value("${STS_REST_URL}") URI stsUrl,
                                        @Value("${CREDENTIAL_USERNAME}") String stsUsername,
@@ -30,7 +30,6 @@ public class IntegrasjonConfig {
 
     @Bean
     @Autowired
-    @Primary
     public AccessTokenClient accessTokenClient(RestTemplate restTemplateMedProxy,
                                                @Value("${AAD_URL}") URI aadAccessTokenUrl,
                                                @Value("${CLIENT_ID}") String clientId,
