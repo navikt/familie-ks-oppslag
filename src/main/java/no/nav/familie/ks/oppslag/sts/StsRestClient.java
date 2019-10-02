@@ -30,7 +30,7 @@ public class StsRestClient {
     private AccessTokenResponse cachedToken;
 
     public StsRestClient(ObjectMapper mapper, URI stsUrl, String stsUsername, String stsPassword) {
-        this.mapper = new ObjectMapper();
+        this.mapper = mapper;
         this.client = HttpClientUtil.create();
         this.stsUrl = stsUrl;
         this.stsUsername = stsUsername;
