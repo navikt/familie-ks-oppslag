@@ -85,7 +85,7 @@ public class AktørService {
                 aktørregisterClient.hentPersonIdent(id).get(id) :
                 aktørregisterClient.hentAktørId(id).get(id);
 
-        secureLogger.info(erAktørId ? "Hentet fnr for aktørId: {}: {}" : "Hentet aktør id'er for fnr: {}: {}", id, response);
+        secureLogger.info(erAktørId ? "Hentet fnr for aktørId: {}: {} fra aktørregisteret" : "Hentet aktør id'er for fnr: {}: {} fra aktørregisteret", id, response);
 
         if (response.getFeilmelding() == null) {
             final var identer = response.getIdenter().stream()
