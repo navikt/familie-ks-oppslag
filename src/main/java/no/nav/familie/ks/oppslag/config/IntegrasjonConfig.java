@@ -1,6 +1,5 @@
 package no.nav.familie.ks.oppslag.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.http.azure.AccessTokenClient;
 import no.nav.familie.ks.oppslag.sts.StsRestClient;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,13 +14,6 @@ import java.net.URI;
 
 @Configuration
 public class IntegrasjonConfig {
-
-    @Bean
-    @Primary
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
-
     @Bean
     @Autowired
     @Profile("!mock-sts")

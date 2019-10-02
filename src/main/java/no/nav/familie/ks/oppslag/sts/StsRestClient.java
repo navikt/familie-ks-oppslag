@@ -30,7 +30,7 @@ public class StsRestClient {
     private AccessTokenResponse cachedToken;
 
     public StsRestClient(ObjectMapper mapper, URI stsUrl, String stsUsername, String stsPassword) {
-        this.mapper = mapper;
+        this.mapper = new ObjectMapper();
         this.client = HttpClientUtil.create();
         this.stsUrl = stsUrl;
         this.stsUsername = stsUsername;
@@ -94,7 +94,9 @@ public class StsRestClient {
     private AccessTokenResponse håndterRespons(String it) {
         try {
             log.info("Response: {}", it);
-            return mapper.readValue(it, AccessTokenResponse.class);
+            AccessTokenResponse accessTokenResponse = mapper.readValue(it, AccessTokenResponse.class);
+            log.info("accessToken etter kall mot sts: {}", accessTokenResponse.toString());
+            return accessTokenResponse;
         } catch (IOException e) {
             throw new StsAccessTokenFeilException("Parsing av respons feilet", e);
         }
