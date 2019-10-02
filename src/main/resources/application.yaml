@@ -8,11 +8,6 @@ spring:
 
 STS_URL: http://security-token-service.default.svc.nais.local
 
-AAD_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/token
-TENANT: ""
-CLIENT_ID: ""
-CLIENT_SECRET: ""
-
 management:
   endpoint.health.show-details: always
   endpoints.web:
