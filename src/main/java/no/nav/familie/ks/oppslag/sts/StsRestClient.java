@@ -47,7 +47,7 @@ public class StsRestClient {
             return false;
         }
 
-        log.info("Etter sjekk: {}", String.valueOf(cachedToken));
+        log.info("Etter sjekk: {}", cachedToken.toString());
         log.info("Tokenet løper ut: {}", Instant.ofEpochMilli(cachedToken.getExpires_in()).atZone(ZoneId.systemDefault()).toLocalTime());
         log.info("Tiden nå er: {}", now(ZoneId.systemDefault()));
 
