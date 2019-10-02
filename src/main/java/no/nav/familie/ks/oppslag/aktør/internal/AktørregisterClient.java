@@ -57,7 +57,6 @@ public class AktørregisterClient {
 
     private AktørResponse hentRespons(String personIdent, URI uri) {
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
-        LOG.info("sts token: ", systembrukerToken);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
