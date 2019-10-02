@@ -2,7 +2,7 @@ package no.nav.familie.ks.oppslag.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.http.azure.AccessTokenClient;
-import no.nav.familie.http.sts.StsRestClient;
+import no.nav.familie.ks.oppslag.sts.StsRestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
