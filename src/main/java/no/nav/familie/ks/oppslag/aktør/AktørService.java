@@ -36,7 +36,8 @@ public class AktørService {
         return Optional.ofNullable(aktørCache().get(personIdent))
                 .map(cachedPersonIdent -> new ResponseEntity<>(cachedPersonIdent, HttpStatus.OK)).orElseGet(() -> {
                     var responseFraRegister = hentAktørIdFraRegister(personIdent);
-                    if (!responseFraRegister.getStatusCode().isError() && !responseFraRegister.getBody().isEmpty()) {
+                    if (!responseFraRegister.getStatusCode().isError() && responseFraRegister.getBody() != null && !responseFraRegister.getBody().isEmpty()) {
+                        secureLogger.info("Legger fnr {} med aktørid {} i aktør-cache", personIdent, responseFraRegister.getBody());
                         aktørCache().put(personIdent, responseFraRegister.getBody());
                     }
                     return responseFraRegister;
@@ -48,8 +49,8 @@ public class AktørService {
         return Optional.ofNullable(personIdentCache().get(aktørId.getId()))
                 .map(cachedPersonIdent -> new ResponseEntity<>(cachedPersonIdent, HttpStatus.OK)).orElseGet(() -> {
                     var responseFraRegister = hentPersonIdentFraRegister(aktørId);
-                    if (!responseFraRegister.getStatusCode().isError() && !responseFraRegister.getBody().isEmpty()) {
-                        secureLogger.info("Legger aktørid  {} med fnr  {} i cache", aktørId.getId(), responseFraRegister.getBody());
+                    if (!responseFraRegister.getStatusCode().isError() && responseFraRegister.getBody() != null && !responseFraRegister.getBody().isEmpty()) {
+                        secureLogger.info("Legger aktørid {} med fnr {} i personident-cache", aktørId.getId(), responseFraRegister.getBody());
                         personIdentCache().put(aktørId.getId(), responseFraRegister.getBody());
                     }
                     return responseFraRegister;
