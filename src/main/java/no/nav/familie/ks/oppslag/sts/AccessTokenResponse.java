@@ -1,9 +1,9 @@
 package no.nav.familie.ks.oppslag.sts;
 
 class AccessTokenResponse {
-    private String access_token;
-    private String token_type;
-    private Long expires_in;
+    public String access_token;
+    public String token_type;
+    public Long expires_in;
 
     public AccessTokenResponse() {
     }
@@ -12,18 +12,6 @@ class AccessTokenResponse {
         this.access_token = access_token;
         this.token_type = token_type;
         this.expires_in = expires_in;
-    }
-
-    String getAccess_token() {
-        return access_token;
-    }
-
-    public String getToken_type() {
-        return token_type;
-    }
-
-    Long getExpires_in() {
-        return expires_in;
     }
 
     @Override
