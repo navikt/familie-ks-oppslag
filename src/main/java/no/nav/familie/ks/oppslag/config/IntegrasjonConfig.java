@@ -17,7 +17,7 @@ public class IntegrasjonConfig {
     @Bean
     @Autowired
     public StsRestClient stsRestClient(ObjectMapper objectMapper,
-                                       @Value("${STS_URL}") URI stsUrl,
+                                       @Value("${STS_REST_URL}") URI stsUrl,
                                        @Value("${CREDENTIAL_USERNAME}") String stsUsername,
                                        @Value("${CREDENTIAL_PASSWORD}") String stsPassword) {
 
