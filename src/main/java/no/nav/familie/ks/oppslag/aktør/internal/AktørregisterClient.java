@@ -39,9 +39,10 @@ public class AktørregisterClient {
     private String aktørRegisterUrl;
     private String consumer;
 
+    @Autowired
     public AktørregisterClient(@Value("${AKTOERID_URL}") String aktørRegisterUrl,
                                @Value("${CREDENTIAL_USERNAME}") String consumer,
-                               @Autowired StsRestClient stsRestClient) {
+                               StsRestClient stsRestClient) {
         this.stsRestClient = stsRestClient;
         this.consumer = consumer;
         this.aktørRegisterUrl = aktørRegisterUrl;
