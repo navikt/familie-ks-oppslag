@@ -6,6 +6,8 @@ import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
 import no.nav.familie.http.sts.StsRestClient;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -30,6 +32,7 @@ public class AktørregisterClient {
     private final Timer aktoerResponstid = Metrics.timer("aktoer.respons.tid");
     private final Counter aktoerSuccess = Metrics.counter("aktoer.response", "status", "success");
     private final Counter aktoerFailure = Metrics.counter("aktoer.response", "status", "failure");
+    private static final Logger LOG = LoggerFactory.getLogger(AktørregisterClient.class);
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
     private ObjectMapper objectMapper;
@@ -53,6 +56,7 @@ public class AktørregisterClient {
 
     private AktørResponse hentRespons(String personIdent, URI uri) {
         String systembrukerToken = stsRestClient.getSystemOIDCToken();
+        LOG.info("sts token: ", systembrukerToken);
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(uri)
