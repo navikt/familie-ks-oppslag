@@ -94,9 +94,7 @@ public class StsRestClient {
     private AccessTokenResponse håndterRespons(String it) {
         try {
             log.info("Response: {}", it);
-            AccessTokenResponse accessTokenResponse = mapper.readValue(it, AccessTokenResponse.class);
-            log.info("accessToken etter kall mot sts: {}", accessTokenResponse.toString());
-            return accessTokenResponse;
+            return mapper.readValue(it, AccessTokenResponse.class);
         } catch (IOException e) {
             throw new StsAccessTokenFeilException("Parsing av respons feilet", e);
         }
