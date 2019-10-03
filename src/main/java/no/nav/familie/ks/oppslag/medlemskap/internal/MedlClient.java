@@ -1,10 +1,9 @@
 package no.nav.familie.ks.oppslag.medlemskap.internal;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.http.client.HttpRequestUtil;
 import no.nav.familie.http.client.NavHttpHeaders;
-import no.nav.familie.ks.oppslag.felles.rest.StsRestClient;
+import no.nav.familie.http.sts.StsRestClient;
 import no.nav.familie.ks.oppslag.medlemskap.MedlemskapService;
 import no.nav.familie.ks.oppslag.medlemskap.MedlemskapsUnntakResponse;
 import org.slf4j.Logger;
@@ -31,12 +30,12 @@ public class MedlClient {
     private String srvBruker;
     private ObjectMapper objectMapper;
 
-    public MedlClient(String url, String srvBruker, StsRestClient stsRestClient) {
+    public MedlClient(String url, String srvBruker, StsRestClient stsRestClient, ObjectMapper objectMapper) {
         this.medl2Url = url;
         this.srvBruker = srvBruker;
         this.stsRestClient = stsRestClient;
         this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        this.objectMapper = objectMapper;
     }
 
     public List<MedlemskapsUnntakResponse> hentMedlemskapsUnntakResponse(String aktørId) {
