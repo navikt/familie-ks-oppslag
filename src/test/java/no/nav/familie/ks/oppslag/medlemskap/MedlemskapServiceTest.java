@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.medlemskap;
 
+import no.nav.familie.ks.oppslag.felles.OppslagException;
 import no.nav.familie.ks.oppslag.medlemskap.domain.MedlemskapsInfo;
 import no.nav.familie.ks.oppslag.medlemskap.domain.MedlemskapsOversetter;
 import no.nav.familie.ks.oppslag.medlemskap.domain.PeriodeInfo;
@@ -72,5 +73,14 @@ public class MedlemskapServiceTest {
         assertThat(gyldigPeriode.getTom()).isNotNull();
         assertThat(gyldigPeriode.getGrunnlag()).isNotNull();
         assertThat(gyldigPeriode.isGjelderMedlemskapIFolketrygden()).isNotNull();
+    }
+
+    @Test(expected = OppslagException.class)
+    public void skal_kaste_oppslagexception_ved_feil() {
+        when(medlClient.hentMedlemskapsUnntakResponse(any())).thenThrow(new RuntimeException("Feil ved kall til MEDL2"));
+
+        ResponseEntity<MedlemskapsInfo> respons = medlemskapService.hentMedlemskapsUnntak(TEST_AKTØRID);
+
+        assertThat(respons.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

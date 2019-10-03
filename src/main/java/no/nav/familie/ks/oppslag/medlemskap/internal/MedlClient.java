@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.familie.http.client.HttpRequestUtil;
 import no.nav.familie.http.client.NavHttpHeaders;
 import no.nav.familie.http.sts.StsRestClient;
+import no.nav.familie.ks.oppslag.felles.OppslagException;
 import no.nav.familie.ks.oppslag.medlemskap.MedlemskapService;
 import no.nav.familie.ks.oppslag.medlemskap.MedlemskapsUnntakResponse;
 import org.slf4j.Logger;
@@ -24,14 +25,14 @@ public class MedlClient {
 
     private static final Logger LOG = LoggerFactory.getLogger(MedlemskapService.class);
 
-    private String medl2Url;
+    private URI medl2Uri;
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
     private String srvBruker;
     private ObjectMapper objectMapper;
 
     public MedlClient(String url, String srvBruker, StsRestClient stsRestClient, ObjectMapper objectMapper) {
-        this.medl2Url = url;
+        this.medl2Uri = URI.create(String.format("%s/medlemskapsunntak", url));
         this.srvBruker = srvBruker;
         this.stsRestClient = stsRestClient;
         this.httpClient = HttpClient.newHttpClient();
@@ -39,9 +40,8 @@ public class MedlClient {
     }
 
     public List<MedlemskapsUnntakResponse> hentMedlemskapsUnntakResponse(String aktørId) {
-        URI uri = URI.create(String.format("%s/medlemskapsunntak", medl2Url));
         HttpRequest request = HttpRequestUtil.createRequest("Bearer " + stsRestClient.getSystemOIDCToken())
-                .uri(uri)
+                .uri(medl2Uri)
                 .header(ACCEPT, "application/json")
                 .header(NavHttpHeaders.NAV_PERSONIDENT.asString(), aktørId)
                 .header(NavHttpHeaders.NAV_CONSUMER_ID.asString(), srvBruker)
@@ -57,5 +57,9 @@ public class MedlClient {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException("Feil ved kall til MEDL2", e);
         }
+    }
+
+    public URI getMedl2Uri() {
+        return this.medl2Uri;
     }
 }
