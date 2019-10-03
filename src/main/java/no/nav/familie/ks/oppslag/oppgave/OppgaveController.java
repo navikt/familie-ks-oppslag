@@ -2,6 +2,7 @@ package no.nav.familie.ks.oppslag.oppgave;
 
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.security.oidc.api.ProtectedWithClaims;
+import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
