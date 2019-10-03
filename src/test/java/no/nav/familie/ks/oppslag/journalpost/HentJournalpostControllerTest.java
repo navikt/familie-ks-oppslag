@@ -1,7 +1,9 @@
 package no.nav.familie.ks.oppslag.journalpost;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.jwt.SignedJWT;
 import no.nav.familie.ks.oppslag.DevLauncher;
+import no.nav.security.oidc.test.support.JwtTokenGenerator;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,10 +49,7 @@ public class HentJournalpostControllerTest {
 
     @Before
     public void setUp() {
-        HttpEntity<String> entity = new HttpEntity<String>(null, headers);
-        ResponseEntity<String> cookie = restTemplate.exchange(
-                createURLWithPort("/local/cookie"), HttpMethod.GET, entity, String.class);
-        headers.add("Authorization", "Bearer " + cookie.getBody().split("value\":\"")[1].split("\",\"")[0]);
+        headers.setBearerAuth(JwtTokenGenerator.signedJWTAsString("testbruker"));
     }
 
     @Test
