@@ -1,13 +1,13 @@
 package no.nav.familie.ks.oppslag.infotrygd.domene;
 
 public class AktivKontantstøtteInfo {
-    private boolean harAktivKontantstøtte;
+    private boolean harAktivKontantstotte;
 
-    public AktivKontantstøtteInfo(boolean harAktivKontantstøtte) {
-        this.harAktivKontantstøtte = harAktivKontantstøtte;
+    public AktivKontantstøtteInfo(boolean harAktivKontantstotte) {
+        this.harAktivKontantstotte = harAktivKontantstotte;
     }
 
-    public boolean getHarAktivKontantstøtte() {
-        return harAktivKontantstøtte;
+    public boolean getHarAktivKontantstotte() {
+        return harAktivKontantstotte;
     }
 }
