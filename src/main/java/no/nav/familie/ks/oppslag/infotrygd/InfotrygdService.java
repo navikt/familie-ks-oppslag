@@ -29,6 +29,7 @@ public class InfotrygdService {
     AktivKontantstøtteInfo hentAktivKontantstøtteFor(String fnr) {
         var headers = new HttpHeaders();
         headers.setBearerAuth(accessTokenClient.getAccessToken(scope).access_token);
+        headers.add("Accept", "application/json");
         headers.add("fnr", fnr);
         var entity = new HttpEntity(headers);
 
