@@ -15,11 +15,15 @@ public class InfotrygdService {
     private RestTemplate restTemplate = new RestTemplate();
     private AccessTokenClient accessTokenClient;
     private String scope;
+    private String infotrygdURL;
 
     @Autowired
-    public InfotrygdService(AccessTokenClient accessTokenClient, @Value("${INFOTRYGD_KS_SCOPE}") String scope) {
+    public InfotrygdService(AccessTokenClient accessTokenClient, 
+                            @Value("${INFOTRYGD_KS_SCOPE}") String scope, 
+                            @Value("${INFOTRYGD_URL}") String infotrygdURL) {
         this.accessTokenClient = accessTokenClient;
         this.scope = scope;
+        this.infotrygdURL = infotrygdURL;
     }
 
     AktivKontantstøtteInfo hentAktivKontantstøtteFor(String fnr) {
@@ -28,7 +32,7 @@ public class InfotrygdService {
         headers.add("fnr", fnr);
         var entity = new HttpEntity(headers);
 
-        var response = restTemplate.exchange("https://infotrygd-kontantstotte/v1/harBarnAktivKontantstotte",
+        var response = restTemplate.exchange(String.format("%s/v1/harBarnAktivKontantstotte", infotrygdURL),
                                         HttpMethod.GET,
                                         entity,
                                         AktivKontantstøtteInfo.class);
