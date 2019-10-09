@@ -6,11 +6,14 @@ no.nav.security.oidc:
     cookie_name: ID_token
 
 AAD_URL: https://login.microsoftonline.com/navno.onmicrosoft.com/oauth2/v2.0/token
+CLIENT_ID: ${CLIENT_ID}
+CLIENT_SECRET: ${CLIENT_SECRET}
+INFOTRYGD_KS_SCOPE: ${INFOTRYGD_KS_SCOPE}
+
 SECURITYTOKENSERVICE_URL: https://sts.adeo.no/SecurityTokenServiceProvider/
 AKTOERID_URL: https://app.adeo.no/aktoerregister/api/v1
 PERSON_V3_URL: https://wasapp.adeo.no/tpsws/ws/Person/v3
 DOKARKIV_V1_URL: https://dokarkiv.nais.adeo.no
-INFOTRYGD_URL: https://infotrygd-kontantstotte.nais.adeo.no
 MEDL2_URL: https://app.adeo.no/medl2/api/v1
 SAF_URL: http://saf/graphql
 BEHANDLE_OPPGAVE_V1_URL: https://wasapp.adeo.no/nav-gsak-ws/BehandleOppgaveV1
