@@ -1,7 +1,7 @@
 package no.nav.familie.ks.oppslag.dokarkiv;
 
+import no.nav.familie.ks.kontrakter.dokarkiv.api.*;
 import no.nav.familie.ks.oppslag.aktør.AktørService;
-import no.nav.familie.ks.oppslag.dokarkiv.api.*;
 import no.nav.familie.ks.oppslag.dokarkiv.client.DokarkivClient;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.IdType;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.JournalpostType;
@@ -12,7 +12,6 @@ import no.nav.familie.ks.oppslag.dokarkiv.metadata.KontanstøtteSøknadMetadata;
 import no.nav.familie.ks.oppslag.personopplysning.PersonopplysningerService;
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
-import no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -55,7 +54,7 @@ public class DokarkivServiceTest {
         when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(AKTØR_ID)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medAktørId(AKTØR_ID).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -69,7 +68,7 @@ public class DokarkivServiceTest {
         when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(AKTØR_ID)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medAktørId(AKTØR_ID).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN,  false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -86,7 +85,7 @@ public class DokarkivServiceTest {
         when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(AKTØR_ID)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medAktørId(AKTØR_ID).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         ArkiverDokumentResponse arkiverDokumentResponse = dokarkivService.lagInngåendeJournalpost(dto);
 
         assertThat(arkiverDokumentResponse.getJournalpostId()).isEqualTo(JOURNALPOST_ID);
@@ -97,7 +96,7 @@ public class DokarkivServiceTest {
     public void skal_kaste_exception_hvis_aktørid_not_found() {
         when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR,false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
 
         Throwable thrown = catchThrowable(() -> { dokarkivService.lagInngåendeJournalpost(dto); });
         assertThat(thrown).isInstanceOf(RuntimeException.class).withFailMessage("Kan ikke hente navn");

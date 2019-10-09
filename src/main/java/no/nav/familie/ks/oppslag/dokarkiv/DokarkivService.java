@@ -1,7 +1,10 @@
 package no.nav.familie.ks.oppslag.dokarkiv;
 
+import no.nav.familie.ks.kontrakter.dokarkiv.api.ArkiverDokumentRequest;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.ArkiverDokumentResponse;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.DokumentType;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.FilType;
 import no.nav.familie.ks.oppslag.aktør.AktørService;
-import no.nav.familie.ks.oppslag.dokarkiv.api.*;
 import no.nav.familie.ks.oppslag.dokarkiv.client.DokarkivClient;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.*;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.Dokument;
@@ -47,7 +50,7 @@ public class DokarkivService {
 
         var request = mapTilOpprettJournalpostRequest(fnr, navn, arkiverDokumentRequest.getDokumenter());
 
-        Optional<OpprettJournalpostResponse> response = Optional.ofNullable(dokarkivClient.lagJournalpost(request, arkiverDokumentRequest.isForsøkFerdigstill(), fnr));
+        Optional<OpprettJournalpostResponse> response = Optional.ofNullable(dokarkivClient.lagJournalpost(request, arkiverDokumentRequest.getForsøkFerdigstill(), fnr));
         return response.map(this::mapTilArkiverDokumentResponse).orElse(null);
     }
 
@@ -67,7 +70,7 @@ public class DokarkivService {
         return navn;
     }
 
-    private OpprettJournalpostRequest mapTilOpprettJournalpostRequest(String fnr, String navn, List<no.nav.familie.ks.oppslag.dokarkiv.api.Dokument> dokumenter) {
+    private OpprettJournalpostRequest mapTilOpprettJournalpostRequest(String fnr, String navn, List<no.nav.familie.ks.kontrakter.dokarkiv.api.Dokument> dokumenter) {
         AbstractDokumentMetadata metadataHoveddokument = METADATA.get(dokumenter.get(0).getDokumentType().name());
         Assert.notNull(metadataHoveddokument, "Ukjent dokumenttype " +  dokumenter.get(0).getDokumentType());
 
@@ -90,7 +93,7 @@ public class DokarkivService {
 
     }
 
-    private Dokument mapTilDokument(no.nav.familie.ks.oppslag.dokarkiv.api.Dokument dokument) {
+    private Dokument mapTilDokument(no.nav.familie.ks.kontrakter.dokarkiv.api.Dokument dokument) {
         AbstractDokumentMetadata metadata = METADATA.get(dokument.getDokumentType().name());
         Assert.notNull(metadata, "Ukjent dokumenttype " +  dokument.getDokumentType());
 

@@ -1,10 +1,10 @@
 package no.nav.familie.ks.oppslag.dokarkiv;
 
+import no.nav.familie.ks.kontrakter.dokarkiv.api.ArkiverDokumentRequest;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.Dokument;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.DokumentType;
+import no.nav.familie.ks.kontrakter.dokarkiv.api.FilType;
 import no.nav.familie.ks.oppslag.OppslagSpringRunnerTest;
-import no.nav.familie.ks.oppslag.dokarkiv.api.ArkiverDokumentRequest;
-import no.nav.familie.ks.oppslag.dokarkiv.api.Dokument;
-import no.nav.familie.ks.oppslag.dokarkiv.api.DokumentType;
-import no.nav.familie.ks.oppslag.dokarkiv.api.FilType;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,7 +28,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 @ActiveProfiles(profiles = {"dev", "mock-sts", "mock-aktor", "mock-personopplysninger"})
 public class DokarkivControllerTest extends OppslagSpringRunnerTest {
     public static final int MOCK_SERVER_PORT = 18321;
-    public static final String FULLT_NAVN = "Foo Bar";
     public static final String DOKARKIV_URL = "/api/arkiv/";
     public static final Dokument HOVEDDOKUMENT = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD);
     public static final Dokument VEDLEGG = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD_VEDLEGG);
@@ -38,14 +37,28 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
     @Before
     public void setUp() {
         headers.setBearerAuth(getLokalTestToken());
+        headers.setContentType(MediaType.APPLICATION_JSON);
     }
 
     @Test
     public void skal_returnere_Bad_Request_hvis_fNr_mangler() {
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest(null, FULLT_NAVN, false, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        String request = "{ }";
 
         ResponseEntity<String> response = restTemplate.exchange(
-                localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<ArkiverDokumentRequest>(body, headers), String.class
+                localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<String>(request, headers), String.class
+        );
+
+        assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
+        assertThat(response.getBody()).contains("value failed for JSON property fnr due to missing");
+    }
+
+
+    @Test
+    public void skal_returnere_Bad_Request_hvis_fNr_blank() {
+        String request = "{ \"fnr\": \"\", \"dokumenter\": []}";
+
+        ResponseEntity<String> response = restTemplate.exchange(
+                localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<String>(request, headers), String.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(BAD_REQUEST);
@@ -54,7 +67,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
 
     @Test
     public void skal_returnere_Bad_Request_hvis_ingen_dokumenter() {
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("fnr", "Foobar",false, new LinkedList<>());
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("fnr", false, new LinkedList<>());
 
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<ArkiverDokumentRequest>(body, headers), String.class
@@ -79,7 +92,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", FULLT_NAVN, false, List.of(HOVEDDOKUMENT));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, List.of(HOVEDDOKUMENT));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
@@ -103,7 +116,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", FULLT_NAVN, false, List.of(HOVEDDOKUMENT, VEDLEGG));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, List.of(HOVEDDOKUMENT, VEDLEGG));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
@@ -127,7 +140,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", "Foobar", false, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
