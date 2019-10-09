@@ -46,7 +46,7 @@ public class InfotrygdController {
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "harBarnAktivKontantstotte")
-    public AktivKontantstøtteInfo aktivKontantstøtte(@NotNull @RequestHeader(name = "fnr") String fnr) {
+    public AktivKontantstøtteInfo aktivKontantstøtte(@NotNull @RequestHeader(name = "Nav-Personident") String fnr) {
         return infotrygdService.hentAktivKontantstøtteFor(fnr);
     }
 }

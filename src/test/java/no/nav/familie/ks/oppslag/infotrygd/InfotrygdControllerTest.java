@@ -48,7 +48,7 @@ public class InfotrygdControllerTest extends OppslagSpringRunnerTest {
 
     @Test
     public void skal_feile_når_fnr_ikke_er_et_tall() {
-        headers.add("fnr", "foo");
+        headers.add("Nav-Personident", "foo");
 
         var response = restTemplate.exchange(
                 localhost("/api/infotrygd/harBarnAktivKontantstotte"), HttpMethod.GET, new HttpEntity<>(headers), AktivKontantstøtteInfo.class
