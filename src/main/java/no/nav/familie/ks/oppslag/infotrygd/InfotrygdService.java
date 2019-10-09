@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -27,6 +30,10 @@ public class InfotrygdService {
     }
 
     AktivKontantstøtteInfo hentAktivKontantstøtteFor(String fnr) {
+        if (!fnr.matches("[0-9]+")) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "fnr må være et tall");
+        }
+
         var headers = new HttpHeaders();
         headers.setBearerAuth(accessTokenClient.getAccessToken(scope).access_token);
         headers.add("Accept", "application/json");
@@ -38,6 +45,10 @@ public class InfotrygdService {
                                         entity,
                                         AktivKontantstøtteInfo.class);
 
-        return response.getBody();
+        if (response.getBody() != null && response.getBody().getHarAktivKontantstotte() != null) {
+            return response.getBody();
+        } else {
+            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Ufullstendig eller tom respons.");
+        }
     }
 }
