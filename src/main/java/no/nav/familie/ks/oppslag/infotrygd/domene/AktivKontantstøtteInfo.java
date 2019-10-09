@@ -1,8 +1,5 @@
 package no.nav.familie.ks.oppslag.infotrygd.domene;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class AktivKontantstøtteInfo {
     private Boolean harAktivKontantstotte;
 

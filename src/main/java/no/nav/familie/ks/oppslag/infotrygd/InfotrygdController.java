@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
+import java.util.Map;
 import javax.validation.constraints.NotNull;
 
 @RestController
@@ -31,16 +32,16 @@ public class InfotrygdController {
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HttpServerErrorException.class)
-    public String handleValidationExceptions(HttpServerErrorException ex) {
-        LOG.warn("Infotrygd-kontantstøtte 5xx-feil: ", ex.getResponseBodyAsString());
-        return ex.getResponseBodyAsString();
+    public Map<String, String> handleExceptions(HttpServerErrorException ex) {
+        LOG.warn("Infotrygd-kontantstøtte 5xx-feil: " + ex.getStatusText());
+        return Map.of("error", ex.getStatusText());
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HttpClientErrorException.class)
-    public String handleValidationExceptions(HttpClientErrorException ex) {
-        LOG.warn("Infotrygd-kontantstøtte 4xx-feil: ", ex.getResponseBodyAsString());
-        return ex.getResponseBodyAsString();
+    public Map<String, String> handleExceptions(HttpClientErrorException ex) {
+        LOG.warn("Infotrygd-kontantstøtte 4xx-feil: " + ex.getStatusText());
+        return Map.of("error", ex.getStatusText());
     }
 
     @ResponseStatus(HttpStatus.OK)
