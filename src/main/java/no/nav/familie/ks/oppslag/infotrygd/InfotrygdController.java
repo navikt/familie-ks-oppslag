@@ -32,13 +32,13 @@ public class InfotrygdController {
 
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<Map<String, String>> handleExceptions(HttpServerErrorException ex) {
-        LOG.warn("Infotrygd-kontantstøtte 5xx-feil: " + ex.getStatusText());
+        LOG.error("Infotrygd-kontantstøtte 5xx-feil: " + ex.getStatusText());
         return new ResponseEntity<Map<String, String>>(Map.of("error", ex.getStatusText()), ex.getStatusCode());
     }
 
     @ExceptionHandler(HttpClientErrorException.class)
     public ResponseEntity<Map<String, String>> handleExceptions(HttpClientErrorException ex) {
-        LOG.warn("Infotrygd-kontantstøtte 4xx-feil: " + ex.getStatusText());
+        LOG.error("Infotrygd-kontantstøtte 4xx-feil: " + ex.getStatusText());
         return new ResponseEntity<Map<String, String>>(Map.of("error", ex.getStatusText()), ex.getStatusCode());
     }
 
