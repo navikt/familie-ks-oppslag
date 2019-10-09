@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -30,23 +30,20 @@ public class InfotrygdController {
         this.infotrygdService = infotrygdService;
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HttpServerErrorException.class)
-    public Map<String, String> handleExceptions(HttpServerErrorException ex) {
+    public ResponseEntity<Map<String, String>> handleExceptions(HttpServerErrorException ex) {
         LOG.warn("Infotrygd-kontantstøtte 5xx-feil: " + ex.getStatusText());
-        return Map.of("error", ex.getStatusText());
+        return new ResponseEntity<Map<String, String>>(Map.of("error", ex.getStatusText()), ex.getStatusCode());
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(HttpClientErrorException.class)
-    public Map<String, String> handleExceptions(HttpClientErrorException ex) {
+    public ResponseEntity<Map<String, String>> handleExceptions(HttpClientErrorException ex) {
         LOG.warn("Infotrygd-kontantstøtte 4xx-feil: " + ex.getStatusText());
-        return Map.of("error", ex.getStatusText());
+        return new ResponseEntity<Map<String, String>>(Map.of("error", ex.getStatusText()), ex.getStatusCode());
     }
 
-    @ResponseStatus(HttpStatus.OK)
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "harBarnAktivKontantstotte")
-    public AktivKontantstøtteInfo aktivKontantstøtte(@NotNull @RequestHeader(name = "Nav-Personident") String fnr) {
-        return infotrygdService.hentAktivKontantstøtteFor(fnr);
+    public ResponseEntity<AktivKontantstøtteInfo> aktivKontantstøtte(@NotNull @RequestHeader(name = "Nav-Personident") String fnr) {
+        return new ResponseEntity<AktivKontantstøtteInfo>(infotrygdService.hentAktivKontantstøtteFor(fnr), HttpStatus.OK);
     }
 }

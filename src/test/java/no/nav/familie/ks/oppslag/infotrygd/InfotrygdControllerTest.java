@@ -54,7 +54,7 @@ public class InfotrygdControllerTest extends OppslagSpringRunnerTest {
                 localhost("/api/infotrygd/harBarnAktivKontantstotte"), HttpMethod.GET, new HttpEntity<>(headers), AktivKontantstøtteInfo.class
         );
 
-        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
     
     @Test
