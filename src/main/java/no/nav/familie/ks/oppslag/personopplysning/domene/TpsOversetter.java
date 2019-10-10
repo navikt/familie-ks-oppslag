@@ -42,6 +42,11 @@ public class TpsOversetter {
     public Personinfo tilPersoninfo(PersonIdent personIdent, HentPersonResponse response) {
         Bruker person = (Bruker) response.getPerson();
 
+        PersonIdent identFraTps = null;
+        if (person.getAktoer() instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent) {
+            identFraTps = new PersonIdent(((no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent) person.getAktoer()).getIdent().getIdent());
+        }
+
         Set<Familierelasjon> familierelasjoner = person.getHarFraRolleI().stream()
                 .map(this::tilRelasjon)
                 .collect(toSet());
@@ -50,7 +55,7 @@ public class TpsOversetter {
         String geografiskTilknytning = person.getGeografiskTilknytning() != null ? person.getGeografiskTilknytning().getGeografiskTilknytning() : null;
 
         return new Personinfo.Builder()
-                .medPersonIdent(personIdent)
+                .medPersonIdent(identFraTps != null ? identFraTps : personIdent)
                 .medFamilierelasjon(familierelasjoner)
                 .medAdresse(tpsAdresseOversetter.finnAdresseFor(person))
                 .medAdresseLandkode(tpsAdresseOversetter.finnAdresseLandkodeFor(person))
