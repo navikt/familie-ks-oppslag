@@ -20,7 +20,7 @@
         <sha1></sha1>
         <changelist>-SNAPSHOT</changelist>
         <java.version>11</java.version>
-        <common-java-modules.version>1.2019.07.11-12.31-0b875ec24c4e</common-java-modules.version>
+        <common-java-modules.version>1.2019.10.02-12.56-eb0766a86085</common-java-modules.version>
         <felles.version>1.0_20191007152733_dff2e9b</felles.version>
         <kontrakt.version>1.0_20191001152708_01aaa0c</kontrakt.version>
         <cxf.version>3.3.1</cxf.version>
