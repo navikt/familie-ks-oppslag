@@ -2,11 +2,16 @@ package no.nav.familie.ks.oppslag.oppgave.internal;
 
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
+import no.nav.sbl.util.StringUtils;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.BehandleOppgaveV1;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSSikkerhetsbegrensningException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.meldinger.*;
+import no.nav.tjeneste.virksomhet.oppgave.v3.binding.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.FinnOppgaveListeFilter;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.FinnOppgaveListeRequest;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.FinnOppgaveListeSok;
 import org.springframework.remoting.soap.SoapFaultException;
 
 import java.time.DayOfWeek;
@@ -21,20 +26,29 @@ public class OppgaveConsumer {
     private final String PRIORITET_KODE = "NORM_KON";
     private static final int DEFAULT_OPPGAVEFRIST_DAGER = 2;
 
-    private BehandleOppgaveV1 port;
+    private BehandleOppgaveV1 behandleOppgavePort;
+    private OppgaveV3 finnOppgavePort;
 
-    public OppgaveConsumer(BehandleOppgaveV1 port) {
-        this.port = port;
+    public OppgaveConsumer(BehandleOppgaveV1 behandleOppgavePort, OppgaveV3 oppgavePort) {
+        this.behandleOppgavePort = behandleOppgavePort;
+        this.finnOppgavePort = oppgavePort;
     }
 
     public WSOpprettOppgaveResponse opprettOppgave(Oppgave request) throws WSSikkerhetsbegrensningException, SoapFaultException {
-        return port.opprettOppgave(tilWSOpprett(request));
+        return behandleOppgavePort.opprettOppgave(tilWSOpprett(request));
     }
 
     public Boolean oppdaterOppgave(Oppgave request) throws
             WSSikkerhetsbegrensningException, WSOppgaveIkkeFunnetException, WSOptimistiskLasingException, SoapFaultException {
-        port.lagreOppgave(tilWSLagre(request));
+        behandleOppgavePort.lagreOppgave(tilWSLagre(request));
         return true;
+    }
+
+    private String finnBehandleSakOppgave(Oppgave request) {
+        if (StringUtils.notNullOrEmpty(request.getEksisterendeOppgaveId())) {
+            return request.getEksisterendeOppgaveId();
+        }
+        return finnOppgavePort.finnOppgaveListe(tilWSOppgaveListe(request)).getOppgaveListe().get(0).getOppgaveId();
     }
 
     private WSOpprettOppgaveRequest tilWSOpprett(Oppgave request) {
@@ -57,12 +71,26 @@ public class OppgaveConsumer {
 
     private WSLagreOppgaveRequest tilWSLagre(Oppgave request) {
         WSLagreOppgave oppgave = new WSLagreOppgave()
-                .withOppgaveId(Integer.parseInt(request.getEksisterendeOppgaveId()))
+                .withOppgaveId(Integer.parseInt(finnBehandleSakOppgave(request)))
                 .withSaksnummer(request.getGosysSakId())
                 .withBeskrivelse(request.getBeskrivelse());
         return new WSLagreOppgaveRequest()
                 .withEndretAvEnhetId(Integer.parseInt(request.getBehandlendeEnhetId()))
                 .withWsLagreOppgave(oppgave);
+    }
+
+    private FinnOppgaveListeRequest tilWSOppgaveListe(Oppgave request) {
+        FinnOppgaveListeRequest oppgaveListeRequest = new FinnOppgaveListeRequest();
+        FinnOppgaveListeSok oppgaveListeSok = new FinnOppgaveListeSok();
+        FinnOppgaveListeFilter filter = new FinnOppgaveListeFilter();
+
+        filter.getOppgavetypeKodeListe().add(OPPGAVETYPE_KODE);
+        oppgaveListeRequest.setFilter(filter);
+        oppgaveListeRequest.setSok(oppgaveListeSok);
+        oppgaveListeSok.setBrukerId(request.getFnr());
+        oppgaveListeSok.setSakId(request.getGosysSakId());
+
+        return oppgaveListeRequest;
     }
 
     private LocalDate iDag() {

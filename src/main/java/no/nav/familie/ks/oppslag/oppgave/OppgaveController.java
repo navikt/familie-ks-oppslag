@@ -25,9 +25,6 @@ public class OppgaveController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/oppdater")
     public ResponseEntity oppdaterOppgave(@RequestBody Oppgave request) {
-        if (request.getEksisterendeOppgaveId() == null) {
-            return ResponseEntity.badRequest().header("message", "Mangler oppgaveId").build();
-        }
         return oppgaveService.opprettEllerOppdaterOppgave(request);
     }
 }
