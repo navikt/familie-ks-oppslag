@@ -2,7 +2,7 @@ package no.nav.familie.ks.oppslag.personopplysning.domene;
 
 import java.util.Objects;
 
-public class PersonIdent implements Ident {
+public class PersonIdent {
 
     private final String id;
 

@@ -15,8 +15,6 @@ import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkRespons
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -148,24 +146,21 @@ public class TpsOversetter {
     private Familierelasjon tilRelasjon(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon familierelasjon) {
         String rollekode = familierelasjon.getTilRolle().getValue();
         RelasjonsRolleType relasjonsrolle = RelasjonsRolleType.valueOf(rollekode);
-        Map<IdentType, Ident> aktørId = utledIdent(familierelasjon);
+        PersonIdent personIdent = utledPersonIdent(familierelasjon);
         Boolean harSammeBosted = familierelasjon.isHarSammeBosted();
 
-        return new Familierelasjon(aktørId, relasjonsrolle,
+        return new Familierelasjon(personIdent, relasjonsrolle,
                 tilLocalDate(familierelasjon.getTilPerson().getFoedselsdato()), harSammeBosted);
     }
 
-    private Map<IdentType, Ident> utledIdent(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon familierelasjon) {
+    private PersonIdent utledPersonIdent(no.nav.tjeneste.virksomhet.person.v3.informasjon.Familierelasjon familierelasjon) {
         final var aktoer = familierelasjon.getTilPerson().getAktoer();
         if (aktoer instanceof no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent) {
             final var personIdent = ((no.nav.tjeneste.virksomhet.person.v3.informasjon.PersonIdent) aktoer).getIdent().getIdent();
-            return Collections.singletonMap(IdentType.PERSONIDENT, new PersonIdent(personIdent));
-        } else if (aktoer instanceof AktoerId) {
-            final var aktørId = ((AktoerId) aktoer).getAktoerId();
-            return Collections.singletonMap(IdentType.AKTØRID, new AktørId(aktørId));
+            return new PersonIdent(personIdent);
         }
 
-        throw new IllegalStateException("ukjent aktørtype");
+        throw new IllegalStateException("TPS returnerte noe annet enn PersonIdent for familierelasjon");
     }
 
     private LocalDate tilLocalDate(Foedselsdato fødselsdatoJaxb) {
