@@ -20,11 +20,17 @@ public class OppgaveController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/opprett")
     public ResponseEntity<String> opprettOppgave(@RequestBody Oppgave request) {
+        if (request.getEksisterendeOppgaveId() != null) {
+            return ResponseEntity.badRequest().header("message", "oppgaveId må være null.").build();
+        }
         return oppgaveService.opprettEllerOppdaterOppgave(request);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/oppdater")
     public ResponseEntity oppdaterOppgave(@RequestBody Oppgave request) {
+        if (request.getEksisterendeOppgaveId() == null) {
+            return ResponseEntity.badRequest().header("message", "oppgaveId kan ikke være null.").build();
+        }
         return oppgaveService.opprettEllerOppdaterOppgave(request);
     }
 }

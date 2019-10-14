@@ -18,6 +18,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Objects;
 
 public class OppgaveConsumer {
 
@@ -45,10 +46,10 @@ public class OppgaveConsumer {
     }
 
     private String finnBehandleSakOppgave(Oppgave request) {
-        if (StringUtils.notNullOrEmpty(request.getEksisterendeOppgaveId())) {
-            return request.getEksisterendeOppgaveId();
+        if (Objects.requireNonNull(request.getEksisterendeOppgaveId()).isEmpty()) {
+            return finnOppgavePort.finnOppgaveListe(tilWSOppgaveListe(request)).getOppgaveListe().get(0).getOppgaveId();
         }
-        return finnOppgavePort.finnOppgaveListe(tilWSOppgaveListe(request)).getOppgaveListe().get(0).getOppgaveId();
+        return request.getEksisterendeOppgaveId();
     }
 
     private WSOpprettOppgaveRequest tilWSOpprett(Oppgave request) {
