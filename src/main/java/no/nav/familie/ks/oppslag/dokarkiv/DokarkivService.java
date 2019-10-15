@@ -51,6 +51,10 @@ public class DokarkivService {
         return response.map(this::mapTilArkiverDokumentResponse).orElse(null);
     }
 
+    public void ferdistillJournalpost(String journalpost) {
+        dokarkivClient.ferdigstillJournalpost(journalpost);
+    }
+
     private String hentNavnForFnr(String fnr) {
         String navn = null;
         ResponseEntity<String> aktørResponse = aktørService.getAktørId(fnr);

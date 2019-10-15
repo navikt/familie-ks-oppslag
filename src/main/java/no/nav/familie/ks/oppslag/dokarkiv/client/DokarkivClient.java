@@ -36,6 +36,9 @@ public class DokarkivClient {
     private final Timer opprettJournalpostResponstid = Metrics.timer("dokarkiv.opprett.respons.tid");
     private final Counter opprettJournalpostSuccess = Metrics.counter("dokarkiv.opprett.response", "status", "success");
     private final Counter opprettJournalpostFailure = Metrics.counter("dokarkiv.opprett.response", "status", "failure");
+    private final Timer ferdigstillJournalpostResponstid = Metrics.timer("dokarkiv.ferdigstill.respons.tid");
+    private final Counter ferdigstillJournalpostSuccess = Metrics.counter("dokarkiv.ferdigstill.response", "status", "success");
+    private final Counter ferdigstillJournalpostFailure = Metrics.counter("dokarkiv.ferdigstill.response", "status", "failure");
 
     private HttpClient httpClient;
     private StsRestClient stsRestClient;
@@ -43,15 +46,16 @@ public class DokarkivClient {
     private String dokarkivUrl;
     private String consumer;
 
+    @Autowired
     public DokarkivClient(@Value("${DOKARKIV_V1_URL}") String dokarkivUrl,
                           @Value("${CREDENTIAL_USERNAME}") String consumer,
-                          @Autowired StsRestClient stsRestClient) {
+                          @Autowired StsRestClient stsRestClient,
+                          ObjectMapper objectMapper) {
         this.stsRestClient = stsRestClient;
         this.consumer = consumer;
         this.dokarkivUrl = dokarkivUrl;
         this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
-        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        this.objectMapper = objectMapper;
     }
 
 
@@ -91,6 +95,43 @@ public class DokarkivClient {
             }
         } catch (IOException | InterruptedException e) {
             opprettJournalpostFailure.increment();
+            throw new RuntimeException("Feil ved kall mot Dokarkiv uri=" + uri, e);
+        }
+    }
+
+
+    public void ferdigstillJournalpost(String journalpostId) {
+        URI uri = URI.create(String.format("%s/rest/journalpostapi/v1/journalpost/%s/ferdigstill", dokarkivUrl, journalpostId));
+        String systembrukerToken = stsRestClient.getSystemOIDCToken();
+        try {
+
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(uri)
+                    .header(ACCEPT, "application/json")
+                    .header("Content-Type", "application/json")
+                    .header(NAV_CONSUMER_ID, consumer)
+                    .header(NAV_CALL_ID, MDCOperations.getCallId())
+                    .header(AUTHORIZATION, "Bearer " + systembrukerToken)
+                    .method("PATCH", HttpRequest.BodyPublishers.ofString("{ \" journalfoerndeEnhet\" :  \"9999\"}"))
+                    .timeout(Duration.ofSeconds(20)) // kall tar opptil 8s i preprod.
+                    .build();
+
+            long startTime = System.nanoTime();
+            HttpResponse<String> httpResponse = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            ferdigstillJournalpostResponstid.record(System.nanoTime() - startTime, TimeUnit.NANOSECONDS);
+
+            if (httpResponse.statusCode() == HttpStatus.OK.value() || httpResponse.statusCode() == HttpStatus.CREATED.value() ) {
+                ferdigstillJournalpostSuccess.increment();
+            } else if (httpResponse.statusCode() == HttpStatus.BAD_REQUEST.value()) {
+                ferdigstillJournalpostFailure.increment();
+                throw new KanIkkeFerdigstilleJournalpostException("Kan ikke ferdigstille journalpost " + journalpostId + " " + httpResponse.body());
+            } else {
+                ferdigstillJournalpostFailure.increment();
+                throw new RuntimeException("Feilresponse ved ferdigstill av journalpost " + httpResponse.statusCode() + " " + httpResponse.body());
+            }
+        } catch (IOException | InterruptedException e) {
+            ferdigstillJournalpostFailure.increment();
             throw new RuntimeException("Feil ved kall mot Dokarkiv uri=" + uri, e);
         }
     }
