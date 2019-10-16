@@ -3,6 +3,7 @@ package no.nav.familie.ks.oppslag.personopplysning;
 import no.nav.familie.ks.oppslag.personopplysning.domene.PersonhistorikkInfo;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.security.oidc.api.ProtectedWithClaims;
+import no.nav.security.oidc.api.Unprotected;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class PersonopplysningerController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, path = "info")
+    @Unprotected
     public ResponseEntity<Personinfo> personInfo(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
         return personopplysningerService.hentPersoninfoFor(personIdent);
     }
