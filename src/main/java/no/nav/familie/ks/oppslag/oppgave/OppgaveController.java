@@ -1,8 +1,8 @@
 package no.nav.familie.ks.oppslag.oppgave;
 
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
+import no.nav.familie.ks.kontrakter.oppgave.OppgaveKt;
 import no.nav.security.oidc.api.ProtectedWithClaims;
-import no.nav.security.oidc.api.Unprotected;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,8 @@ public class OppgaveController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/opprett")
-    public ResponseEntity<String> opprettOppgave(@RequestBody Oppgave request) {
+    public ResponseEntity<String> opprettOppgave(@RequestBody String oppgaveJson) {
+        Oppgave request = OppgaveKt.toOppgave(oppgaveJson);
         if (request.getEksisterendeOppgaveId() != null) {
             return ResponseEntity.badRequest().header("message", "oppgaveId må være null.").build();
         }
@@ -27,7 +28,8 @@ public class OppgaveController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, path = "/oppdater")
-    public ResponseEntity oppdaterOppgave(@RequestBody Oppgave request) {
+    public ResponseEntity oppdaterOppgave(@RequestBody String oppgaveJson) {
+        Oppgave request = OppgaveKt.toOppgave(oppgaveJson);
         if (request.getEksisterendeOppgaveId() == null) {
             return ResponseEntity.badRequest().header("message", "oppgaveId kan ikke være null.").build();
         }
