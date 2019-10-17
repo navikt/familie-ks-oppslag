@@ -56,7 +56,7 @@ public class ServiceConfig {
 
     @Bean
     public OppgaveV3 oppgaveV3Port(@Value("${OPPGAVE_V3_URL}") String oppgaveV3Url,
-                                   @Value("${SECURITYTOKENSERVICE_URL}") String stsUrl,
+                                   @Value("${STS_URL}") String stsUrl,
                                    @Value("${CREDENTIAL_USERNAME}") String systemuserUsername,
                                    @Value("${CREDENTIAL_PASSWORD}") String systemuserPwd) {
 
