@@ -2,6 +2,7 @@ package no.nav.familie.ks.oppslag.oppgave;
 
 
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
+import no.nav.familie.ks.kontrakter.oppgave.OppgaveKt;
 import no.nav.familie.ks.oppslag.oppgave.internal.OppgaveConsumer;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
@@ -32,7 +33,9 @@ public class OppgaveService {
     ResponseEntity opprettEllerOppdaterOppgave(Oppgave request) {
         try {
             if (request.getEksisterendeOppgaveId() != null) {
-                return ResponseEntity.ok(oppgaveConsumer.oppdaterOppgave(request));
+                Boolean response = oppgaveConsumer.oppdaterOppgave(request);
+                LOG.info("oppdaterOppgave response: " + response + " for oppgave-request: " + OppgaveKt.toJson(request));
+                return ResponseEntity.ok(response);
             } else {
                 return opprettOppgaveResponse(request);
             }
@@ -47,6 +50,7 @@ public class OppgaveService {
     private ResponseEntity opprettOppgaveResponse(Oppgave request) throws WSSikkerhetsbegrensningException {
         var response = oppgaveConsumer.opprettOppgave(request);
         if (response.getOppgaveId() != null) {
+            LOG.info("opprettOppgave response: " + response.getOppgaveId() + " for oppgave-request: " + OppgaveKt.toJson(request));
             return ResponseEntity.ok(response.getOppgaveId());
         }
         return ResponseEntity.status(EXPECTATION_FAILED)
