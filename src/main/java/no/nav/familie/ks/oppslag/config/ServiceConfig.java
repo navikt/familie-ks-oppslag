@@ -64,7 +64,7 @@ public class ServiceConfig {
 
         return new CXFClient<>(OppgaveV3.class)
                 .address(oppgaveV3Url)
-                .configureStsForSystemUser()
+                .configureStsForOnBehalfOfWithJWT()
                 .build();
     }
 

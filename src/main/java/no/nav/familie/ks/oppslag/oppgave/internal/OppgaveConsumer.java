@@ -2,7 +2,6 @@ package no.nav.familie.ks.oppslag.oppgave.internal;
 
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.felles.ws.DateUtil;
-import no.nav.sbl.util.StringUtils;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.BehandleOppgaveV1;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOppgaveIkkeFunnetException;
 import no.nav.tjeneste.virksomhet.behandleoppgave.v1.WSOptimistiskLasingException;
