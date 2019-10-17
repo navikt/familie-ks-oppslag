@@ -55,6 +55,7 @@ public class OppgaveConsumer {
     private String finnBehandleSakOppgave(Oppgave request) {
         if (Objects.requireNonNull(request.getEksisterendeOppgaveId()).isEmpty()) {
             LOG.info("Sender FinnOppgaveListeRequest for Oppgave: " + OppgaveKt.toJson(request));
+            LOG.info("Sender FinnOppgaveListeRequest for wsfilter: " + tilWSOppgaveListe(request).toString());
             return finnOppgavePort.finnOppgaveListe(tilWSOppgaveListe(request)).getOppgaveListe().get(0).getOppgaveId();
         }
         return request.getEksisterendeOppgaveId();
@@ -96,6 +97,8 @@ public class OppgaveConsumer {
         FinnOppgaveListeFilter filter = new FinnOppgaveListeFilter();
 
         filter.getOppgavetypeKodeListe().add(OPPGAVETYPE_KODE);
+        filter.setOpprettetEnhetId("4820");
+        filter.setAnsvarligEnhetNavn("4820");
         oppgaveListeRequest.setFilter(filter);
         oppgaveListeRequest.setSok(oppgaveListeSok);
         oppgaveListeSok.setBrukerId(request.getFnr());
