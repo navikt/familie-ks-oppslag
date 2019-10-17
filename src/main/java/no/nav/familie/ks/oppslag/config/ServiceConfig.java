@@ -6,6 +6,8 @@ import no.nav.tjeneste.virksomhet.behandleoppgave.v1.BehandleOppgaveV1;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppgave.v3.binding.OppgaveV3;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
+import org.apache.cxf.ext.logging.LoggingFeature;
+import org.apache.cxf.feature.Features;
 import org.apache.cxf.interceptor.LoggingInInterceptor;
 import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.springframework.beans.factory.annotation.Value;
@@ -70,19 +72,11 @@ public class ServiceConfig {
                 .build();
     }
 
-
     @Bean
-    public LoggingOutInterceptor loggingOutInterceptor() {
-        LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
-        loggingOutInterceptor.setPrettyLogging(true);
-        return loggingOutInterceptor;
-    }
-
-    @Bean
-    public LoggingInInterceptor loggingInInterceptor() {
-        LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
-        loggingInInterceptor.setPrettyLogging(true);
-        return loggingInInterceptor;
+    public LoggingFeature loggingFeature () {
+        LoggingFeature loggingFeature = new LoggingFeature();
+        loggingFeature.setPrettyLogging(true);
+        return loggingFeature;
     }
 
     private void setSystemProperties(String stsUrl, String systemuserUsername, String systemuserPwd) {

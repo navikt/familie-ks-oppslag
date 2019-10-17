@@ -166,6 +166,13 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.cxf/cxf-rt-features-logging -->
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-features-logging</artifactId>
+            <version>3.3.3</version>
+        </dependency>
+
 
         <!-- div -->
         <dependency>
