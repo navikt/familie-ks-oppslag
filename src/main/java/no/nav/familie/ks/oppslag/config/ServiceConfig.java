@@ -6,6 +6,8 @@ import no.nav.tjeneste.virksomhet.behandleoppgave.v1.BehandleOppgaveV1;
 import no.nav.tjeneste.virksomhet.innsynjournal.v2.binding.InnsynJournalV2;
 import no.nav.tjeneste.virksomhet.oppgave.v3.binding.OppgaveV3;
 import no.nav.tjeneste.virksomhet.person.v3.binding.PersonV3;
+import org.apache.cxf.interceptor.LoggingInInterceptor;
+import org.apache.cxf.interceptor.LoggingOutInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,7 +58,7 @@ public class ServiceConfig {
 
     @Bean
     public OppgaveV3 oppgaveV3Port(@Value("${OPPGAVE_V3_URL}") String oppgaveV3Url,
-                                   @Value("${STS_URL}") String stsUrl,
+                                   @Value("${SECURITYTOKENSERVICE_URL}") String stsUrl,
                                    @Value("${CREDENTIAL_USERNAME}") String systemuserUsername,
                                    @Value("${CREDENTIAL_PASSWORD}") String systemuserPwd) {
 
@@ -64,8 +66,23 @@ public class ServiceConfig {
 
         return new CXFClient<>(OppgaveV3.class)
                 .address(oppgaveV3Url)
-                .configureStsForOnBehalfOfWithJWT()
+                .configureStsForSystemUser()
                 .build();
+    }
+
+
+    @Bean
+    public LoggingOutInterceptor loggingOutInterceptor() {
+        LoggingOutInterceptor loggingOutInterceptor = new LoggingOutInterceptor();
+        loggingOutInterceptor.setPrettyLogging(true);
+        return loggingOutInterceptor;
+    }
+
+    @Bean
+    public LoggingInInterceptor loggingInInterceptor() {
+        LoggingInInterceptor loggingInInterceptor = new LoggingInInterceptor();
+        loggingInInterceptor.setPrettyLogging(true);
+        return loggingInInterceptor;
     }
 
     private void setSystemProperties(String stsUrl, String systemuserUsername, String systemuserPwd) {

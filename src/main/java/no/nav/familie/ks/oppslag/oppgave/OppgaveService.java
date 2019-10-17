@@ -33,6 +33,7 @@ public class OppgaveService {
     ResponseEntity opprettEllerOppdaterOppgave(Oppgave request) {
         try {
             if (request.getEksisterendeOppgaveId() != null) {
+                LOG.info("oppdaterOppgave start: " + OppgaveKt.toJson(request));
                 Boolean response = oppgaveConsumer.oppdaterOppgave(request);
                 LOG.info("oppdaterOppgave response: " + response + " for oppgave-request: " + OppgaveKt.toJson(request));
                 return ResponseEntity.ok(response);

@@ -46,6 +46,8 @@ public class OppgaveConsumer {
 
     public Boolean oppdaterOppgave(Oppgave request) throws
             WSSikkerhetsbegrensningException, WSOppgaveIkkeFunnetException, WSOptimistiskLasingException, SoapFaultException {
+        LOG.info(tilWSLagre(request).toString());
+
         behandleOppgavePort.lagreOppgave(tilWSLagre(request));
         return true;
     }
