@@ -18,4 +18,4 @@ MEDL2_URL: https://app-q0.adeo.no/medl2/api/v1
 SAF_URL: http://saf.q0/graphql
 BEHANDLE_OPPGAVE_V1_URL: https://wasapp-q0.adeo.no/nav-gsak-ws/BehandleOppgaveV1
 INNSYN_JOURNAL_V2_URL: https://wasapp-q0.adeo.no/joark/InnsynJournal/v2
-OPPGAVE_URL: https://oppgave-q0.nais.preprod.local/api/v1
+OPPGAVE_URL: http://oppgave-q0/api/v1

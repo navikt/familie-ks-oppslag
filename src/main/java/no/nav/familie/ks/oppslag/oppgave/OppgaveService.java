@@ -12,7 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import static org.springframework.http.HttpStatus.*;
@@ -29,7 +30,7 @@ public class OppgaveService {
         this.oppgaveClient = oppgaveClient;
     }
 
-    ResponseEntity opprettEllerOppdaterOppgave(Oppgave request) {
+    ResponseEntity oppdaterOppgave(Oppgave request) {
         OppgaveJsonDto oppgaveJsonDto;
         try {
             if (StringUtils.nullOrEmpty(request.getEksisterendeOppgaveId())) {
@@ -41,6 +42,10 @@ public class OppgaveService {
         } catch (JsonProcessingException e) {
             LOG.info("Mapping av OppgaveJsonDto til String feilet.");
             return ResponseEntity.status(EXPECTATION_FAILED).build();
+        } catch (HttpClientErrorException | HttpServerErrorException e) {
+            return ResponseEntity.status(e.getStatusCode()).header("message", e.getMessage()).build();
+        } catch (Exception e) {
+            throw new RuntimeException("Ukjent feil ved kall mot oppgave/api/v1", e);
         }
 
         return ResponseEntity.ok(oppgaveJsonDto.getId());
