@@ -41,19 +41,18 @@ public class TilgangsKontrollService {
     @Cacheable(cacheNames = TILGANGTILBRUKER, key = "#saksbehandlerId.concat(#personFnr)", condition = "#personFnr != null && #saksbehandlerId != null")
     public Tilgang sjekkTilgang(String personFnr, String saksbehandlerId, Personinfo personInfo) {
 
-
-        secureLogger.info("sjekker tilgang for " + personFnr + " " + saksbehandlerId + " " + personInfo + " med " + personInfo.getDiskresjonskode());
-
         String diskresjonskode = personInfo.getDiskresjonskode();
+
         if (DISKRESJONSKODE_KODE6.equals(diskresjonskode) && !harTilgangTilKode6(saksbehandlerId)) {
-            LOG.info("har ikke tilgang");
+            secureLogger.info(saksbehandlerId + " har ikke tilgang til " + personFnr);
             return new Tilgang().withHarTilgang(false).withBegrunnelse(KODE6.name());
         } else if (DISKRESJONSKODE_KODE7.equals(diskresjonskode) && !harTilgangTilKode7(saksbehandlerId)) {
-            LOG.info("Har ikke tilgang");
+            secureLogger.info(saksbehandlerId + " har ikke tilgang til " + personFnr);
             return new Tilgang().withHarTilgang(false).withBegrunnelse(KODE7.name());
         }
 
         if (egenAnsattService.erEgenAnsatt(personFnr) && !harTilgangTilEgenAnsatt(saksbehandlerId)) {
+            secureLogger.info(saksbehandlerId + " har ikke tilgang til egen ansatt " + personFnr);
             return new Tilgang().withHarTilgang(false).withBegrunnelse(EGEN_ANSATT.name());
         }
 
