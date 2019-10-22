@@ -73,7 +73,6 @@ public class PersonopplysningerService {
                     .withAktoer(new PersonIdent().withIdent(new NorskIdent().withIdent(personIdent)))
                     .withInformasjonsbehov(List.of(Informasjonsbehov.FAMILIERELASJONER, Informasjonsbehov.ADRESSE));
             HentPersonResponse response = personConsumer.hentPersonResponse(request);
-            secureLogger.info("Person " + personIdent + " sitt kjønn er: " + response.getPerson().getKjoenn().getKjoenn().getValue());
             return ResponseEntity.ok(oversetter.tilPersoninfo(new no.nav.familie.ks.oppslag.personopplysning.domene.PersonIdent(personIdent), response));
         } catch (HentPersonSikkerhetsbegrensning exception) {
             LOG.info("Ikke tilgang til å hente personinfo for person");
