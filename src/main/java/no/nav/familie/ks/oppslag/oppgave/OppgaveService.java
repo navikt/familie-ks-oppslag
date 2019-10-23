@@ -44,9 +44,9 @@ public class OppgaveService {
             oppgaveClient.oppdaterOppgave(oppgaveJsonDto, request.getBeskrivelse());
         } catch (JsonProcessingException e) {
             LOG.info("Mapping av OppgaveJsonDto til String feilet.");
-            return ResponseEntity.status(EXPECTATION_FAILED).build();
+            return ResponseEntity.status(NO_CONTENT).build();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            return ResponseEntity.status(e.getStatusCode()).header("message", e.getMessage()).build();
+            return ResponseEntity.status(NO_CONTENT).header("message", e.getMessage()).build();
         } catch (Exception e) {
             throw new RuntimeException("Ukjent feil ved kall mot oppgave/api/v1", e);
         }
