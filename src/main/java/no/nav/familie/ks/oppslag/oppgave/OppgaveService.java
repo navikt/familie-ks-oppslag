@@ -16,8 +16,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.annotation.ApplicationScope;
 
-import static org.springframework.http.HttpStatus.*;
-
 @Service
 @ApplicationScope
 public class OppgaveService {
@@ -31,26 +29,27 @@ public class OppgaveService {
     }
 
     ResponseEntity oppdaterOppgave(Oppgave request) {
-        OppgaveJsonDto oppgaveJsonDto;
         try {
+            OppgaveJsonDto oppgaveJsonDto;
             if (StringUtils.nullOrEmpty(request.getEksisterendeOppgaveId())) {
                 oppgaveJsonDto = oppgaveClient.finnOppgave(request);
             } else {
                 oppgaveJsonDto = oppgaveClient.finnOppgave(request.getEksisterendeOppgaveId());
             }
             if (oppgaveJsonDto == null) {
-                return ResponseEntity.badRequest().body("Fant ingen oppgave for " + request.getJournalpostId());
+                LOG.error("Fant ingen oppgave tilknyttet sak med journalpostId " + request.getJournalpostId());
+                return ResponseEntity.noContent().build();
             }
             oppgaveClient.oppdaterOppgave(oppgaveJsonDto, request.getBeskrivelse());
+            return ResponseEntity.ok(oppgaveJsonDto.getId());
         } catch (JsonProcessingException e) {
             LOG.info("Mapping av OppgaveJsonDto til String feilet.");
-            return ResponseEntity.status(NO_CONTENT).build();
+            return ResponseEntity.noContent().header("message", e.getMessage()).build();
         } catch (HttpClientErrorException | HttpServerErrorException e) {
-            return ResponseEntity.status(NO_CONTENT).header("message", e.getMessage()).build();
+            LOG.info("oppdaterOppgave kastet RestClientResponseException");
+            return ResponseEntity.noContent().header("message", e.getMessage()).build();
         } catch (Exception e) {
             throw new RuntimeException("Ukjent feil ved kall mot oppgave/api/v1", e);
         }
-
-        return ResponseEntity.ok(oppgaveJsonDto.getId());
     }
 }
