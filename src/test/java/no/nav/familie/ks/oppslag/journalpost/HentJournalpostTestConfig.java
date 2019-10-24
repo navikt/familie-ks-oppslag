@@ -11,8 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @Configuration
 public class HentJournalpostTestConfig {
@@ -60,6 +59,8 @@ public class HentJournalpostTestConfig {
 
 
         });
+
+        doNothing().when(consumer).ping();
         return consumer;
     }
 

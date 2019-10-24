@@ -4,12 +4,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.Timer;
+import no.nav.familie.http.client.NavHttpHeaders;
 import no.nav.familie.http.sts.StsRestClient;
 import no.nav.familie.ks.oppslag.felles.MDCOperations;
+import no.nav.familie.log.mdc.MDCConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
@@ -38,6 +47,7 @@ public class AktørregisterClient {
     private ObjectMapper objectMapper;
     private String aktørRegisterUrl;
     private String consumer;
+    private RestTemplate restTemplate;
 
     @Autowired
     public AktørregisterClient(@Value("${AKTOERID_URL}") String aktørRegisterUrl,
@@ -48,10 +58,14 @@ public class AktørregisterClient {
         this.aktørRegisterUrl = aktørRegisterUrl;
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
+        this.restTemplate = new RestTemplateBuilder()
+                .setConnectTimeout(Duration.ofSeconds(5))
+                .setReadTimeout(Duration.ofSeconds(5))
+                .build();
     }
 
     public AktørResponse hentAktørId(String personIdent) {
-        URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
+        URI uri = URI.create(String.format("%s/api/v1/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, AKTOERID_IDENTGRUPPE));
         return hentRespons(personIdent, uri);
     }
 
@@ -81,8 +95,20 @@ public class AktørregisterClient {
 
 
     public AktørResponse hentPersonIdent(String personIdent) {
-        URI uri = URI.create(String.format("%s/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, PERSONIDENT_IDENTGRUPPE));
+        URI uri = URI.create(String.format("%s/api/v1/identer?gjeldende=true&identgruppe=%s", aktørRegisterUrl, PERSONIDENT_IDENTGRUPPE));
         return hentRespons(personIdent, uri);
+    }
+
+    public void ping() {
+        URI uri = URI.create(String.format("%s/internal/isAlive", aktørRegisterUrl));
+
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+        headers.add("Authorization", "Bearer " + stsRestClient.getSystemOIDCToken());
+        headers.add(NavHttpHeaders.NAV_CALLID.asString(), MDC.get(MDCConstants.MDC_CALL_ID));
+
+        HttpEntity httpEntity = new HttpEntity(headers);
+
+        restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
     }
 
 }
