@@ -9,9 +9,7 @@ import no.nav.tjeneste.virksomhet.person.v3.informasjon.*;
 import no.nav.tjeneste.virksomhet.person.v3.meldinger.HentPersonhistorikkResponse;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -426,8 +424,9 @@ public class TpsAdresseOversetter {
     }
 
     private String tilPoststed(String postnummer) {
-        Path postnummerFil = Paths.get(getPostnummerFil());
-        try (Stream<String> filLinje = Files.lines(postnummerFil)) {
+        InputStream postnummerFil = getPostnummerFil();
+        BufferedReader bf = new BufferedReader(new InputStreamReader(postnummerFil));
+        try (Stream<String> filLinje = bf.lines()) {
             String[][] allePostnumre = filLinje.map(s -> s.split("\t", 5))
                     .toArray(String[][]::new);
 
@@ -436,14 +435,14 @@ public class TpsAdresseOversetter {
                     return linje[1];
                 }
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Feil ved mapping av postnummer", e);
         }
         return HARDKODET_POSTSTED;
     }
 
-    private String getPostnummerFil() {
-        return getClass().getClassLoader().getResource("kodeverk/postnummer.txt").getFile();
+    private InputStream getPostnummerFil() {
+        return getClass().getClassLoader().getResourceAsStream("kodeverk/postnummer.txt");
     }
 
     private String tilLand(Landkoder landkoder) {
