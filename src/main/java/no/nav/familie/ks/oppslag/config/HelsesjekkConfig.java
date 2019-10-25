@@ -1,8 +1,10 @@
 package no.nav.familie.ks.oppslag.config;
 
 import no.nav.familie.ks.oppslag.aktør.internal.AktørregisterClient;
+import no.nav.familie.ks.oppslag.dokarkiv.client.DokarkivClient;
 import no.nav.familie.ks.oppslag.egenansatt.internal.EgenAnsattConsumer;
 import no.nav.familie.ks.oppslag.helse.*;
+import no.nav.familie.ks.oppslag.infotrygd.InfotrygdService;
 import no.nav.familie.ks.oppslag.journalpost.internal.InnsynJournalConsumer;
 import no.nav.familie.ks.oppslag.medlemskap.internal.MedlClient;
 import no.nav.familie.ks.oppslag.medlemskap.internal.MedlClientConfig;
@@ -38,5 +40,15 @@ public class HelsesjekkConfig {
     @Bean
     public MedlHelsesjekk medlHelsesjekk(MedlClient medlClient) {
         return new MedlHelsesjekk(medlClient);
+    }
+
+    @Bean
+    public DokarkivHelsesjekk dokarkivHelsesjekk(DokarkivClient dokarkivClient) {
+        return new DokarkivHelsesjekk(dokarkivClient);
+    }
+
+    @Bean
+    public InfotrygdHelsesjekk infotrygdHelsesjekk(InfotrygdService infotrygdService) {
+        return new InfotrygdHelsesjekk(infotrygdService);
     }
 }

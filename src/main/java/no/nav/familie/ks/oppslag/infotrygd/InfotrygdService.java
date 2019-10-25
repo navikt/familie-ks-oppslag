@@ -51,4 +51,15 @@ public class InfotrygdService {
             throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR, "Ufullstendig eller tom respons.");
         }
     }
+
+    public void ping() {
+        var headers = new HttpHeaders();
+        headers.setBearerAuth(accessTokenClient.getAccessToken(scope).access_token);
+        var entity = new HttpEntity(headers);
+
+        restTemplate.exchange(String.format("%s/actuator/health", infotrygdURL),
+                HttpMethod.GET,
+                entity,
+                String.class);
+    }
 }

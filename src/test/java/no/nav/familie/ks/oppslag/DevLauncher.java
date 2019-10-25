@@ -20,6 +20,7 @@ public class DevLauncher {
                         "mock-aktor",
                         "mock-dokarkiv",
                         "mock-egenansatt",
+                        "mock-infotrygd",
                         "mock-innsyn",
                         "mock-medlemskap",
                         "mock-oppgave",
