@@ -31,6 +31,9 @@ public class HentJournalpostTestConfig {
 
             return new Journalpost(stringCaptor.getValue(), new Sak("1111" + stringCaptor.getValue(), "GSAK"));
         });
+
+        doNothing().when(klient).ping();
+
         return klient;
     }
 
