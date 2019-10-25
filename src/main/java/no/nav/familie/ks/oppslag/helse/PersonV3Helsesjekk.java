@@ -26,7 +26,7 @@ public class PersonV3Helsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch(Exception e) {
             personV3Nede.increment();
-            return Health.down(e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
         }
     }
 }

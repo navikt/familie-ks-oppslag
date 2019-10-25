@@ -25,7 +25,7 @@ public class EgenAnsattV1Helsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             egenAnsattV1Nede.increment();
-            return Health.down(e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
         }
     }
 }

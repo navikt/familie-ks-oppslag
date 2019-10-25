@@ -25,7 +25,7 @@ public class DokarkivHelsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             dokarkivNede.increment();
-            return Health.down(e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
         }
     }
 }

@@ -26,7 +26,7 @@ public class SafHelsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             safNede.increment();
-            return Health.down(e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
         }
     }
 }
