@@ -26,7 +26,7 @@ public class MedlHelsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             medlNede.increment();
-            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e.getMessage()).build();
         }
     }
 }

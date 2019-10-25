@@ -25,7 +25,7 @@ public class InnsynJournalV2Helsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             innsynJournalV2Nede.increment();
-            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e.getMessage()).build();
         }
     }
 }
