@@ -11,7 +11,6 @@ public class PersonV3Helsesjekk implements HealthIndicator {
 
     private PersonConsumer personV3;
 
-    private final Counter personV3Oppe = Metrics.counter("helsesjekk.personV3", "status", "oppe");
     private final Counter personV3Nede = Metrics.counter("helsesjekk.personV3", "status", "nede");
 
     public PersonV3Helsesjekk(@Autowired PersonConsumer personConsumer) {
@@ -22,7 +21,6 @@ public class PersonV3Helsesjekk implements HealthIndicator {
     public Health health() {
         try {
             personV3.ping();
-            personV3Oppe.increment();
             return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding","Test").build();//Health.up().build();
         } catch(Exception e) {
             personV3Nede.increment();

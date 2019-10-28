@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class SafHelsesjekk implements HealthIndicator {
 
-    private final Counter safOppe = Metrics.counter("helsesjekk.saf", "status", "oppe");
     private final Counter safNede = Metrics.counter("helsesjekk.saf", "status", "nede");
 
     private SafKlient safKlient;
@@ -22,7 +21,6 @@ public class SafHelsesjekk implements HealthIndicator {
     public Health health() {
         try {
             safKlient.ping();
-            safOppe.increment();
             return Health.up().build();
         } catch (Exception e) {
             safNede.increment();

@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class AktørHelsesjekk implements HealthIndicator {
 
-    private final Counter aktørOppe = Metrics.counter("helsesjekk.aktoer", "status", "oppe");
     private final Counter aktørNede = Metrics.counter("helsesjekk.aktoer", "status", "nede");
 
     private AktørregisterClient aktørregisterClient;
@@ -22,7 +21,6 @@ public class AktørHelsesjekk implements HealthIndicator {
     public Health health() {
         try {
             aktørregisterClient.ping();
-            aktørOppe.increment();
             return Health.up().build();
         } catch (Exception e) {
             aktørNede.increment();

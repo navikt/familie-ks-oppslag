@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class InnsynJournalV2Helsesjekk implements HealthIndicator {
 
-    private final Counter innsynJournalV2Oppe = Metrics.counter("helsesjekk.innsynJournalV2", "status", "oppe");
     private final Counter innsynJournalV2Nede = Metrics.counter("helsesjekk.innsynJournalV2", "status", "nede");
     private InnsynJournalConsumer innsynJournalV2;
 
@@ -21,7 +20,6 @@ public class InnsynJournalV2Helsesjekk implements HealthIndicator {
     public Health health() {
         try {
             innsynJournalV2.ping();
-            innsynJournalV2Oppe.increment();
             return Health.up().build();
         } catch (Exception e) {
             innsynJournalV2Nede.increment();

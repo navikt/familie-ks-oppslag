@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class DokarkivHelsesjekk implements HealthIndicator {
 
-    private final Counter dokarkivOppe = Metrics.counter("helsesjekk.dokarkiv", "status", "oppe");
     private final Counter dokarkivNede = Metrics.counter("helsesjekk.dokarkiv", "status", "nede");
     private DokarkivClient dokarkivClient;
 
@@ -21,7 +20,6 @@ public class DokarkivHelsesjekk implements HealthIndicator {
     public Health health() {
         try {
             dokarkivClient.ping();
-            dokarkivOppe.increment();
             return Health.up().build();
         } catch (Exception e) {
             dokarkivNede.increment();

@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class InfotrygdHelsesjekk implements HealthIndicator {
 
-    private final Counter infotrygdOppe = Metrics.counter("helsesjekk.infotrygd", "status", "oppe");
     private final Counter infotrygdNede = Metrics.counter("helsesjekk.infotrygd", "status", "nede");
     private InfotrygdService infotrygdService;
 
@@ -21,7 +20,6 @@ public class InfotrygdHelsesjekk implements HealthIndicator {
     public Health health() {
         try {
             infotrygdService.ping();
-            infotrygdOppe.increment();
             return Health.up().build();
         } catch(Exception e) {
             infotrygdNede.increment();

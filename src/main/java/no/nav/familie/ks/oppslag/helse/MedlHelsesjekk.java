@@ -9,7 +9,6 @@ import org.springframework.boot.actuate.health.HealthIndicator;
 
 public class MedlHelsesjekk implements HealthIndicator {
 
-    private final Counter medlOppe = Metrics.counter("helsesjekk.medl", "status", "oppe");
     private final Counter medlNede = Metrics.counter("helsesjekk.medl", "status", "nede");
 
     private MedlClient medlClient;
@@ -22,7 +21,6 @@ public class MedlHelsesjekk implements HealthIndicator {
     public Health health() {
         try {
             medlClient.ping();
-            medlOppe.increment();
             return Health.up().build();
         } catch (Exception e) {
             medlNede.increment();
