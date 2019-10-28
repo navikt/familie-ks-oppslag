@@ -20,17 +20,17 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     private static final Logger secureLogger = LoggerFactory.getLogger("secureLogger");
     private final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
 
-    @ExceptionHandler({OIDCUnauthorizedException.class, HttpClientErrorException.Unauthorized.class})
-    public ResponseEntity<String> handleUnauthorizedException() {
-        logger.warn("Kan ikke behandle pga. bruker ikke logget inn.");
+    @ExceptionHandler({OIDCUnauthorizedException.class})
+    public ResponseEntity<String> handleUnauthorizedException(OIDCUnauthorizedException e) {
+        logger.warn("Kan ikke behandle pga. bruker ikke logget inn.", e);
         return ResponseEntity.status(UNAUTHORIZED).body("Du er ikke logget inn");
     }
 
     @ExceptionHandler({RestClientResponseException.class})
     public ResponseEntity<String> handleRestClientResponseException(RestClientResponseException e) {
-        secureLogger.error("RestClientResponseException : ", e);
-        logger.error("RestClientResponseException : {}", ExceptionUtils.getStackTrace(e));
-        return ResponseEntity.status(e.getRawStatusCode()).header("message", e.getMessage()).build();
+        secureLogger.error("RestClientResponseException : {} {}", e.getResponseBodyAsString(), e);
+        logger.error("RestClientResponseException : {} {} {}", e.getRawStatusCode(), e.getStatusText(), ExceptionUtils.getStackTrace(e));
+        return ResponseEntity.status(e.getRawStatusCode()).body(e.getResponseBodyAsString() + " Message: " + e.getMessage());
     }
 
     @ExceptionHandler({Exception.class})
