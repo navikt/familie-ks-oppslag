@@ -21,7 +21,6 @@ public class PersonV3Helsesjekk implements HealthIndicator {
     public Health health() {
         try {
             personV3.ping();
-            personV3Nede.increment();
             return Health.up().build();
         } catch(Exception e) {
             personV3Nede.increment();
