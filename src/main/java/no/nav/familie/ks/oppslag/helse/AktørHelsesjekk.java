@@ -24,7 +24,7 @@ public class AktørHelsesjekk implements HealthIndicator {
             return Health.up().build();
         } catch (Exception e) {
             aktørNede.increment();
-            return Health.down(e).build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e.getMessage()).build();
         }
     }
 }
