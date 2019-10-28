@@ -23,7 +23,7 @@ public class PersonV3Helsesjekk implements HealthIndicator {
         try {
             personV3.ping();
             personV3Oppe.increment();
-            return Health.up().build();
+            return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding","Test").build();//Health.up().build();
         } catch(Exception e) {
             personV3Nede.increment();
             return Health.status("DOWN-NONCRITICAL").withDetail("Feilmelding", e.getMessage()).build();
