@@ -61,7 +61,7 @@ public class OppgaveClient {
     }
 
     public void ping() {
-        getRequest(URI.create(String.format("%s/internal/isAlive", oppgaveBaseUrl)), String.class);
+        getRequest(URI.create(String.format("%s/internal/alive", oppgaveBaseUrl)), String.class);
     }
 
     private URI lagRequestUrlMed(URI oppgaveUri, String aktoerId, String journalpostId) {
