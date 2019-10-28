@@ -20,7 +20,7 @@ public class AktørClientTestConfig {
     @Bean
     @Profile("mock-aktor")
     @Primary
-    public AktørregisterClient aktørregisterClientMock() {
+    public AktørregisterClient aktørregisterClientMock() throws Exception {
         AktørregisterClient aktørregisterClient = mock(AktørregisterClient.class);
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         Ident testIdent = new Ident().withIdent("1000011111111").withGjeldende(true);
