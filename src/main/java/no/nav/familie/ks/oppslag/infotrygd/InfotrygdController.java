@@ -35,6 +35,7 @@ public class InfotrygdController {
             LOG.error("Oppslag mot infotrygd-kontantstotte feilet. Status code: " + ex.getStatusCode());
             secureLogger.error("Oppslag mot infotrygd-kontantstotte feilet. feilmelding={} exception={}", ex.getMessage(), ex);
         }
+        LOG.info("Status: " + ex.getStatusCode());
         return new ResponseEntity<>(Map.of("error", ex.getStatusCode().toString()), ex.getStatusCode());
     }
 
