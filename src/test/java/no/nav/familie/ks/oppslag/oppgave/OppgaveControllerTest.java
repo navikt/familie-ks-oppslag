@@ -36,7 +36,7 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
         restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST,new HttpEntity<>(test, headers), String.class
         );
-        assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("java.lang.NullPointerException\n\tat no.nav.familie.ks.oppslag.oppgave"));
+        assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("java.lang.NullPointerException"));
     }
 
     @Test
@@ -46,7 +46,7 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
         restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST,new HttpEntity<>(test, headers), String.class
         );
-        assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("HttpClientErrorException"));
+        assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("RestClientResponseException"));
     }
 
     @Test
@@ -66,6 +66,6 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
         restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST,new HttpEntity<>(test, headers), String.class
         );
-        assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("RuntimeException"));
+        assertThat(loggingEvents).extracting(ILoggingEvent::getMessage).anyMatch(s -> s.contains("Exception"));
     }
 }
