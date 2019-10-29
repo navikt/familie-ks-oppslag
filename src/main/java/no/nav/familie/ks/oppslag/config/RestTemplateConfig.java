@@ -13,7 +13,6 @@ public class RestTemplateConfig {
     @Bean
     public RestTemplate restTemplateMedProxy() {
         return new RestTemplateBuilder()
-                .additionalCustomizers(new NaisProxyCustomizer())
                 .build();
     }
 }

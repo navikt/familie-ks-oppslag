@@ -35,6 +35,7 @@ spec:
       cpu: 1000m
   ingresses: # Optional. List of ingress URLs that will route HTTP traffic to the application.
     - https://familie-ks-oppslag.nais.preprod.local
+  webproxy: true
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: preprod
