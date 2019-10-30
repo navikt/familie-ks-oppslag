@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.IOException;
@@ -24,7 +26,7 @@ import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ActiveProfiles(profiles = {"dev", "mock-sts", "mock-aktor"})
+@ActiveProfiles(profiles = {"dev", "mock-sts"})
 public class OppgaveControllerTest extends OppslagSpringRunnerTest {
     private static final String OPPDATER_OPPGAVE_URL = "/api/oppgave/oppdater";
     private static final Integer MOCK_SERVER_PORT = 18321;
@@ -44,7 +46,7 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
     }
 
     @Test
-    public void skal_logge_stack_trace_ved_NullPointerException() {
+    public void skal_logge_stack_trace_og_returnere_INTERNAL_SERVER_ERROR_ved_NullPointerException() {
         mockServerRule.getClient()
                 .when(
                         HttpRequest
@@ -58,14 +60,15 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
 
         Oppgave test = new Oppgave("1234567891011", "1", null, "test NPE");
 
-        restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST, new HttpEntity<>(test, headers), String.class
         );
         assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("java.lang.NullPointerException\n\tat"));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
-    public void skal_skrive_til_logg_når_det_oppstår_RestClientException() {
+    public void skal_logge_og_returnere_INTERNAL_SERVER_ERROR_ved_RestClientException() {
         mockServerRule.getClient()
                 .when(
                         HttpRequest
@@ -79,14 +82,15 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
 
         Oppgave test = new Oppgave("1234567891011", "1", null, "test RestClientException");
 
-        restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST, new HttpEntity<>(test, headers), String.class
         );
         assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s -> s.contains("HttpClientErrorException"));
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Test
-    public void skal_skrive_til_logg_hvis_oppgave_ikke_ble_funnet() throws IOException {
+    public void skal_logge_og_returnere_NOT_FOUND_ved_OppgaveIkkeFunnetException() throws IOException {
         mockServerRule.getClient()
                 .when(
                         HttpRequest
@@ -101,12 +105,13 @@ public class OppgaveControllerTest extends OppslagSpringRunnerTest {
 
         Oppgave test = new Oppgave("1234567891011", "1", null, "test oppgave ikke funnet");
 
-        restTemplate.exchange(
+        ResponseEntity<String> response = restTemplate.exchange(
                 localhost(OPPDATER_OPPGAVE_URL), HttpMethod.POST, new HttpEntity<>(test, headers), String.class
         );
         assertThat(loggingEvents).extracting(ILoggingEvent::getFormattedMessage).anyMatch(s ->
                 s.contains("OppgaveIkkeFunnetException: Mislykket finnOppgave request med url: http://localhost:18321/api/v1/oppgaver?aktoerId=1234567891011")
         );
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     private String gyldigOppgaveResponse() throws IOException {
