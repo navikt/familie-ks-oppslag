@@ -50,18 +50,19 @@ public class PersonopplysningerTestConfig {
 
         when(personConsumer.hentPersonhistorikkResponse(historikkRequestCaptor.capture())).thenAnswer(invocation -> {
             PersonIdent personIdent = (PersonIdent) historikkRequestCaptor.getValue().getAktoer();
-            if (personIdent.getIdent().getIdent().equals(SøknadTestdata.barnPersonident)) {
+            if (SøknadTestdata.barnPersonident.equals(personIdent.getIdent().getIdent())) {
                 return hentPersonhistorikkResponseBarn();
             } else {
                 return hentPersonHistorikkResponse(personIdent.getIdent().getIdent().equals(SøknadTestdata.morPersonident));
             }
         });
+
         when(personConsumer.hentPersonResponse(personRequestCaptor.capture())).thenAnswer(invocation -> {
             PersonIdent personIdent = (PersonIdent) personRequestCaptor.getValue().getAktoer();
 
-            if (personIdent.getIdent().getIdent().equals(SøknadTestdata.morPersonident)) {
+            if (SøknadTestdata.morPersonident.equals(personIdent.getIdent().getIdent())) {
                 return hentPersonResponseForMor();
-            } else if (personIdent.getIdent().getIdent().equals(SøknadTestdata.barnPersonident)) {
+            } else if (SøknadTestdata.barnPersonident.equals(personIdent.getIdent().getIdent())) {
                 return hentPersonResponseForBarn();
             } else {
                 return hentPersonResponseForFar();
@@ -111,57 +112,54 @@ public class PersonopplysningerTestConfig {
     }
 
     private Person hentPersoninfoMor() {
-        Bruker person = new Bruker();
-        person
-                .withBostedsadresse(NORSK_ADRESSE)
+        Bruker mor = hentStandardPersoninfo();
+        mor
                 .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("K")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("GIFT")))
-                .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("TEST TESTESEN"))
                 .withHarFraRolleI(hentFamilierelasjonerMor())
-                .withGeografiskTilknytning(new Bydel().withGeografiskTilknytning("0315"))
-                .withGjeldendePostadressetype(new Postadressetyper().withValue("BOSTEDSADRESSE"))
-                .withStatsborgerskap(new Statsborgerskap().withLand(NORGE))
                 .withFoedselsdato(hentFoedselsdato("1990-01-01"))
                 .withAktoer(MOR_PERSON_IDENT);
 
-        return person;
+        return mor;
     }
 
     private Person hentPersoninfoFar() {
-        Bruker person = new Bruker();
-        person
-                .withBostedsadresse(NORSK_ADRESSE)
+        Bruker far = hentStandardPersoninfo();
+        far
                 .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("M")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("GIFT")))
-                .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("EKTEMANN TESTESEN"))
                 .withHarFraRolleI(hentFamilierelasjonerFar())
-                .withGeografiskTilknytning(new Bydel().withGeografiskTilknytning("0315"))
-                .withGjeldendePostadressetype(new Postadressetyper().withValue("BOSTEDSADRESSE"))
-                .withStatsborgerskap(new Statsborgerskap().withLand(NORGE))
                 .withFoedselsdato(hentFoedselsdato("1990-01-01"))
                 .withAktoer(FAR_PERSON_IDENT);
 
-        return person;
+        return far;
     }
 
     private Person hentPersoninfoBarn() {
-        Bruker barn = new Bruker();
+        Bruker barn = hentStandardPersoninfo();
         barn
-                .withBostedsadresse(NORSK_ADRESSE)
                 .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("K")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("UGIF")))
-                .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("BARN TESTESEN"))
                 .withHarFraRolleI(hentFamilierelasjonerBarn())
-                .withGeografiskTilknytning(new Bydel().withGeografiskTilknytning("0315"))
-                .withGjeldendePostadressetype(new Postadressetyper().withValue("BOSTEDSADRESSE"))
-                .withStatsborgerskap(new Statsborgerskap().withLand(NORGE))
                 .withFoedselsdato(hentFoedselsdato("2018-05-01"))
                 .withAktoer(BARN_PERSON_IDENT);
 
         return barn;
+    }
+
+    private Bruker hentStandardPersoninfo() {
+        Bruker person = new Bruker();
+        person
+                .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
+                .withGeografiskTilknytning(new Bydel().withGeografiskTilknytning("0315"))
+                .withGjeldendePostadressetype(new Postadressetyper().withValue("BOSTEDSADRESSE"))
+                .withStatsborgerskap(new Statsborgerskap().withLand(NORGE))
+                .withBostedsadresse(NORSK_ADRESSE);
+
+        return person;
     }
 
     private Collection<Familierelasjon> hentFamilierelasjonerMor() {
