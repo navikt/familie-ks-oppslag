@@ -49,6 +49,10 @@ public class PersonopplysningerTestConfig {
         ArgumentCaptor<HentPersonhistorikkRequest> historikkRequestCaptor = ArgumentCaptor.forClass(HentPersonhistorikkRequest.class);
 
         when(personConsumer.hentPersonhistorikkResponse(historikkRequestCaptor.capture())).thenAnswer(invocation -> {
+            if (historikkRequestCaptor.getValue() == null) {
+                return null;
+            }
+
             PersonIdent personIdent = (PersonIdent) historikkRequestCaptor.getValue().getAktoer();
             if (SøknadTestdata.barnPersonident.equals(personIdent.getIdent().getIdent())) {
                 return hentPersonhistorikkResponseBarn();
@@ -58,6 +62,10 @@ public class PersonopplysningerTestConfig {
         });
 
         when(personConsumer.hentPersonResponse(personRequestCaptor.capture())).thenAnswer(invocation -> {
+            if (personRequestCaptor.getValue() == null) {
+                return null;
+            }
+
             PersonIdent personIdent = (PersonIdent) personRequestCaptor.getValue().getAktoer();
 
             if (SøknadTestdata.morPersonident.equals(personIdent.getIdent().getIdent())) {
