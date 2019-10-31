@@ -114,7 +114,7 @@ public class PersonopplysningerTestConfig {
         Bruker person = new Bruker();
         person
                 .withBostedsadresse(NORSK_ADRESSE)
-                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withKodeRef("KVINNE")))
+                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("K")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("GIFT")))
                 .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("TEST TESTESEN"))
@@ -132,7 +132,7 @@ public class PersonopplysningerTestConfig {
         Bruker person = new Bruker();
         person
                 .withBostedsadresse(NORSK_ADRESSE)
-                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withKodeRef("MANN")))
+                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("M")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("GIFT")))
                 .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("EKTEMANN TESTESEN"))
@@ -150,7 +150,7 @@ public class PersonopplysningerTestConfig {
         Bruker barn = new Bruker();
         barn
                 .withBostedsadresse(NORSK_ADRESSE)
-                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withKodeRef("KVINNE")))
+                .withKjoenn(new Kjoenn().withKjoenn(new Kjoennstyper().withValue("K")))
                 .withSivilstand(new Sivilstand().withSivilstand(new Sivilstander().withValue("UGIF")))
                 .withPersonstatus(new Personstatus().withPersonstatus(new Personstatuser().withValue("BOSA")))
                 .withPersonnavn(new Personnavn().withSammensattNavn("BARN TESTESEN"))
