@@ -3,7 +3,7 @@ package no.nav.familie.ks.oppslag.tilgangskontroll;
 import no.nav.familie.ks.oppslag.personopplysning.PersonopplysningerService;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.familie.ks.oppslag.tilgangskontroll.domene.Tilgang;
-import no.nav.security.oidc.api.ProtectedWithClaims;
+import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,8 +32,8 @@ public class TilgangskontrollController {
     }
 
     @GetMapping(path = "/person")
-    //@ProtectedWithClaims(issuer = AZURE) TODO bruk Azure, og hent saksbehandler fra securitycontext
-    @ProtectedWithClaims(issuer = "intern")
+    // TODO bruk security context og hent saksbehandler fra /me hos azure
+    @ProtectedWithClaims(issuer = "azure")
     public ResponseEntity tilgangTilPerson(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent, @NotNull @RequestHeader(name = "saksbehandlerId") String saksbehandlerId) {
         return sjekkTilgangTilBruker(saksbehandlerId, personIdent);
     }
