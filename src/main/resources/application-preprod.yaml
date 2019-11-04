@@ -10,6 +10,8 @@ CLIENT_ID: ${CLIENT_ID}
 CLIENT_SECRET: ${CLIENT_SECRET}
 INFOTRYGD_KS_SCOPE: ${INFOTRYGD_KS_SCOPE}
 
+AAD_GRAPH_API_URI: https://graph.microsoft.com/v1.0/
+
 SECURITYTOKENSERVICE_URL: https://sts-q1.preprod.local/SecurityTokenServiceProvider/
 AKTOERID_URL: https://app-q0.adeo.no/aktoerregister
 PERSON_V3_URL: https://wasapp-q0.adeo.no/tpsws/ws/Person/v3
