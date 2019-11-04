@@ -1,8 +1,7 @@
 package no.nav.familie.ks.oppslag.config;
 
 import no.nav.familie.http.azure.AzureAccessTokenException;
-import no.nav.security.token.support.core.exceptions.JwtTokenInvalidClaimException;
-import no.nav.security.token.support.core.exceptions.JwtTokenMissingException;
+import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,8 +25,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     public ApiExceptionHandler() {
     }
 
-    @ExceptionHandler({JwtTokenInvalidClaimException.class, JwtTokenMissingException.class})
-    public ResponseEntity<Map<String, String>> handleUnauthorizedException(RuntimeException e) {
+    @ExceptionHandler({JwtTokenUnauthorizedException.class})
+    public ResponseEntity<Map<String, String>> handleUnauthorizedException(JwtTokenUnauthorizedException e) {
         logger.warn("Kan ikke logget inn.", e);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Du er ikke logget inn"));
     }

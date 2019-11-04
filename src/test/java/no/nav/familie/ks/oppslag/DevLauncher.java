@@ -1,7 +1,6 @@
 package no.nav.familie.ks.oppslag;
 
 import no.nav.familie.ks.oppslag.config.ApplicationConfig;
-import no.nav.security.token.support.test.spring.TokenGeneratorConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration;
@@ -9,7 +8,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication(exclude = ErrorMvcAutoConfiguration.class)
-@Import({ApplicationConfig.class, TokenGeneratorConfiguration.class})
+@Import({ApplicationConfig.class})
 public class DevLauncher {
 
     public static void main(String... args) {

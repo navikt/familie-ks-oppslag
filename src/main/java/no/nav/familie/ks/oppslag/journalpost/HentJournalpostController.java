@@ -11,8 +11,8 @@ import org.springframework.web.client.HttpStatusCodeException;
 import java.util.Map;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
 @RequestMapping("/api/journalpost")
+@ProtectedWithClaims(issuer = "azure")
 public class HentJournalpostController {
     private static final Logger LOG = LoggerFactory.getLogger(HentJournalpostController.class);
 
