@@ -2,12 +2,16 @@ package no.nav.familie.ks.oppslag.oppgave.internal;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Metrics;
 import no.nav.familie.http.sts.StsRestClient;
 import no.nav.familie.ks.kontrakter.oppgave.Oppgave;
 import no.nav.familie.ks.oppslag.oppgave.OppgaveIkkeFunnetException;
 import no.nav.familie.log.mdc.MDCConstants;
 import no.nav.oppgave.v1.FinnOppgaveResponseDto;
 import no.nav.oppgave.v1.OppgaveJsonDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -20,7 +24,10 @@ public class OppgaveClient {
     private static final String TEMA = "KON";
     private static final String OPPGAVE_TYPE = "BEH_SAK";
     private static final String X_CORRELATION_ID = "X-Correlation-ID";
+    private static final Logger logger = LoggerFactory.getLogger(OppgaveClient.class);
 
+    //private final Counter returnerteIngenOppgaver = Metrics.counter("oppslag.oppgave.response", "ingenOppgaver");
+    //private final Counter returnerteMerEnnEnOppgave = Metrics.counter("oppslag.oppgave.response", "flerEnnEnOppgave");
     private final URI oppgaveUri;
     private final RestTemplate restTemplate;
     private final StsRestClient stsRestClient;
@@ -67,9 +74,14 @@ public class OppgaveClient {
 
     private OppgaveJsonDto requestOppgaveJson(URI requestUrl) {
         var response = getRequest(requestUrl, FinnOppgaveResponseDto.class);
+        logger.info("OppgaveResponse er: " + Objects.requireNonNull(response.getBody()).getOppgaver().toString());
         if (Objects.requireNonNull(response.getBody()).getOppgaver().isEmpty()) {
+            // metrikker på at listen er tom
+            //returnerteIngenOppgaver.increment();
             throw new OppgaveIkkeFunnetException("Mislykket finnOppgave request med url: " + requestUrl);
         }
+        // metrikker på at listen er mer enn en
+        //returnerteMerEnnEnOppgave.increment();
         return response.getBody().getOppgaver().get(0);
     }
 
