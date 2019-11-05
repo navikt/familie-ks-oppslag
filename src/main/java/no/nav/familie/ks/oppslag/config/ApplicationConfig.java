@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootConfiguration
-@ComponentScan({"no.nav.familie"})
+@ComponentScan({"no.nav"})
 public class ApplicationConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationConfig.class);

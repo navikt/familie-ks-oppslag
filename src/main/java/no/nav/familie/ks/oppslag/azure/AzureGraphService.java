@@ -1,37 +1,39 @@
 package no.nav.familie.ks.oppslag.azure;
 
-import no.nav.familie.http.azure.AccessTokenClient;
 import no.nav.familie.ks.oppslag.azure.domene.Gruppe;
 import no.nav.familie.ks.oppslag.azure.domene.Person;
+import no.nav.familie.ks.oppslag.config.BaseService;
+import no.nav.security.token.support.client.core.oauth2.OAuth2AccessTokenService;
+import no.nav.security.token.support.client.spring.ClientConfigurationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public class AzureGraphService {
+@Service
+public class AzureGraphService extends BaseService {
 
-    private RestTemplate restTemplate = new RestTemplate();
-    private AccessTokenClient accessTokenClient;
-    private String scope;
+    private static final String OAUTH2_CLIENT_CONFIG_KEY = "aad-graph-clientcredentials";
     private String aadGrapURI;
 
     @Autowired
-    public AzureGraphService(AccessTokenClient accessTokenClient,
-                             @Value("${AAD_SCOPE}") String scope,
+    public AzureGraphService(RestTemplateBuilder restTemplateBuilderMedProxy,
+                             ClientConfigurationProperties clientConfigurationProperties,
+                             OAuth2AccessTokenService oAuth2AccessTokenService,
                              @Value("${AAD_GRAPH_API_URI}") String URI) {
-        this.accessTokenClient = accessTokenClient;
-        this.scope = scope;
+        super(OAUTH2_CLIENT_CONFIG_KEY, restTemplateBuilderMedProxy, clientConfigurationProperties, oAuth2AccessTokenService);
+
         this.aadGrapURI = URI;
     }
 
     public Person getPerson() {
 
         var headers = new HttpHeaders();
-        headers.setBearerAuth(accessTokenClient.getAccessToken(scope).access_token);
         headers.add("Accept", "application/json");
         var entity = new HttpEntity(headers);
 
@@ -39,7 +41,9 @@ public class AzureGraphService {
 
         Person person = response.getBody();
         var gruppeResponse = restTemplate.exchange(String.format("%sme/memberOf?$select=onPremisesSamAccountName,displayName,id", aadGrapURI), HttpMethod.GET, entity, Gruppe[].class);
-        person.setGrupper(List.of(gruppeResponse.getBody()));
+        if (person != null) {
+            person.setGrupper(List.of(gruppeResponse.getBody()));
+        }
 
         return person;
     }
