@@ -37,7 +37,7 @@ public class AzureGraphService extends BaseService {
         headers.add("Accept", "application/json");
         var entity = new HttpEntity(headers);
 
-        var response = restTemplate.exchange(String.format("%me?$select=displayName,onPremisesSamAccountName,userPrincipalName,onPremisesSamAccountName", aadGrapURI), HttpMethod.GET, entity, Person.class);
+        var response = restTemplate.exchange(String.format("%sme?$select=displayName,onPremisesSamAccountName,userPrincipalName,onPremisesSamAccountName", aadGrapURI), HttpMethod.GET, entity, Person.class);
 
         Person person = response.getBody();
         var gruppeResponse = restTemplate.exchange(String.format("%sme/memberOf?$select=onPremisesSamAccountName,displayName,id", aadGrapURI), HttpMethod.GET, entity, Gruppe[].class);
