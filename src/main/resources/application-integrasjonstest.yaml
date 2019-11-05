@@ -1,8 +1,8 @@
 no.nav.security.jwt:
   issuer.azuread:
-    discoveryurl: https://login.microsoftonline.com/navq.onmicrosoft.com/v2.0/.well-known/openid-configuration
-    accepted_audience: ${KS_OPPSLAG_CLIENT_ID}
-    cookie_name: azure_token
+    discoveryurl: http://metadata
+    accepted_audience: aud-localhost
+    cookie_name: localhost-idtoken
   client:
     registration:
       aad-graph-onbehalfof:
@@ -16,7 +16,7 @@ no.nav.security.jwt:
           client-auth-method: client_secret_basic
 
 AAD_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/v2.0/token
-KS_OPPSLAG_CLIENT_ID: ""
+CLIENT_ID: ""
 CLIENT_SECRET: ""
 INFOTRYGD_KS_SCOPE: ""
 

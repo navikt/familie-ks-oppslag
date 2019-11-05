@@ -1,5 +1,7 @@
 package no.nav.familie.ks.oppslag.tilgangskontroll;
 
+import no.nav.familie.ks.oppslag.azure.AzureGraphService;
+import no.nav.familie.ks.oppslag.azure.domene.Saksbehandler;
 import no.nav.familie.ks.oppslag.personopplysning.PersonopplysningerService;
 import no.nav.familie.ks.oppslag.personopplysning.domene.Personinfo;
 import no.nav.familie.ks.oppslag.tilgangskontroll.domene.Tilgang;
@@ -20,13 +22,13 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping(value = "/api/tilgang")
 public class TilgangskontrollController {
 
-
+    private AzureGraphService azureGraphService;
     private TilgangsKontrollService tilgangService;
-
     private PersonopplysningerService personService;
 
     @Autowired
-    public TilgangskontrollController(TilgangsKontrollService tilgangsKontrollService, PersonopplysningerService personopplysningerService) {
+    public TilgangskontrollController(AzureGraphService azureGraphService, TilgangsKontrollService tilgangsKontrollService, PersonopplysningerService personopplysningerService) {
+        this.azureGraphService = azureGraphService;
         this.tilgangService = tilgangsKontrollService;
         this.personService = personopplysningerService;
     }
@@ -34,12 +36,13 @@ public class TilgangskontrollController {
     @GetMapping(path = "/person")
     @ProtectedWithClaims(issuer = "azuread")
     public ResponseEntity tilgangTilPerson(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
-        return sjekkTilgangTilBruker("TODO, hent fra azure", personIdent);
+        return sjekkTilgangTilBruker(personIdent);
     }
 
-    private ResponseEntity sjekkTilgangTilBruker(String saksbehandlerId, String personIdent) {
+    private ResponseEntity sjekkTilgangTilBruker(String personIdent) {
+        Saksbehandler saksbehandler = azureGraphService.getSaksbehandler();
         Personinfo personInfo = personService.hentPersoninfo(personIdent);
-        Tilgang tilgang = tilgangService.sjekkTilgang(personIdent, saksbehandlerId, personInfo);
+        Tilgang tilgang = tilgangService.sjekkTilgang(personIdent, saksbehandler, personInfo);
         return lagRespons(tilgang);
     }
 
