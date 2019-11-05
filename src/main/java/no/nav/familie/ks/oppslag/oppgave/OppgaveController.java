@@ -35,7 +35,6 @@ public class OppgaveController {
     public ResponseEntity<Map<String, String>> handleOppgaveIkkeFunnetException(RuntimeException e) {
         String errorMessage = "Feil ved oppdatering av Gosysoppgave: " + ExceptionUtils.getStackTrace(e);
         LOG.warn(errorMessage, e);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Ingen oppgaver funnet " + e.getMessage(), "ikke_exception", "true"));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Ingen oppgaver funnet " + e.getMessage()));
     }
-
 }

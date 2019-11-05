@@ -26,8 +26,8 @@ public class OppgaveClient {
     private static final String X_CORRELATION_ID = "X-Correlation-ID";
     private static final Logger logger = LoggerFactory.getLogger(OppgaveClient.class);
 
-    //private final Counter returnerteIngenOppgaver = Metrics.counter("oppslag.oppgave.response", "ingenOppgaver");
-    //private final Counter returnerteMerEnnEnOppgave = Metrics.counter("oppslag.oppgave.response", "flerEnnEnOppgave");
+    private final Counter returnerteIngenOppgaver = Metrics.counter("oppslag.oppgave.response", "antall.oppgaver", "ingen");
+    private final Counter returnerteMerEnnEnOppgave = Metrics.counter("oppslag.oppgave.response", "antall.oppgaver", "flerEnnEn");
     private final URI oppgaveUri;
     private final RestTemplate restTemplate;
     private final StsRestClient stsRestClient;
@@ -76,12 +76,12 @@ public class OppgaveClient {
         var response = getRequest(requestUrl, FinnOppgaveResponseDto.class);
         logger.info("OppgaveResponse er: " + Objects.requireNonNull(response.getBody()).getOppgaver().toString());
         if (Objects.requireNonNull(response.getBody()).getOppgaver().isEmpty()) {
-            // metrikker på at listen er tom
-            //returnerteIngenOppgaver.increment();
+            returnerteIngenOppgaver.increment();
             throw new OppgaveIkkeFunnetException("Mislykket finnOppgave request med url: " + requestUrl);
         }
-        // metrikker på at listen er mer enn en
-        //returnerteMerEnnEnOppgave.increment();
+        if (response.getBody().getOppgaver().size()>1) {
+            returnerteMerEnnEnOppgave.increment();
+        }
         return response.getBody().getOppgaver().get(0);
     }
 
