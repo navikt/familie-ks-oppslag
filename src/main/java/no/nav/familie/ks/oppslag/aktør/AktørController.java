@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.constraints.NotNull;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api/aktoer")
 public class AktørController {
 

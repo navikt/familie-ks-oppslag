@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Map;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api/infotrygd")
 public class InfotrygdController {
     private static final Logger LOG = LoggerFactory.getLogger(InfotrygdController.class);

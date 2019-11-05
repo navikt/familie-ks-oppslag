@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api/personopplysning")
 public class PersonopplysningerController {
 

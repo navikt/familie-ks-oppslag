@@ -32,10 +32,9 @@ public class TilgangskontrollController {
     }
 
     @GetMapping(path = "/person")
-    // TODO bruk security context og hent saksbehandler fra /me hos azure
-    @ProtectedWithClaims(issuer = "azure")
-    public ResponseEntity tilgangTilPerson(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent, @NotNull @RequestHeader(name = "saksbehandlerId") String saksbehandlerId) {
-        return sjekkTilgangTilBruker(saksbehandlerId, personIdent);
+    @ProtectedWithClaims(issuer = "azuread")
+    public ResponseEntity tilgangTilPerson(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
+        return sjekkTilgangTilBruker("TODO, hent fra azure", personIdent);
     }
 
     private ResponseEntity sjekkTilgangTilBruker(String saksbehandlerId, String personIdent) {

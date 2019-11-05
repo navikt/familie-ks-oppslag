@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api/oppgave")
 public class OppgaveController {
     private static final Logger LOG = LoggerFactory.getLogger(OppgaveController.class);

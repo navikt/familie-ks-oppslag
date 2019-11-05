@@ -18,6 +18,7 @@ management:
       info: "status/isAlive"
   metrics.export.prometheus.enabled: true
 
+logging.level.no.nav.security: DEBUG
 STS_URL: http://security-token-service.default.svc.nais.local
 INFOTRYGD_URL: http://infotrygd-kontantstotte
 OPPGAVE_URL: http://oppgave

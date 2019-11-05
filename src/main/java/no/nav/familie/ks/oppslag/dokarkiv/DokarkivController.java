@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 @RequestMapping("/api/arkiv")
 public class DokarkivController {
     private static final Logger LOG = LoggerFactory.getLogger(DokarkivController.class);

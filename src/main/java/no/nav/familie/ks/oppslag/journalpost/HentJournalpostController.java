@@ -12,7 +12,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/journalpost")
-@ProtectedWithClaims(issuer = "azure")
+@ProtectedWithClaims(issuer = "azuread")
 public class HentJournalpostController {
     private static final Logger LOG = LoggerFactory.getLogger(HentJournalpostController.class);
 
