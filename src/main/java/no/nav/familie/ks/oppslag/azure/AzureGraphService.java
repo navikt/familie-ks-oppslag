@@ -41,7 +41,7 @@ public class AzureGraphService extends BaseService {
 
         Person person = response.getBody();
         var gruppeResponse = restTemplate.exchange(String.format("%sme/memberOf?$select=onPremisesSamAccountName,displayName,id", aadGrapURI), HttpMethod.GET, entity, Gruppe[].class);
-        if (person != null) {
+        if (person != null && gruppeResponse.getBody() != null) {
             person.setGrupper(List.of(gruppeResponse.getBody()));
         }
 
