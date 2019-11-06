@@ -26,7 +26,7 @@ import java.nio.file.Files;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.*;
 
-@ActiveProfiles(profiles = {"integrasjonstest", "mock-sts", "mock-innsyn"})
+@ActiveProfiles({"integrasjonstest", "mock-sts", "mock-innsyn"})
 public class HentJournalpostControllerTest extends OppslagSpringRunnerTest {
     Logger testLogger = (Logger) LoggerFactory.getLogger(HentJournalpostController.class);
 

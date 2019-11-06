@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ActiveProfiles(profiles = { "integrasjonstest" })
+@ActiveProfiles("integrasjonstest")
 public class InfotrygdControllerTest extends OppslagSpringRunnerTest {
         public static final int MOCK_SERVER_PORT = 18321;
         AccessTokenClient accessTokenClient = mock(AccessTokenClient.class);
