@@ -10,8 +10,6 @@ import no.nav.familie.ks.oppslag.oppgave.OppgaveIkkeFunnetException;
 import no.nav.familie.log.mdc.MDCConstants;
 import no.nav.oppgave.v1.FinnOppgaveResponseDto;
 import no.nav.oppgave.v1.OppgaveJsonDto;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
