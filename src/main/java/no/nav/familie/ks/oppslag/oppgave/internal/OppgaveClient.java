@@ -24,7 +24,6 @@ public class OppgaveClient {
     private static final String TEMA = "KON";
     private static final String OPPGAVE_TYPE = "BEH_SAK";
     private static final String X_CORRELATION_ID = "X-Correlation-ID";
-    private static final Logger logger = LoggerFactory.getLogger(OppgaveClient.class);
 
     private final Counter returnerteIngenOppgaver = Metrics.counter("oppslag.oppgave.response", "antall.oppgaver", "ingen");
     private final Counter returnerteMerEnnEnOppgave = Metrics.counter("oppslag.oppgave.response", "antall.oppgaver", "flerEnnEn");
