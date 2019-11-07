@@ -25,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CREATED;
 
-@ActiveProfiles(profiles = {"dev", "mock-sts", "mock-aktor", "mock-personopplysninger"})
+@ActiveProfiles(profiles = {"integrasjonstest", "mock-sts", "mock-aktor", "mock-personopplysninger"})
 public class DokarkivControllerTest extends OppslagSpringRunnerTest {
     private static final int MOCK_SERVER_PORT = 18321;
     private static final String DOKARKIV_URL = "/api/arkiv/";
