@@ -8,15 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @ControllerAdvice
-public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+public class ApiExceptionHandler {
 
     private static final Logger secureLogger = LoggerFactory.getLogger("secureLogger");
     private final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
@@ -41,6 +42,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(Ressurs.Companion.failure("Feil mot ekstern tjeneste. " + e.getRawStatusCode() + " " + e.getResponseBodyAsString() + " Message=" + e.getMessage(), null));
     }
 
+    @ExceptionHandler({MissingRequestHeaderException.class})
+    public ResponseEntity<Ressurs> handleMissingRequestHeaderException(MissingRequestHeaderException e) {
+        logger.warn("Mangler påkrevd request header. {}", e.getMessage());
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(Ressurs.Companion.failure("Mangler påkrevd request header", e));
+    }
+
     @ExceptionHandler({AzureAccessTokenException.class})
     public ResponseEntity<Ressurs> handleRestClientResponseException(AzureAccessTokenException e) {
         logger.error("AzureAccessTokenException : {} ", ExceptionUtils.getStackTrace(e));
@@ -57,5 +66,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 .status(INTERNAL_SERVER_ERROR)
                 .body(Ressurs.Companion.failure("Det oppstod en feil. " + e.getMessage(), null));
     }
+
 
 }

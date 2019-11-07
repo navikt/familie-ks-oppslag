@@ -1,7 +1,7 @@
 package no.nav.familie.ks.oppslag.journalpost;
 
-import no.nav.familie.ks.kontrakter.sak.Ressurs;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
+import no.nav.familie.ks.kontrakter.sak.Ressurs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
