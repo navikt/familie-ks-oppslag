@@ -1,6 +1,5 @@
 package no.nav.familie.ks.oppslag.dokarkiv;
 
-import no.nav.familie.ks.oppslag.aktør.AktørService;
 import no.nav.familie.ks.oppslag.dokarkiv.api.*;
 import no.nav.familie.ks.oppslag.dokarkiv.client.DokarkivClient;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.IdType;
@@ -22,7 +21,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.mockito.Mockito.*;
 
 
@@ -35,26 +33,23 @@ public class DokarkivServiceTest {
     private static final String STRUKTURERT_VARIANTFORMAT = "ORIGINAL";
     private static final String JOURNALPOST_ID = "123";
     private static final String FILNAVN = "filnavn";
-    private static final String AKTØR_ID_STRING = "aktorid";
     private static final PersonIdent PERSON_IDENT = new PersonIdent(FNR);
 
     private DokarkivClient dokarkivClient = mock(DokarkivClient.class);
     private DokarkivService dokarkivService;
     private PersonopplysningerService personopplysningerService = mock(PersonopplysningerService.class);
-    private AktørService aktørService = mock(AktørService.class);
 
     @Before
     public void setUp() {
-        dokarkivService = new DokarkivService(dokarkivClient, personopplysningerService, aktørService);
+        dokarkivService = new DokarkivService(dokarkivClient, personopplysningerService);
     }
 
     @Test
     public void skal_mappe_request_til_oppretttJournalpostRequest_av_type_ARKIV_PDFA() {
         final ArgumentCaptor<OpprettJournalpostRequest> captor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
-        when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(FNR)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medPersonIdent(PERSON_IDENT).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR,false, null, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -65,10 +60,9 @@ public class DokarkivServiceTest {
     @Test
     public void skal_mappe_request_til_oppretttJournalpostRequest_av_type_ORIGINAL_JSON() {
         final ArgumentCaptor<OpprettJournalpostRequest> captor = ArgumentCaptor.forClass(OpprettJournalpostRequest.class);
-        when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(FNR)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medPersonIdent(PERSON_IDENT).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN,  false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR,false, null, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         dokarkivService.lagInngåendeJournalpost(dto);
 
         verify(dokarkivClient).lagJournalpost(captor.capture(),eq(false), eq(FNR));
@@ -82,27 +76,14 @@ public class DokarkivServiceTest {
         responseFraKlient.setJournalpostId(JOURNALPOST_ID);
         responseFraKlient.setJournalpostferdigstilt(true);
         when(dokarkivClient.lagJournalpost(any(OpprettJournalpostRequest.class), anyBoolean(), anyString())).thenReturn(responseFraKlient);
-        when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(AKTØR_ID_STRING, HttpStatus.OK));
         when(personopplysningerService.hentPersoninfoFor(FNR)).thenReturn(new ResponseEntity<>(new Personinfo.Builder().medPersonIdent(PERSON_IDENT).medFødselsdato(LocalDate.now()).medNavn(NAVN).build(), HttpStatus.OK));
 
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, false, null, List.of(new Dokument(JSON_DOK, FilType.JSON, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
         ArkiverDokumentResponse arkiverDokumentResponse = dokarkivService.lagInngåendeJournalpost(dto);
 
         assertThat(arkiverDokumentResponse.getJournalpostId()).isEqualTo(JOURNALPOST_ID);
         assertThat(arkiverDokumentResponse.isFerdigstilt()).isTrue();
     }
-
-    @Test
-    public void skal_kaste_exception_hvis_aktørid_not_found() {
-        when(aktørService.getAktørId(FNR)).thenReturn(new ResponseEntity<>(null, HttpStatus.NOT_FOUND));
-
-        ArkiverDokumentRequest dto = new ArkiverDokumentRequest(FNR, NAVN, false, List.of(new Dokument(PDF_DOK, FilType.PDFA, FILNAVN, DokumentType.KONTANTSTØTTE_SØKNAD)));
-
-        Throwable thrown = catchThrowable(() -> dokarkivService.lagInngåendeJournalpost(dto));
-        assertThat(thrown).isInstanceOf(RuntimeException.class).withFailMessage("Kan ikke hente navn");
-    }
-
-
 
     private void assertOpprettJournalpostRequest(OpprettJournalpostRequest request, String pdfa, byte[] pdfDok, String arkivVariantformat) {
         assertThat(request.getAvsenderMottaker().getId()).isEqualTo(FNR);

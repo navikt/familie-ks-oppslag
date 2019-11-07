@@ -27,11 +27,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @ActiveProfiles(profiles = {"dev", "mock-sts", "mock-aktor", "mock-personopplysninger"})
 public class DokarkivControllerTest extends OppslagSpringRunnerTest {
-    public static final int MOCK_SERVER_PORT = 18321;
-    public static final String FULLT_NAVN = "Foo Bar";
-    public static final String DOKARKIV_URL = "/api/arkiv/";
-    public static final Dokument HOVEDDOKUMENT = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD);
-    public static final Dokument VEDLEGG = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD_VEDLEGG);
+    private static final int MOCK_SERVER_PORT = 18321;
+    private static final String DOKARKIV_URL = "/api/arkiv/";
+    private static final Dokument HOVEDDOKUMENT = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD);
+    private static final Dokument VEDLEGG = new Dokument("foo".getBytes(), FilType.PDFA, "filnavn", DokumentType.KONTANTSTØTTE_SØKNAD_VEDLEGG);
     @Rule
     public MockServerRule mockServerRule = new MockServerRule(this, MOCK_SERVER_PORT);
 
@@ -42,7 +41,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
 
     @Test
     public void skal_returnere_Bad_Request_hvis_fNr_mangler() {
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest(null, FULLT_NAVN, false, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest(null, false, "", List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
 
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
@@ -54,7 +53,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
 
     @Test
     public void skal_returnere_Bad_Request_hvis_ingen_dokumenter() {
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("fnr", "Foobar",false, new LinkedList<>());
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("fnr",false, null, new LinkedList<>());
 
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
@@ -79,7 +78,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", FULLT_NAVN, false, List.of(HOVEDDOKUMENT));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, null, List.of(HOVEDDOKUMENT));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
@@ -103,7 +102,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", FULLT_NAVN, false, List.of(HOVEDDOKUMENT, VEDLEGG));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, null, List.of(HOVEDDOKUMENT, VEDLEGG));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
@@ -127,7 +126,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
                 );
 
 
-        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", "Foobar", false, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
+        ArkiverDokumentRequest body = new ArkiverDokumentRequest("FNR", false, null, List.of(new Dokument("foo".getBytes(), FilType.PDFA, null, DokumentType.KONTANTSTØTTE_SØKNAD)));
         ResponseEntity<String> response = restTemplate.exchange(
                 localhost(DOKARKIV_URL), HttpMethod.POST, new HttpEntity<>(body, headers), String.class
         );
@@ -136,7 +135,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
     }
 
     @Test
-    public void ferdigstill_returnerer_OK() throws IOException {
+    public void ferdigstill_returnerer_OK() {
         mockServerRule.getClient()
                 .when(
                         HttpRequest
@@ -157,7 +156,7 @@ public class DokarkivControllerTest extends OppslagSpringRunnerTest {
     }
 
     @Test
-    public void ferdigstill_returnerer_400_hvis_ikke_mulig_ferdigstill() throws IOException {
+    public void ferdigstill_returnerer_400_hvis_ikke_mulig_ferdigstill() {
         mockServerRule.getClient()
                 .when(
                         HttpRequest

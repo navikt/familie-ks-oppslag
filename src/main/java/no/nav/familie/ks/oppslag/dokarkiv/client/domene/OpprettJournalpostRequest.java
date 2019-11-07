@@ -118,6 +118,9 @@ public class OpprettJournalpostRequest {
 		this.dokumenter = dokumenter;
 	}
 
+	public static OpprettJournalpostRequestBuilder builder() {
+		return new OpprettJournalpostRequestBuilder();
+	}
 
 	public static final class OpprettJournalpostRequestBuilder {
 		private JournalpostType journalpostType;
@@ -131,13 +134,6 @@ public class OpprettJournalpostRequest {
 		private String eksternReferanseId;
 		private Sak sak;
 		private List<Dokument> dokumenter = new ArrayList<>();
-
-		public OpprettJournalpostRequestBuilder() {
-		}
-
-		public static OpprettJournalpostRequestBuilder builder() {
-			return new OpprettJournalpostRequestBuilder();
-		}
 
 		public OpprettJournalpostRequestBuilder medJournalpostType(JournalpostType journalpostType) {
 			this.journalpostType = journalpostType;

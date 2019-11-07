@@ -10,15 +10,19 @@ public class ArkiverDokumentRequest {
     private String fnr;
 
     private boolean forsøkFerdigstill;
+
+    private String saksnummer;
+
     @NotEmpty
     private List<Dokument> dokumenter;
 
     public ArkiverDokumentRequest() {
     }
 
-    public ArkiverDokumentRequest(String fnr, String navn, boolean forsøkFerdigstill, List<Dokument> dokumenter) {
+    public ArkiverDokumentRequest(String fnr, boolean forsøkFerdigstill, String saksnummer, List<Dokument> dokumenter) {
         this.fnr = fnr;
         this.forsøkFerdigstill = forsøkFerdigstill;
+        this.saksnummer = saksnummer;
         this.dokumenter = dokumenter;
     }
 
@@ -26,9 +30,12 @@ public class ArkiverDokumentRequest {
         return fnr;
     }
 
-
     public boolean isForsøkFerdigstill() {
         return forsøkFerdigstill;
+    }
+
+    public String getSaksnummer() {
+        return saksnummer;
     }
 
     public List<Dokument> getDokumenter() {

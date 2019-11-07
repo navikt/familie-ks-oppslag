@@ -1,6 +1,5 @@
 package no.nav.familie.ks.oppslag.dokarkiv;
 
-import no.nav.familie.ks.oppslag.aktør.AktørService;
 import no.nav.familie.ks.oppslag.dokarkiv.api.*;
 import no.nav.familie.ks.oppslag.dokarkiv.client.DokarkivClient;
 import no.nav.familie.ks.oppslag.dokarkiv.client.domene.*;
@@ -31,20 +30,23 @@ public class DokarkivService {
 
     private final DokarkivClient dokarkivClient;
     private final PersonopplysningerService personopplysningerService;
-    private final AktørService aktørService;
 
     @Autowired
-    public DokarkivService(DokarkivClient dokarkivClient, PersonopplysningerService personopplysningerService, AktørService aktørService) {
+    public DokarkivService(DokarkivClient dokarkivClient, PersonopplysningerService personopplysningerService) {
         this.dokarkivClient = dokarkivClient;
         this.personopplysningerService = personopplysningerService;
-        this.aktørService = aktørService;
     }
 
     public ArkiverDokumentResponse lagInngåendeJournalpost(ArkiverDokumentRequest arkiverDokumentRequest) {
         String fnr = arkiverDokumentRequest.getFnr();
         String navn = hentNavnForFnr(fnr);
 
-        var request = mapTilOpprettJournalpostRequest(fnr, navn, arkiverDokumentRequest.getDokumenter());
+        OpprettJournalpostRequest request;
+        if (arkiverDokumentRequest.isForsøkFerdigstill()) {
+            request = mapTilOpprettJournalpostRequest(fnr, navn, arkiverDokumentRequest.getSaksnummer(), arkiverDokumentRequest.getDokumenter());
+        } else {
+            request = mapTilOpprettJournalpostRequest(fnr, navn, null, arkiverDokumentRequest.getDokumenter());
+        }
 
         Optional<OpprettJournalpostResponse> response = Optional.ofNullable(dokarkivClient.lagJournalpost(request, arkiverDokumentRequest.isForsøkFerdigstill(), fnr));
         return response.map(this::mapTilArkiverDokumentResponse).orElse(null);
@@ -67,7 +69,7 @@ public class DokarkivService {
         return navn;
     }
 
-    private OpprettJournalpostRequest mapTilOpprettJournalpostRequest(String fnr, String navn, List<no.nav.familie.ks.oppslag.dokarkiv.api.Dokument> dokumenter) {
+    private OpprettJournalpostRequest mapTilOpprettJournalpostRequest(String fnr, String navn, String saksnummer, List<no.nav.familie.ks.oppslag.dokarkiv.api.Dokument> dokumenter) {
         AbstractDokumentMetadata metadataHoveddokument = METADATA.get(dokumenter.get(0).getDokumentType().name());
         Assert.notNull(metadataHoveddokument, "Ukjent dokumenttype " + dokumenter.get(0).getDokumentType());
 
@@ -75,7 +77,7 @@ public class DokarkivService {
                 .map(this::mapTilDokument)
                 .collect(Collectors.toList());
 
-        return new OpprettJournalpostRequest.OpprettJournalpostRequestBuilder().builder()
+        var opprettJournalpostRequest = OpprettJournalpostRequest.builder()
                 .medJournalpostType(JournalpostType.INNGAAENDE)
                 .medBehandlingstema(metadataHoveddokument.getBehandlingstema())
                 .medKanal(metadataHoveddokument.getKanal())
@@ -85,10 +87,13 @@ public class DokarkivService {
                 .medAvsenderMottaker(new AvsenderMottaker(fnr, IdType.FNR, navn))
                 .medBruker(new Bruker(IdType.FNR, fnr))
                 .medDokumenter(dokumentRequest)
-                .medEksternReferanseId(MDCOperations.getCallId())
-//                .medSak() Når vi tar over fagsak, så må dennne settes til vår. For BRUT001 behandling, så kan ikke denne settes
-                .build();
+                .medEksternReferanseId(MDCOperations.getCallId());
 
+        if (Optional.ofNullable(saksnummer).isPresent()) {
+            opprettJournalpostRequest.medSak(new Sak(saksnummer));
+        }
+
+        return opprettJournalpostRequest.build();
     }
 
     private Dokument mapTilDokument(no.nav.familie.ks.oppslag.dokarkiv.api.Dokument dokument) {
