@@ -8,8 +8,6 @@ public class Saksbehandler {
     private String onPremisesSamAccountName; //Navident
     private List<Gruppe> grupper = new LinkedList<>();
 
-    public Saksbehandler() {}
-
     public Saksbehandler(String userPrincipalName, String onPremisesSamAccountName) {
         this.userPrincipalName = userPrincipalName;
         this.onPremisesSamAccountName = onPremisesSamAccountName;

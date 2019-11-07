@@ -31,7 +31,7 @@ public class AzureGraphService extends BaseService {
     public Saksbehandler getSaksbehandler() {
 
         var headers = new HttpHeaders();
-        headers.add("Accept", "application/json");
+        headers.add("Content-Type", "application/json;charset=UTF-8");
         var entity = new HttpEntity(headers);
 
         var response = restTemplate.exchange(String.format("%sme?$select=displayName,onPremisesSamAccountName,userPrincipalName", aadGrapURI), HttpMethod.GET, entity, Saksbehandler.class);
