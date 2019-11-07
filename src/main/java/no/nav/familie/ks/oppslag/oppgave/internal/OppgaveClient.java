@@ -94,8 +94,7 @@ public class OppgaveClient {
     private <T> void putRequest(URI uri, String requestBody, Class<T> responseType) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(stsRestClient.getSystemOIDCToken());
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+        headers.add("Content-Type", "application/json;charset=UTF-8");
         headers.add(X_CORRELATION_ID, MDC.get(MDCConstants.MDC_CALL_ID));
 
         restTemplate.exchange(uri, HttpMethod.PUT, new HttpEntity<>(requestBody, headers), responseType);
