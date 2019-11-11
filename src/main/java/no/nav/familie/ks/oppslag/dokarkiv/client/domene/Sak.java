@@ -14,7 +14,7 @@ public class Sak {
     private String fagsakId;
 
     public Sak(String fagsakId) {
-        this.fagsaksystem = "AO11"; // TODO: Bytt til riktig verdi for kontantstøtte når vi vet hva den er
+        this.fagsaksystem = "KONTANTSTOTTESAK";
         this.sakstype = "FAGSAK";
         this.fagsakId = fagsakId;
     }
