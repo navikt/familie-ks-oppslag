@@ -29,7 +29,7 @@ public class PersonopplysningerController {
     public ResponseEntity<Ressurs> handleRestClientResponseException(RestClientResponseException e) {
         return ResponseEntity
                 .status(e.getRawStatusCode())
-                .body(Ressurs.Companion.failure("Feil mot ekstern tjeneste. " + e.getRawStatusCode() + " " + e.getResponseBodyAsString() + " Message=" + e.getMessage(), null));
+                .body(Ressurs.Companion.failure("Feil mot personopplysning. " + e.getRawStatusCode() + " Message=" + e.getMessage(), null));
     }
 
     @Deprecated
