@@ -177,16 +177,14 @@ public class HentJournalpostControllerTest extends OppslagSpringRunnerTest {
 
     @Test
     public void hente_journalpost_basert_på_kanalreferanseId_skal_returnere_journalpost() {
-
-
         ResponseEntity<Ressurs> response = restTemplate.exchange(
                 fromHttpUrl(localhost(JOURNALPOST_BASE_URL))
-                        .queryParam("kanalReferanseId", "CallId").toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), Ressurs.class
+                        .queryParam("kanalReferanseId", JOURNALPOST_ID).toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), Ressurs.class
         );
 
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody().getStatus()).isEqualTo(Ressurs.Status.SUKSESS);
-        assertThat(response.getBody().getData().textValue()).isEqualTo(JOURNALPOST_ID);
+        assertThat(response.getBody().getData().get("journalpostId").textValue()).isEqualTo(JOURNALPOST_ID);
     }
 
     @Test
