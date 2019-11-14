@@ -6,8 +6,6 @@ import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientResponseException;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -31,13 +29,13 @@ public class AktørController {
                 .body(Ressurs.Companion.failure(e.getMessage(), e));
     }
 
-    @Deprecated
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     @GetMapping
     public ResponseEntity<String> getAktørIdForPersonIdentGammel(@NotNull @RequestHeader(name = "Nav-Personident") String personIdent) {
         return aktørService.getAktørIdGammel(personIdent);
     }
 
-    @Deprecated
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     @GetMapping(path = "/fraaktorid")
     public ResponseEntity<String> getPersonIdentForAktørIdGammel(@NotNull @RequestHeader(name = "Nav-Aktorid") String aktørId) {
         return aktørService.getPersonIdentGammel(new AktørId(aktørId));
@@ -48,7 +46,7 @@ public class AktørController {
         return ResponseEntity
                 .ok()
                 .body(Ressurs.Companion.success(
-                        Map.of("aktørId", aktørService.getAktørId(personIdent)),"Hent aktør for personident OK")
+                        Map.of("aktørId", aktørService.getAktørId(personIdent)), "Hent aktør for personident OK")
                 );
     }
 
@@ -57,7 +55,7 @@ public class AktørController {
         return ResponseEntity
                 .ok()
                 .body(Ressurs.Companion.success(
-                        Map.of("personIdent", aktørService.getPersonIdent(new AktørId(aktørId))),"Hent personIdent for aktør OK")
+                        Map.of("personIdent", aktørService.getPersonIdent(new AktørId(aktørId))), "Hent personIdent for aktør OK")
                 );
     }
 }

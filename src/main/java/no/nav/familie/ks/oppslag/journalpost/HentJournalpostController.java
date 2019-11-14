@@ -1,13 +1,15 @@
 package no.nav.familie.ks.oppslag.journalpost;
 
-import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import no.nav.familie.ks.kontrakter.sak.Ressurs;
+import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpStatusCodeException;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/journalpost")
@@ -81,6 +83,6 @@ public class HentJournalpostController {
         if (journalpostId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Ressurs.Companion.failure("journalpost ikke funnet", null));
         }
-        return ResponseEntity.ok(Ressurs.Companion.success(journalpostId, "OK"));
+        return ResponseEntity.ok(Ressurs.Companion.success(Map.of("journalpostId", journalpostId), "OK"));
     }
 }

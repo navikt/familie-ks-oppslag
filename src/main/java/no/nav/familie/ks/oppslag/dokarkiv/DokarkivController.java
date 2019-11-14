@@ -53,7 +53,7 @@ public class DokarkivController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    @Deprecated
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     public ArkiverDokumentResponse arkiverDokumentGammel(@Valid @RequestBody ArkiverDokumentRequest arkiverDokumentRequest) {
         return journalføringService.lagInngåendeJournalpost(arkiverDokumentRequest);
     }

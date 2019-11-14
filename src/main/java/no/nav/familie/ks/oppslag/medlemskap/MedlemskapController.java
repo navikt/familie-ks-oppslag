@@ -21,6 +21,7 @@ public class MedlemskapController {
     }
 
     @GetMapping
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     public ResponseEntity<MedlemskapsInfo> hentMedlemskapsUnntakGammel(@RequestParam("id") String aktørId) {
         return ResponseEntity.ok(medlemskapService.hentMedlemskapsUnntak(aktørId));
     }

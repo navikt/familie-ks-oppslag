@@ -35,6 +35,7 @@ public class AktørService {
         this.aktørregisterClient = aktørregisterClient;
     }
 
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     public ResponseEntity<String> getAktørIdGammel(String personIdent) {
         Objects.requireNonNull(personIdent, "personIdent");
         return Optional.ofNullable(aktørCache().get(personIdent)).map(ResponseEntity::ok).orElseGet(() -> {
@@ -47,6 +48,7 @@ public class AktørService {
         });
     }
 
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     public ResponseEntity<String> getPersonIdentGammel(AktørId aktørId) {
         Objects.requireNonNull(aktørId, "aktørId");
         return Optional.ofNullable(personIdentCache().get(aktørId.getId())).map(ResponseEntity::ok).orElseGet(() -> {

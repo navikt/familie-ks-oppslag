@@ -69,7 +69,7 @@ public class PersonopplysningerService {
             throw  HttpClientErrorException.create(NOT_FOUND, "Kan ikke hente historikk for person som ikke finnes i TPS" + exception.getMessage(),  null, null, null);
         }
     }
-
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     ResponseEntity<PersonhistorikkInfo> hentHistorikkForGammel(String personIdent, LocalDate fom, LocalDate tom) {
         Objects.requireNonNull(personIdent, "personIdent");
         Objects.requireNonNull(fom, "fom");
@@ -90,7 +90,7 @@ public class PersonopplysningerService {
     }
 
 
-
+    @Deprecated(since = "TODO slettes når mottak bytter endepunkt")
     public ResponseEntity<Personinfo> hentPersoninfoForGammel(String personIdent) {
         try {
             HentPersonRequest request = new HentPersonRequest()
