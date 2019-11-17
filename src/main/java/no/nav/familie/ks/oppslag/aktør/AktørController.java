@@ -5,7 +5,10 @@ import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotNull;
 import java.util.Map;
@@ -20,13 +23,6 @@ public class AktørController {
     @Autowired
     AktørController(AktørService aktørService) {
         this.aktørService = aktørService;
-    }
-
-    @ExceptionHandler({AktørOppslagException.class})
-    public ResponseEntity<Ressurs> handAktørOppslagException(AktørOppslagException e) {
-        return ResponseEntity
-                .status(e.getHttpStatus())
-                .body(Ressurs.Companion.failure(e.getMessage(), e));
     }
 
     @Deprecated(since = "TODO slettes når mottak bytter endepunkt")

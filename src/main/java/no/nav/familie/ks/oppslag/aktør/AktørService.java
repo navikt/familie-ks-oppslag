@@ -3,16 +3,15 @@ package no.nav.familie.ks.oppslag.aktør;
 import no.nav.familie.ks.oppslag.aktør.domene.Aktør;
 import no.nav.familie.ks.oppslag.aktør.domene.Ident;
 import no.nav.familie.ks.oppslag.aktør.internal.AktørregisterClient;
+import no.nav.familie.ks.oppslag.felles.OppslagException;
 import no.nav.familie.ks.oppslag.personopplysning.domene.AktørId;
 import org.ehcache.Cache;
 import org.ehcache.CacheManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -135,7 +134,6 @@ public class AktørService {
 
     private String hentPersonIdentFraRegister(AktørId aktørId) {
         return fra(aktørId);
-
     }
 
     private <T> String fra(T idType) {
@@ -154,10 +152,10 @@ public class AktørService {
                 return identer.get(0).getIdent();
             } else {
                 String melding = String.format("%s gjeldene %s", identer.isEmpty() ? "Ingen" : "Flere", erAktørId ? "aktørIder" : "norske identer");
-                throw new AktørOppslagException(melding, identer.isEmpty() ? NOT_FOUND : CONFLICT);
+                throw new OppslagException(melding, "aktør", OppslagException.Level.LAV, identer.isEmpty() ? NOT_FOUND : CONFLICT, null);
             }
         } else {
-            throw new AktørOppslagException(String.format("Funksjonell feil. Fikk følgende feilmelding fra aktørregisteret: %s", response.getFeilmelding()), BAD_REQUEST);
+            throw new OppslagException(String.format("Funksjonell feil med følgende feilmelding: %s", response.getFeilmelding()), "aktør", OppslagException.Level.LAV, BAD_REQUEST, null);
         }
     }
 }

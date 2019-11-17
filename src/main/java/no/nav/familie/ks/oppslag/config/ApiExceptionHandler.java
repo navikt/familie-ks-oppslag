@@ -2,6 +2,7 @@ package no.nav.familie.ks.oppslag.config;
 
 import no.nav.familie.http.azure.AzureAccessTokenException;
 import no.nav.familie.ks.kontrakter.sak.Ressurs;
+import no.nav.familie.ks.oppslag.felles.OppslagException;
 import no.nav.security.token.support.spring.validation.interceptor.JwtTokenUnauthorizedException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -65,6 +66,30 @@ public class ApiExceptionHandler {
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(Ressurs.Companion.failure("Det oppstod en feil. " + e.getMessage(), null));
+    }
+
+    @ExceptionHandler({OppslagException.class})
+    public ResponseEntity<Ressurs> handAktørOppslagException(OppslagException e) {
+        String feilmelding = String.format("[%s][%s]", e.getKilde(), e.getMessage());
+        if (e.getError() != null) {
+            feilmelding += String.format("[%s]", e.getError().getClass().getName());
+        }
+        switch (e.getLevel()) {
+            case KRITISK:
+                secureLogger.error("OppslagException : {} [{}]", feilmelding, e.getError());
+                logger.error("OppslagException : {}", feilmelding);
+                break;
+            case MEDIUM:
+                secureLogger.warn("OppslagException : {} [{}]", feilmelding, e.getError());
+                logger.warn("OppslagException : {}", feilmelding);
+                break;
+            default:
+                logger.info("OppslagException : {} {}", feilmelding);
+        }
+
+        return ResponseEntity
+                .status(e.getHttpStatus())
+                .body(Ressurs.Companion.failure(feilmelding, e));
     }
 
 
