@@ -46,7 +46,7 @@ public class InfotrygdControllerTest extends OppslagSpringRunnerTest {
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
         assertThat(response.getBody().getStatus()).isEqualTo(Ressurs.Status.FEILET);
         assertThat(response.getBody().getMelding()).isEqualTo("Mangler påkrevd request header");
-        assertThat(response.getBody().getErrorMelding()).isEqualTo("Missing request header 'Nav-Personident' for method parameter of type String");
+        assertThat(response.getBody().getStacktrace()).contains("Missing request header 'Nav-Personident' for method parameter of type String");
     }
 
     @Test
