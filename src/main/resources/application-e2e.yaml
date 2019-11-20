@@ -1,13 +1,13 @@
 no.nav.security.jwt:
   issuer.azuread:
-    discoveryurl: http://metadata
-    accepted_audience: aud-localhost
+    discoveryurl: http://localhost:8060/rest/isso/oauth2/.well-known/openid-configuration
+    accepted_audience: OIDC
     cookie_name: localhost-idtoken
   client:
     registration:
       aad-graph-onbehalfof:
         resource-url: https://login.microsoftonline.com
-        token-endpoint-url: https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/v2.0/token
+        token-endpoint-url: http://localhost:8060/rest/isso/oauth2/access_token
         grant-type: urn:ietf:params:oauth:grant-type:jwt-bearer
         scope: ${AAD_GRAPH_SCOPE}
         authentication:
@@ -15,7 +15,7 @@ no.nav.security.jwt:
           client-secret: ${CLIENT_SECRET}
           client-auth-method: client_secret_basic
 
-AAD_URL: https://login.microsoftonline.com/navq.onmicrosoft.com/oauth2/v2.0/token
+AAD_URL: http://localhost:8060/rest/isso/oauth2/access_token
 KS_OPPSLAG_CLIENT_ID: ""
 CLIENT_SECRET: ""
 INFOTRYGD_KS_SCOPE: ""
@@ -25,6 +25,7 @@ SECURITYTOKENSERVICE_URL: https://localhost:8063/soap/SecurityTokenServiceProvid
 AKTOERID_URL: #TODO lokal mockserver AKTOERID_URL
 PERSON_V3_URL: #TODO lokal mockserver PERSON_V3_URL
 DOKARKIV_V1_URL: #TODO lokal mockserver DOKARKIV_V1_URL
+INFOTRYGD_URL: http://localhost:8060/rest/infotrygd-kontantstotte
 INNSYN_JOURNAL_V2_URL: #TODO lokal mockserver INNSYN_JOURNAL_V2_URL
 EGEN_ANSATT_V1_URL: #TODO lokal mockserver EGEN_ANSATT_V1_URL
 
