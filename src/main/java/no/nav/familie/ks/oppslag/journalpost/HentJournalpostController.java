@@ -1,5 +1,6 @@
 package no.nav.familie.ks.oppslag.journalpost;
 
+import no.nav.familie.ks.kontrakter.sak.Ressurs;
 import no.nav.security.token.support.core.api.ProtectedWithClaims;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +23,8 @@ public class HentJournalpostController {
         this.journalpostService = journalpostService;
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(JournalpostRestClientException.class)
-    public Map<String, String> handleRestClientException(
+    public ResponseEntity<Ressurs> handleRestClientException(
             JournalpostRestClientException ex) {
         String errorMessage = "Feil ved henting av journalpost=" + ex.getJournalpostId();
         if (ex.getCause() instanceof HttpStatusCodeException) {
@@ -34,36 +34,34 @@ public class HentJournalpostController {
             errorMessage += " klientfeilmelding=" + ex.getMessage();
         }
         LOG.warn(errorMessage, ex);
-        return Map.of("journalpost", ex.getJournalpostId(), "message", errorMessage);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(errorMessage, ex));
     }
 
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(RuntimeException.class)
-    public Map<String, String> handleRequestParserException(
+    public ResponseEntity<Ressurs> handleRequestParserException(
             RuntimeException ex) {
         String errorMessage = "Feil ved henting av journalpost. " + ex.getMessage();
         LOG.warn(errorMessage, ex);
-        return Map.of("message", errorMessage);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Ressurs.Companion.failure(errorMessage, ex));
     }
 
 
-    @GetMapping("/{journalpostId}/sak")
-    public ResponseEntity<String> hentSaksnummer(@PathVariable(name = "journalpostId") String journalpostId) {
+    @GetMapping("sak")
+    public ResponseEntity<Ressurs> hentSaksnummer(@RequestParam(name = "journalpostId") String journalpostId) {
         String saksnummer = journalpostService.hentSaksnummer(journalpostId);
         if (saksnummer == null) {
-            return new ResponseEntity<>("Sak mangler for journalpostId=" + journalpostId, HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Ressurs.Companion.failure("Sak mangler for journalpostId=" + journalpostId, null));
         } else {
-            return new ResponseEntity<>(saksnummer, HttpStatus.OK);
+            return ResponseEntity.ok(Ressurs.Companion.success(Map.of("saksnummer", saksnummer), "OK"));
         }
     }
 
-
-    @GetMapping("/kanalreferanseid/{kanalReferanseId}")
-    public ResponseEntity<String> hentJournalpostId(@PathVariable(name = "kanalReferanseId") String kanalReferanseId) {
+    @GetMapping
+    public ResponseEntity<Ressurs> hentJournalpostId(@RequestParam(name = "kanalReferanseId") String kanalReferanseId) {
         String journalpostId = journalpostService.hentJournalpostId(kanalReferanseId);
         if (journalpostId == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Ressurs.Companion.failure("journalpost ikke funnet", null));
         }
-        return ResponseEntity.ok(journalpostService.hentJournalpostId(kanalReferanseId));
+        return ResponseEntity.ok(Ressurs.Companion.success(Map.of("journalpostId", journalpostId), "OK"));
     }
 }
